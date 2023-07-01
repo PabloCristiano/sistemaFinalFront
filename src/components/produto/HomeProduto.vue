@@ -155,7 +155,6 @@ export default {
       // }
     },
     showModalAlterarProduto(id) {
-      console.log(id);
       this.onReset();
       this.form_produto.titulo = "Alterar Produto";
       this.form_produto.btn = "Alterar";
@@ -195,18 +194,20 @@ export default {
       this.isLoading = true;
       ServiceProduto.getById(id)
         .then((obj) => {
-          console.log(obj);
+          const precoCusto = obj.data[0].precoCusto;
+          const precoVenda = obj.data[0].precoVenda;
+          const custoUltCompra = obj.data[0].custoUltCompra;
           this.form_produto.id = obj.data[0].id;
           this.form_produto.produto = obj.data[0].produto;
-          this.form_produto.unidade = obj.data[0].unidade;
+          this.form_produto.unidade = obj.data[0].qtdEstoque;
           this.form_produto.id_categoria = obj.data[0].categoria.id;
           this.form_produto.categoria = obj.data[0].categoria.categoria;
           this.form_produto.id_fornecedor = obj.data[0].fornecedor.id;
           this.form_produto.fornecedor = obj.data[0].fornecedor.razaoSocial;
           this.form_produto.qtdEstoque = obj.data[0].qtdEstoque;
-          this.form_produto.precoCusto = obj.data[0].precoCusto;
-          this.form_produto.precoVenda = obj.data[0].precoVenda;
-          this.form_produto.custoUltCompra = obj.data[0].custoUltCompra;
+          this.form_produto.precoCusto = precoCusto.toFixed(2);
+          this.form_produto.precoVenda = precoVenda.toFixed(2);
+          this.form_produto.custoUltCompra = custoUltCompra.toFixed(2);
           this.form_produto.dataUltCompra = obj.data[0].dataUltCompra;
           this.form_produto.dataUltVenda = obj.data[0].dataUltVenda;
 

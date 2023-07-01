@@ -206,10 +206,11 @@ export default {
       this.isLoading = true;
       ServiceServico.getById(id)
         .then((obj) => {
+          const valor = obj.data[0].valor;
           this.form_servico.id = obj.data[0].id;
           this.form_servico.servico = obj.data[0].servico;
           this.form_servico.tempo = obj.data[0].tempo;
-          this.form_servico.valor = obj.data[0].valor;
+          this.form_servico.valor = valor.toFixed(2);
           this.form_servico.comissao = obj.data[0].comissao;
           this.form_servico.observacoes = obj.data[0].observacoes;
           this.form_servico.data_create = obj.data[0].data_create;

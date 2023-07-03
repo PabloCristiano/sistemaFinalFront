@@ -405,6 +405,31 @@ import { validationMessage } from "vuelidate-messages";
 import { formataDataTempo } from "../../rules/filters";
 import HomeCategoria from "../categorias/HomeCategorias.vue";
 import HomeFornecedor from "../fornecedores/HomeFornecedor.vue";
+import { ServiceProduto } from "../../services/serviceProduto";
+import { Notyf } from "notyf";
+const notyf = new Notyf({
+  position: {
+    x: "center",
+    y: "top",
+  },
+  types: [
+    {
+      type: "warning",
+      background: "orange",
+      icon: {
+        className: "material-icons",
+        tagName: "i",
+        text: "warning",
+      },
+    },
+    {
+      type: "error",
+      background: "indianred",
+      duration: 5000,
+      dismissible: true,
+    },
+  ],
+});
 const formMessages = {
   required: () => "Campo Obrigatório",
   txtMinLen: ({ $params }) =>
@@ -481,6 +506,9 @@ export default {
     };
   },
   methods: {
+    fGetListProduto() {
+      this.functionGetListProduto();
+    },
     validationMsg: validationMessage(formMessages),
     closeProduto() {
       this.onReset();
@@ -497,34 +525,38 @@ export default {
       this.funcOnReset();
     },
     onSubmit() {
-      // const vm = this;
+      const vm = this;
       if (this.$v.$invalid) {
         this.$v.$touch();
       } else {
-        if (this.form.btn === "Salvar") {
-          // ServiceCliente.storeCliente(this.form)
-          //     .then(response => {
-          //         if (response.status === 200) {
-          //             if (response.data[0] === "success") {
-          //                 notyf.success(response.data[1]);
-          //                 vm.onReset();
-          //                 vm.$bvModal.hide(vm.modal_form_cliente);
-          //                 this.fGetListCliente();
-          //             }
-          //             if (response.data[0] === "error") {
-          //                 notyf.error(response.data[1]);
-          //             }
-          //         } else {
-          //             console.log(response.response.data.errors)
-          //             if (response.response.data.errors != null) {
-          //                 Object.keys(response.response.data.errors).forEach(function (key) {
-          //                     notyf.error(response.response.data.errors[key][0]);
-          //                 });
-          //             }
-          //         }
-          //     }).catch(error => {
-          //         console.log(error)
-          //     });
+        if (this.form.btn === "Salvar") {         
+          ServiceProduto.storeProduto(this.form)
+            .then((response) => {
+              console.log(response.status);
+              if (response.status === 200) {
+                if (response.data[0] === "success") {
+                  notyf.success(response.data[1]);
+                  vm.onReset();
+                  vm.$bvModal.hide(vm.modal_form_produto);
+                  this.fGetListProduto();
+                }
+                if (response.data[0] === "error") {
+                  notyf.error(response.data[1]);
+                }
+              } else {
+                console.log(response.response.data.errors);
+                if (response.response.data.errors != null) {
+                  Object.keys(response.response.data.errors).forEach(function (
+                    key
+                  ) {
+                    notyf.error(response.response.data.errors[key][0]);
+                  });
+                }
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
         if (this.form.btn === "Alterar") {
           // ServiceCliente.alterarCliente(this.form)

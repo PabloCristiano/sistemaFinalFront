@@ -110,7 +110,7 @@ export default {
         },
       ],
       form_produto: {
-        id: 0,
+        id:null,
         produto: "",
         unidade: "",
         id_categoria: "",

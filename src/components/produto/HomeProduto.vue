@@ -149,10 +149,9 @@ export default {
         });
     },
     selectCellProdutos(params) {
-      console.log(params);
-      // if (this.functionCategorias) {
-      //     this.functionCidade(params);
-      // }
+      if (this.functionCategorias) {
+          this.functionCidade(params);
+      }
     },
     showModalAlterarProduto(id) {
       this.onReset();

@@ -562,42 +562,45 @@ export default {
             });
         }
         if (this.form.btn === "Alterar") {
-          // ServiceCliente.alterarCliente(this.form)
-          //     .then(response => {
-          //         if (response.status === 200) {
-          //             console.log(response.data.success);
-          //             notyf.success(response.data.success);
-          //             vm.onReset();
-          //             vm.$bvModal.hide(vm.modal_form_cliente);
-          //             this.fGetListCliente();
-          //         } else {
-          //             if (response.response.data.errors != null) {
-          //                 Object.keys(response.response.data.errors).forEach(function (key) {
-          //                     notyf.error(response.response.data.errors[key][0]);
-          //                 });
-          //             }
-          //         }
-          //     }).catch(error => {
-          //         console.log(error)
-          //     });
+          ServiceProduto.alterarProduto(this.form)
+            .then((response) => {
+              if (response.status === 200) {
+                console.log(response.data.success);
+                notyf.success(response.data.success);
+                vm.onReset();
+                vm.$bvModal.hide(vm.modal_form_produto);
+                this.fGetListProduto();
+              } else {
+                if (response.response.data.errors != null) {
+                  Object.keys(response.response.data.errors).forEach(function (
+                    key
+                  ) {
+                    notyf.error(response.response.data.errors[key][0]);
+                  });
+                }
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
         if (this.form.btn === "Excluir") {
-          // ServiceCliente.excluirCliente(this.form.id)
-          //     .then((obj) => {
-          //         if (obj.status === 200) {
-          //             notyf.success(obj.data.success);
-          //             this.onReset();
-          //             this.$bvModal.hide(this.modal_form_cliente);
-          //             this.fGetListCliente();
-          //         } else {
-          //             if (obj.response.data.erro.length > 0) {
-          //                 notyf.error(obj.response.data.erro[0]);
-          //             }
-          //         }
-          //     })
-          //     .catch((error) => {
-          //         console.log(error);
-          //     });
+          ServiceProduto.excluirProduto(this.form.id)
+            .then((obj) => {
+              if (obj.status === 200) {
+                notyf.success(obj.data.success);
+                this.onReset();
+                this.$bvModal.hide(this.modal_form_produto);
+                this.fGetListProduto();
+              } else {
+                if (obj.response.data.erro.length > 0) {
+                  notyf.error(obj.response.data.erro[0]);
+                }
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
       }
     },

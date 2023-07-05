@@ -160,12 +160,11 @@ export default {
       this.form_produto.btn = "Alterar";
       this.funcGetById(id);
     },
-    showModalExcluirProduto(id) {
-      console.log(id);
-      // this.form_produto.titulo = "Excluir Categoria";
-      // this.form_produto.btn = "Excluir";
-      // this.form_produto.disabled = true;
-      // this.funcGetById(id);
+    showModalExcluirProduto(id) { 
+      this.form_produto.titulo = "Excluir Produto";
+      this.form_produto.btn = "Excluir";
+      this.form_produto.disabled = true;
+      this.funcGetById(id);
     },
     ShowModalFormProduto() {
       this.form_produto.titulo = "Cadastrar Produto";

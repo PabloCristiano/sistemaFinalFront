@@ -183,26 +183,26 @@ export default {
       } else {
         if (this.form.btn === "Salvar") {
           console.log(this.form);
-          // ServiceServico.storeServico(this.form)
-          //   .then((response) => {
-          //     if (response.status === 200) {
-          //       notyf.success(response.data.success);
-          //       vm.onReset();
-          //       vm.$bvModal.hide(vm.modal_form_formaPagamento);
-          //       this.function_getListFormaPagamento();
-          //     } else {
-          //       if (response.response.data.errors != null) {
-          //         Object.keys(response.response.data.errors).forEach(function (
-          //           key
-          //         ) {
-          //           notyf.error(response.response.data.errors[key][0]);
-          //         });
-          //       }
-          //     }
-          //   })
-          //   .catch((error) => {
-          //     console.log(error);
-          //   });
+          ServiceFormaPagamento.storeFormaPagamento(this.form)
+            .then((response) => {
+              if (response.status === 200) {
+                notyf.success(response.data.success);
+                vm.onReset();
+                vm.$bvModal.hide(vm.modal_form_formaPagamento);
+                this.function_getListFormaPagamento();
+              } else {
+                if (response.response.data.errors != null) {
+                  Object.keys(response.response.data.errors).forEach(function (
+                    key
+                  ) {
+                    notyf.error(response.response.data.errors[key][0]);
+                  });
+                }
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
         if (this.form.btn === "Alterar") {
           console.log(this.form);

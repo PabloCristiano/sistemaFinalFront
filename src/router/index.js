@@ -17,6 +17,7 @@ const HomeCategorias = ()=> import( /* webpackChunkName: "Fornecedor" */ "@/comp
 const HomeServico = ()=> import( /* webpackChunkName: "Servico" */ "@/components/servico/HomeServico");
 const HomeProfissional = ()=> import( /* webpackChunkName: "Profissional" */ "@/components/profissional/HomeProfissional");
 const HomeProduto = ()=> import( /* webpackChunkName: "Produto" */ "@/components/produto/HomeProduto");
+const HomeFormaPagamento = ()=> import( /* webpackChunkName: "FormaPagamento" */ "@/components/formaPagamento/HomeFormaPagamento");
 
 Vue.use(VueRouter)
 
@@ -154,6 +155,17 @@ const routes = [{
         meta: {
           public: true,
           label: 'Cadastro Produto',
+          requiresPermission: 'admin'
+        }
+      },
+      {
+        path: '/formapagamento',
+        component: HomeFormaPagamento,
+        titulo: 'Cadastro Forma de Pagamento',
+        name: 'formapagamento',
+        meta: {
+          public: true,
+          label: 'Cadastro Forma de Pagamento',
           requiresPermission: 'admin'
         }
       }

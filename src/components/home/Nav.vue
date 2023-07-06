@@ -54,7 +54,7 @@
         </div>
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Financeiro</a></li>
-          <li><a href="#">Forma de Pagamento</a></li>
+          <li><router-link :to="{path:'/formapagamento'}">Forma de Pagamento</router-link></li>
           <li><a href="#">Condição de Pagamento</a></li>
         </ul>
       </li>

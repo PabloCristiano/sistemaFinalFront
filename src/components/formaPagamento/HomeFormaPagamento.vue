@@ -30,7 +30,7 @@
               <template slot="table-row" slot-scope="props">
                 <span v-if="props.column.field === 'btn'">
                   <a
-                    @click="showModalAlterarFormaPagamento()"
+                    @click="showModalAlterarFormaPagamento(props.row.id)"
                     size="sm"
                     class="btn btn-sm me-1 mb-1"
                     data-backdrop="static"
@@ -40,7 +40,7 @@
                     <i class="bx bx-edit-alt"></i>
                   </a>
                   <a
-                    @click="showModalExcluirFormaPagamento()"
+                    @click="showModalExcluirFormaPagamento(props.row.id)"
                     size="sm"
                     class="btn btn-sm me-1 mb-1"
                     data-backdrop="static"
@@ -69,15 +69,13 @@
       </div>
     </b-overlay>
     <br /><br />
-    <Modal
-      :formulario="form_formaPagamento"
-      :funcOnReset="onReset"
-    ></Modal>
+    <Modal :formulario="form_formaPagamento" :funcOnReset="onReset"></Modal>
   </div>
 </template>
 <script>
 import Modal from "./Modal.vue";
 import { VueGoodTable } from "vue-good-table";
+import { ServiceFormaPagamento } from "../../services/serviceFormaPagamento.js";
 export default {
   components: { VueGoodTable, Modal },
   data() {
@@ -118,62 +116,47 @@ export default {
       },
     };
   },
-  created() {},
+  created() {
+    this.getListFormaPagamento();
+  },
   methods: {
     selectCellFormaPagamento(params) {
       if (this.functionEstado) {
         this.functionEstado(params);
       }
     },
+    getListFormaPagamento() {
+      this.isLoading = true;
+      ServiceFormaPagamento.getAll()
+        .then((obj) => {
+          if (obj) {
+            this.formaPagamentos = obj;
+          }
+          this.isLoading = false;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     ShowModalFormFormaPagamento() {
-         this.onReset();
-         this.form_formaPagamento.titulo = "Cadastrar Forma de Pagamento";
-         this.form_formaPagamento.btn = "Salvar";
-         this.form_formaPagamento.nome_modal = "Show_Modal";
-         this.$bvModal.show(this.modal_form_formaPagamento);
+      this.onReset();
+      this.form_formaPagamento.titulo = "Cadastrar Forma de Pagamento";
+      this.form_formaPagamento.btn = "Salvar";
+      this.$bvModal.show(this.modal_form_formaPagamento);
     },
-    showModalAlterarFormaPagamento() {
-      //   this.isLoading = true;
-      //   ServiceEstado.getById(id)
-      //     .then((obj) => {
-      //       this.onReset();
-      //       this.form_formaPagamento.titulo = "Alterar Forma de Pagamento";
-      //       this.form_formaPagamento.btn = "Alterar";
-      //       this.form_formaPagamento.id = obj.data[0].id;
-      //       this.form_formaPagamento.estado = obj.data[0].estado;
-      //       this.form_formaPagamento.uf = obj.data[0].uf;
-      //       this.form_formaPagamento.id_pais = obj.data[0].pais.id;
-      //       this.form_formaPagamento.pais = obj.data[0].pais.pais;
-      //       this.form_formaPagamento.data_create = obj.data[0].data_create;
-      //       this.form_formaPagamento.data_alt = obj.data[0].data_alt;
-      //       this.isLoading = false;
-      //       this.$bvModal.show(this.modal_form_formaPagamento);
-      //     })
-      //     .catch((error) => {
-      //       console.log(error);
-      //     });
+    showModalAlterarFormaPagamento(id) {
+      this.onReset();
+      var titulo = "Alterar Forma de Pagamento";
+      var btn = "Alterar";
+      var disabled = false;
+      this.funcGetById(id, titulo, btn, disabled);
     },
-    showModalExcluirFormaPagamento() {
-      //   this.isLoading = true;
-      //   ServiceEstado.getById(id)
-      //     .then((obj) => {
-      //       this.onReset();
-      //       this.form_formaPagamento.titulo = "Excluir Forma de Pagamento";
-      //       this.form_formaPagamento.btn = "Excluir";
-      //       this.form_formaPagamento.id = obj.data[0].id;
-      //       this.form_formaPagamento.estado = obj.data[0].estado;
-      //       this.form_formaPagamento.uf = obj.data[0].uf;
-      //       this.form_formaPagamento.id_pais = obj.data[0].pais.id;
-      //       this.form_formaPagamento.pais = obj.data[0].pais.pais;
-      //       this.form_formaPagamento.data_create = obj.data[0].data_create;
-      //       this.form_formaPagamento.data_alt = obj.data[0].data_alt;
-      //       this.form_formaPagamento.disabled = true;
-      //       this.isLoading = false;
-      //       this.$bvModal.show(this.modal_form_formaPagamento);
-      //     })
-      //     .catch((error) => {
-      //       console.log(error);
-      //     });
+    showModalExcluirFormaPagamento(id) {
+      this.onReset();
+      var titulo = "Excluir Forma de Pagamento";
+      var btn = "Excluir";
+      var disabled = true;
+      this.funcGetById(id, titulo, btn, disabled);
     },
     onReset() {
       this.form_formaPagamento.id = "";
@@ -181,6 +164,25 @@ export default {
       this.form_formaPagamento.data_create = "";
       this.form_formaPagamento.data_alt = "";
       this.form_formaPagamento.disabled = false;
+    },
+    funcGetById(id, titulo, btn, disabled) {
+      this.isLoading = true;
+      ServiceFormaPagamento.getById(id)
+        .then((obj) => {
+          this.form_formaPagamento.id = obj.data[0].id;
+          this.form_formaPagamento.forma_pg = obj.data[0].forma_pg;
+          this.form_formaPagamento.data_create = obj.data[0].data_create;
+          this.form_formaPagamento.data_alt = obj.data[0].data_alt;
+          this.form_formaPagamento.titulo = titulo;
+          this.form_formaPagamento.btn = btn;
+          this.form_formaPagamento.disabled = disabled;
+          this.isLoading = false;
+          this.$bvModal.show(this.modal_form_formaPagamento);
+          return;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };

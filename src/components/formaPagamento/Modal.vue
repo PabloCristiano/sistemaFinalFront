@@ -104,7 +104,7 @@
 <script>
 import * as validators from "vuelidate/lib/validators";
 import { validationMessage } from "vuelidate-messages";
-// import { ServiceServico } from "../../services/ServiceServico.js";
+//import { ServiceFormaPagamento } from "../../services/serviceFormaPagamento.js";
 import { formataDataTempo } from "../../rules/filters";
 // import { Notyf } from "notyf";
 // const notyf = new Notyf({
@@ -178,6 +178,7 @@ export default {
         this.$v.$touch();
       } else {
         if (this.form.btn === "Salvar") {
+          console.log(this.form);
           // ServiceServico.storeServico(this.form)
           //   .then((response) => {
           //     if (response.status === 200) {

@@ -61,14 +61,14 @@
                 <b-form-input
                   id="unidade"
                   type="text"
-                  v-model="form.unidade"
-                  :class="{ 'fail-error': $v.form.unidade.$error }"
+                  v-model="form.qtdEstoque"
+                  :class="{ 'fail-error': $v.form.qtdEstoque.$error }"
                   placeholder="Unidade"
                   :disabled="form.disabled"
                 >
                 </b-form-input>
                 <small style="font-size: 11px; color: red">
-                  {{ validationMsg($v.form.unidade) }}
+                  {{ validationMsg($v.form.qtdEstoque) }}
                 </small>
               </div>
             </div>
@@ -83,6 +83,7 @@
                   placeholder="Código"
                   :title="form.id_categoria"
                   :disabled="form.disabled"
+                  v-debounce:1000ms="categoriaDebounce"
                 >
                 </b-form-input>
                 <small style="font-size: 11px; color: red">
@@ -93,7 +94,7 @@
                 <label
                   >Categoria:<b style="color: rgb(245, 153, 153)"> *</b></label
                 >
-                <b-overlay :show="false" rounded="sm">
+                <b-overlay :show="isLoadingCategoria" rounded="sm">
                   <b-input-group>
                     <b-form-input
                       id="categoria"
@@ -143,6 +144,7 @@
                   placeholder="Código"
                   :title="form.id_fornecedor"
                   :disabled="form.disabled"
+                  v-debounce:1000ms="fornecedorDebounce"
                 >
                 </b-form-input>
                 <small style="font-size: 11px; color: red">
@@ -153,7 +155,7 @@
                 <label
                   >Fornecedor:<b style="color: rgb(245, 153, 153)"> *</b></label
                 >
-                <b-overlay :show="false" rounded="sm">
+                <b-overlay :show="isLoadingFornecedor" rounded="sm">
                   <b-input-group>
                     <b-form-input
                       id="fornecedor"
@@ -402,9 +404,37 @@
 <script>
 import * as validators from "vuelidate/lib/validators";
 import { validationMessage } from "vuelidate-messages";
+import Rules from "../../rules/rules";
 import { formataDataTempo } from "../../rules/filters";
 import HomeCategoria from "../categorias/HomeCategorias.vue";
 import HomeFornecedor from "../fornecedores/HomeFornecedor.vue";
+import { ServiceProduto } from "../../services/serviceProduto";
+import { ServiceFornecedor } from "../../services/serviceFornecedor";
+import { ServiceCategorias } from "../../services/serviceCategorias";
+import { Notyf } from "notyf";
+const notyf = new Notyf({
+  position: {
+    x: "center",
+    y: "top",
+  },
+  types: [
+    {
+      type: "warning",
+      background: "orange",
+      icon: {
+        className: "material-icons",
+        tagName: "i",
+        text: "warning",
+      },
+    },
+    {
+      type: "error",
+      background: "indianred",
+      duration: 5000,
+      dismissible: true,
+    },
+  ],
+});
 const formMessages = {
   required: () => "Campo Obrigatório",
   txtMinLen: ({ $params }) =>
@@ -412,12 +442,7 @@ const formMessages = {
   txtMaxLen: ({ $params }) =>
     `Campo maximo ${$params.txtMaxLen.max} characters.`,
   integer: () => "Campo deve ser um Numero inteiro",
-  txtCnpj: () => `CNPJ Inválido`,
-  txtCpf: () => `CPF Inválido`,
-  email: () => "Deve ser um E-mail Válido.",
-  txtUrl: () => `Site deve ser uma Url Ex: http://www.exemplo.com `,
-  txtConfSenha: () => "Deve ser a mesma Senha",
-  txtMaior: () => "Cliente deve ser Maior de Idade",
+  txtNumeroPositivo: () => "Campo deve ser Positivo/Maior que zero.",
 };
 export default {
   props: {
@@ -428,13 +453,14 @@ export default {
   components: { HomeCategoria, HomeFornecedor },
   data() {
     return {
-      isLoadingCidade: false,
       form: this.formulario,
       headerBgVariant: "dark",
       headerTextVariant: "light",
       modal_form_produto: "modal_form_produto",
       modal_search_categoria: "modal_search_categoria",
       modal_search_fornecedor: "modal_search_fornecedor",
+      isLoadingFornecedor: false,
+      isLoadingCategoria: false,
     };
   },
   filters: {
@@ -447,21 +473,25 @@ export default {
           required: validators.required,
           txtMinLen: validators.minLength(3),
         },
-        unidade: {
+        qtdEstoque: {
           required: validators.required,
           integer: validators.integer,
+          txtNumeroPositivo: Rules.isPositiveNumber,
         },
         precoCusto: {
           required: validators.required,
           decimal: validators.decimal,
+          txtNumeroPositivo: Rules.isPositiveNumber,
         },
         precoVenda: {
           required: validators.required,
           decimal: validators.decimal,
+          txtNumeroPositivo: Rules.isPositiveNumber,
         },
         custoUltCompra: {
           required: validators.required,
           decimal: validators.decimal,
+          txtNumeroPositivo: Rules.isPositiveNumber,
         },
         id_categoria: {
           required: validators.required,
@@ -481,6 +511,9 @@ export default {
     };
   },
   methods: {
+    fGetListProduto() {
+      this.functionGetListProduto();
+    },
     validationMsg: validationMessage(formMessages),
     closeProduto() {
       this.onReset();
@@ -497,72 +530,77 @@ export default {
       this.funcOnReset();
     },
     onSubmit() {
-      // const vm = this;
+      const vm = this;
       if (this.$v.$invalid) {
         this.$v.$touch();
       } else {
         if (this.form.btn === "Salvar") {
-          // ServiceCliente.storeCliente(this.form)
-          //     .then(response => {
-          //         if (response.status === 200) {
-          //             if (response.data[0] === "success") {
-          //                 notyf.success(response.data[1]);
-          //                 vm.onReset();
-          //                 vm.$bvModal.hide(vm.modal_form_cliente);
-          //                 this.fGetListCliente();
-          //             }
-          //             if (response.data[0] === "error") {
-          //                 notyf.error(response.data[1]);
-          //             }
-          //         } else {
-          //             console.log(response.response.data.errors)
-          //             if (response.response.data.errors != null) {
-          //                 Object.keys(response.response.data.errors).forEach(function (key) {
-          //                     notyf.error(response.response.data.errors[key][0]);
-          //                 });
-          //             }
-          //         }
-          //     }).catch(error => {
-          //         console.log(error)
-          //     });
+          ServiceProduto.storeProduto(this.form)
+            .then((response) => {
+              if (response.status === 200) {
+                console.log(response);
+                notyf.success(response.data.success);
+                vm.onReset();
+                vm.$bvModal.hide(vm.modal_form_produto);
+                this.fGetListProduto();
+                if (response.data[0] === "error") {
+                  notyf.error(response.data[1]);
+                }
+              } else {
+                console.log(response.response.data.errors);
+                if (response.response.data.errors != null) {
+                  Object.keys(response.response.data.errors).forEach(function (
+                    key
+                  ) {
+                    notyf.error(response.response.data.errors[key][0]);
+                  });
+                }
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
         if (this.form.btn === "Alterar") {
-          // ServiceCliente.alterarCliente(this.form)
-          //     .then(response => {
-          //         if (response.status === 200) {
-          //             console.log(response.data.success);
-          //             notyf.success(response.data.success);
-          //             vm.onReset();
-          //             vm.$bvModal.hide(vm.modal_form_cliente);
-          //             this.fGetListCliente();
-          //         } else {
-          //             if (response.response.data.errors != null) {
-          //                 Object.keys(response.response.data.errors).forEach(function (key) {
-          //                     notyf.error(response.response.data.errors[key][0]);
-          //                 });
-          //             }
-          //         }
-          //     }).catch(error => {
-          //         console.log(error)
-          //     });
+          ServiceProduto.alterarProduto(this.form)
+            .then((response) => {
+              if (response.status === 200) {
+                console.log(response.data.success);
+                notyf.success(response.data.success);
+                vm.onReset();
+                vm.$bvModal.hide(vm.modal_form_produto);
+                this.fGetListProduto();
+              } else {
+                if (response.response.data.errors != null) {
+                  Object.keys(response.response.data.errors).forEach(function (
+                    key
+                  ) {
+                    notyf.error(response.response.data.errors[key][0]);
+                  });
+                }
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
         if (this.form.btn === "Excluir") {
-          // ServiceCliente.excluirCliente(this.form.id)
-          //     .then((obj) => {
-          //         if (obj.status === 200) {
-          //             notyf.success(obj.data.success);
-          //             this.onReset();
-          //             this.$bvModal.hide(this.modal_form_cliente);
-          //             this.fGetListCliente();
-          //         } else {
-          //             if (obj.response.data.erro.length > 0) {
-          //                 notyf.error(obj.response.data.erro[0]);
-          //             }
-          //         }
-          //     })
-          //     .catch((error) => {
-          //         console.log(error);
-          //     });
+          ServiceProduto.excluirProduto(this.form.id)
+            .then((obj) => {
+              if (obj.status === 200) {
+                notyf.success(obj.data.success);
+                this.onReset();
+                this.$bvModal.hide(this.modal_form_produto);
+                this.fGetListProduto();
+              } else {
+                if (obj.response.data.erro.length > 0) {
+                  notyf.error(obj.response.data.erro[0]);
+                }
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
       }
     },
@@ -590,6 +628,36 @@ export default {
       this.form.id_fornecedor = obj.row.id;
       this.form.fornecedor = obj.row.razaoSocial;
       this.$bvModal.hide(this.modal_search_fornecedor);
+    },
+    fornecedorDebounce(id) {
+      this.isLoadingFornecedor = true;
+      let vm = this;
+      ServiceFornecedor.getById(id).then((response) => {
+        if (response.status === 200) {
+          vm.form.fornecedor = response.data[0].razaoSocial;
+          this.isLoadingFornecedor = false;
+        } else {
+          vm.form.fornecedor = "";
+          vm.form.id_fornecedor = "";
+          this.isLoadingFornecedor = false;
+          notyf.error("Fornecedor não encontrado.");
+        }
+      });
+    },
+    categoriaDebounce(id) {
+      this.isLoadingCategoria = true;
+      let vm = this;
+      ServiceCategorias.getById(id).then((response) => {
+        if (response.status === 200) {
+          vm.form.categoria = response.data[0].categoria;
+          this.isLoadingCategoria = false;
+        } else {
+          vm.form.categoria = "";
+          vm.form.id_categoria = "";
+          this.isLoadingCategoria = false;
+          notyf.error("Categoria não encontrada.");
+        }
+      });
     },
   },
 };

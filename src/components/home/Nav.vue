@@ -48,14 +48,14 @@
         <div class="iocn-link">
           <a href="#">
             <i class="bx bx-book-alt"></i>
-            <span class="link_name">Posts</span>
+            <span class="link_name">Financeiro</span>
           </a>
           <i class="bx bxs-chevron-down arrow"></i>
         </div>
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Financeiro</a></li>
-          <li><a href="#">Forma de Pagamento</a></li>
-          <li><a href="#">Condição de Pagamento</a></li>
+          <li><router-link :to="{path:'/formapagamento'}">Forma de Pagamento</router-link></li>
+          <li><a href="#" style="white-space: pre-line;">Condição de Pagamento</a></li>
         </ul>
       </li>
       <!--<li>

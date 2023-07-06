@@ -48,7 +48,7 @@
                   type="text"
                   placeholder="Forma de Pagamento"
                   :class="{ 'fail-error': $v.form.forma_pg.$error }"
-                  v-model="form.servico"
+                  v-model="form.forma_pg"
                   :disabled="form.disabled"
                 >
                 </b-form-input>

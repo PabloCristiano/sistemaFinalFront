@@ -69,7 +69,7 @@
       </div>
     </b-overlay>
     <br /><br />
-    <Modal :formulario="form_formaPagamento" :funcOnReset="onReset"></Modal>
+    <Modal :formulario="form_formaPagamento" :funcOnReset="onReset" :funcgetListFormaPagamento ="getListFormaPagamento"></Modal>
   </div>
 </template>
 <script>

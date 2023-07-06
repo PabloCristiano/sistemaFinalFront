@@ -104,32 +104,32 @@
 <script>
 import * as validators from "vuelidate/lib/validators";
 import { validationMessage } from "vuelidate-messages";
-//import { ServiceFormaPagamento } from "../../services/serviceFormaPagamento.js";
+import { ServiceFormaPagamento } from "../../services/serviceFormaPagamento.js";
 import { formataDataTempo } from "../../rules/filters";
-// import { Notyf } from "notyf";
-// const notyf = new Notyf({
-//   position: {
-//     x: "center",
-//     y: "top",
-//   },
-//   types: [
-//     {
-//       type: "warning",
-//       background: "orange",
-//       icon: {
-//         className: "material-icons",
-//         tagName: "i",
-//         text: "warning",
-//       },
-//     },
-//     {
-//       type: "error",
-//       background: "indianred",
-//       duration: 5000,
-//       dismissible: true,
-//     },
-//   ],
-// });
+import { Notyf } from "notyf";
+const notyf = new Notyf({
+  position: {
+    x: "center",
+    y: "top",
+  },
+  types: [
+    {
+      type: "warning",
+      background: "orange",
+      icon: {
+        className: "material-icons",
+        tagName: "i",
+        text: "warning",
+      },
+    },
+    {
+      type: "error",
+      background: "indianred",
+      duration: 5000,
+      dismissible: true,
+    },
+  ],
+});
 const formMessages = {
   required: () => "Campo Obrigatório",
   txtMinLen: ({ $params }) =>
@@ -142,6 +142,7 @@ export default {
   props: {
     formulario: { type: Object },
     funcOnReset: { type: Function },
+    funcgetListFormaPagamento:{type: Function}
   },
   data() {
     return {
@@ -164,6 +165,9 @@ export default {
   },
   methods: {
     validationMsg: validationMessage(formMessages),
+    function_getListFormaPagamento(){
+      this.funcgetListFormaPagamento();
+    },
     onReset() {
       this.$v.$reset();
       this.funcOnReset();
@@ -173,7 +177,7 @@ export default {
       this.$bvModal.hide(this.modal_form_formaPagamento);
     },
     onSubmit() {
-      // const vm = this;
+      const vm = this;
       if (this.$v.$invalid) {
         this.$v.$touch();
       } else {
@@ -184,8 +188,8 @@ export default {
           //     if (response.status === 200) {
           //       notyf.success(response.data.success);
           //       vm.onReset();
-          //       vm.$bvModal.hide(vm.modal_form_servico);
-          //       this.fGetListServico();
+          //       vm.$bvModal.hide(vm.modal_form_formaPagamento);
+          //       this.function_getListFormaPagamento();
           //     } else {
           //       if (response.response.data.errors != null) {
           //         Object.keys(response.response.data.errors).forEach(function (
@@ -201,44 +205,46 @@ export default {
           //   });
         }
         if (this.form.btn === "Alterar") {
-          // ServiceServico.alterarServico(this.form)
-          //   .then((response) => {
-          //     if (response.status === 200) {
-          //       notyf.success(response.data.success);
-          //       vm.onReset();
-          //       vm.$bvModal.hide(vm.modal_form_servico);
-          //       this.fGetListServico();
-          //     } else {
-          //       if (response.response.data.errors != null) {
-          //         Object.keys(response.response.data.errors).forEach(function (
-          //           key
-          //         ) {
-          //           notyf.error(response.response.data.errors[key][0]);
-          //         });
-          //       }
-          //     }
-          //   })
-          //   .catch((error) => {
-          //     console.log(error);
-          //   });
+          console.log(this.form);
+          ServiceFormaPagamento.alterarFormaPagamento(this.form)
+            .then((response) => {
+              if (response.status === 200) {
+                notyf.success(response.data.success);
+                vm.onReset();
+                vm.$bvModal.hide(vm.modal_form_formaPagamento);
+                this.function_getListFormaPagamento();
+              } else {
+                if (response.response.data.errors != null) {
+                  Object.keys(response.response.data.errors).forEach(function (
+                    key
+                  ) {
+                    notyf.error(response.response.data.errors[key][0]);
+                  });
+                }
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
         if (this.form.btn === "Excluir") {
-          //ServiceServico.excluirServico(this.form.id)
-          //  .then((obj) => {
-          //    if (obj.status === 200) {
-          //      notyf.success(obj.data.success);
-           //     this.onReset();
-           //     this.$bvModal.hide(this.modal_form_servico);
-           //     this.fGetListServico();
-           //   } else {
-            //    if (obj.response.data.error.length > 0) {
-            //      notyf.error(obj.response.data.error[0]);
-            //    }
-            //  }
-          //  })
-          //  .catch((error) => {
-          //    console.log(error);
-          //  });
+          ServiceFormaPagamento.excluirFormaPagamento(this.form.id)
+           .then((obj) => {
+           
+             if (obj.status === 200) {
+               notyf.success(obj.data.success);
+               this.onReset();
+               this.$bvModal.hide(this.modal_form_formaPagamento);
+               this.function_getListFormaPagamento();
+             } else {
+               if (obj.response.data.erro.length > 0) {
+                 notyf.error(obj.response.data.erro[0]);
+               }
+             }
+           })
+           .catch((error) => {
+             console.log(error);
+           });
         }
       }
     },

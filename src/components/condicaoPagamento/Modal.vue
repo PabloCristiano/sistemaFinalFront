@@ -60,7 +60,7 @@
             <div class="row col-12 mt-2">
               <div class="col-md-4">
                 <label>Juros:</label>
-                <b-input-group prepend="%">
+                <b-input-group append="%">
                   <b-form-input id="limiteCredito" type="text" v-model="form.limiteCredito" placeholder="0,00"
                     :title="form.limiteCredito" :disabled="form.disabled">
                   </b-form-input>
@@ -68,7 +68,7 @@
               </div>
               <div class="col-md-4">
                 <label>Multa:</label>
-                <b-input-group prepend="%">
+                <b-input-group append="%">
                   <b-form-input id="limiteCredito" type="text" v-model="form.limiteCredito" placeholder="0,00"
                     :title="form.limiteCredito" :disabled="form.disabled">
                   </b-form-input>
@@ -76,7 +76,7 @@
               </div>
               <div class="col-md-4">
                 <label>Desconto:</label>
-                <b-input-group prepend="%">
+                <b-input-group append="%">
                   <b-form-input id="limiteCredito" type="text" v-model="form.limiteCredito" placeholder="0,00"
                     :title="form.limiteCredito" :disabled="form.disabled">
                   </b-form-input>

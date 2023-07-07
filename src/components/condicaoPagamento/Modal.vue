@@ -2,7 +2,7 @@
   <div>
     <b-modal
       :id="modal_form_condicaoPagamento"
-      size="lg"
+      size="xl"
       :header-bg-variant="headerBgVariant"
       :header-text-variant="headerTextVariant"
       no-close-on-backdrop
@@ -47,13 +47,13 @@
                   id="servico"
                   type="text"
                   placeholder="Condição de Pagamento"
-                  
+                  :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
                   v-model="form.condicaoPagamento"
                   :disabled="form.disabled"
                 >
                 </b-form-input>
                 <small style="font-size: 11px; color: red">
-                  <!-- {{ validationMsg($v.form.condicaoPagamento) }} -->
+                  {{ validationMsg($v.form.condicaoPagamento) }}
                 </small>
               </div>
             </div>
@@ -131,7 +131,7 @@ export default {
   filters: {
     formataDataTempo,
   },
-  validation: {
+  validations: {
     form: {
       condicaoPagamento: {
         required: validators.required,
@@ -142,7 +142,7 @@ export default {
   methods: {
     validationMsg: validationMessage(formMessages),
     function_getListFormaPagamento() {
-      this.funcgetListFormaPagamento();
+      this.funcgetListCondicaoPagamento();
     },
     onReset() {
       this.$v.$reset();

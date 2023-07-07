@@ -61,26 +61,96 @@
               <div class="col-md-4">
                 <label>Juros:</label>
                 <b-input-group append="%">
-                  <b-form-input id="limiteCredito" type="text" v-model="form.limiteCredito" placeholder="0,00"
-                    :title="form.limiteCredito" :disabled="form.disabled">
+                  <b-form-input
+                    id="limiteCredito"
+                    type="text"
+                    v-model="form.limiteCredito"
+                    placeholder="0,00"
+                    :title="form.limiteCredito"
+                    :disabled="form.disabled"
+                  >
                   </b-form-input>
                 </b-input-group>
               </div>
               <div class="col-md-4">
                 <label>Multa:</label>
                 <b-input-group append="%">
-                  <b-form-input id="limiteCredito" type="text" v-model="form.limiteCredito" placeholder="0,00"
-                    :title="form.limiteCredito" :disabled="form.disabled">
+                  <b-form-input
+                    id="limiteCredito"
+                    type="text"
+                    v-model="form.limiteCredito"
+                    placeholder="0,00"
+                    :title="form.limiteCredito"
+                    :disabled="form.disabled"
+                  >
                   </b-form-input>
                 </b-input-group>
               </div>
               <div class="col-md-4">
                 <label>Desconto:</label>
                 <b-input-group append="%">
-                  <b-form-input id="limiteCredito" type="text" v-model="form.limiteCredito" placeholder="0,00"
-                    :title="form.limiteCredito" :disabled="form.disabled">
+                  <b-form-input
+                    id="limiteCredito"
+                    type="text"
+                    v-model="form.limiteCredito"
+                    placeholder="0,00"
+                    :title="form.limiteCredito"
+                    :disabled="form.disabled"
+                  >
                   </b-form-input>
                 </b-input-group>
+              </div>
+            </div>
+            <div class="row col-12 mt-02" style="margin-top: 20px" v-if="true">
+              <div class="container mt-02 table-responsive">
+                <table class="table">
+                  <thead class="fixed-header">
+                    <tr
+                      class="table text-center"
+                      style="background: darkslategray; color: white"
+                    >
+                      <th scope="col" class="tableTr">Parcela</th>
+                      <th scope="col" class="tableTr">Prazo</th>
+                      <th scope="col" class="tableTr">Porcentagem</th>
+                      <th scope="col" class="tableTr">Forma de Pagamento</th>
+                      <th scope="col" class="tableTr">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="tableTr text-center">
+                      <td>01</td>
+                      <td>30 dias</td>
+                      <td>100%</td>
+                      <td>PIX</td>
+                      <td>
+                        <button
+                          class="btn btn-sm btn me-2"
+                          style="background-color: rgb(212 225 237)"
+                        >
+                          <i class="bx bx-edit-alt"></i>
+                        </button>
+                        <button
+                          class="btn btn-sm btn"
+                          style="background-color: rgb(212 225 237)"
+                        >
+                          <i class="bx bx-trash-alt"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row col-12" style="margin-top: 15px">
+              <div class="col-md-12 text-center">
+                <b-button
+                  class="btn btn-sm"
+                  type="button"
+                  variant="dark"
+                  @click.prevent="openModelParcela()"
+                >
+                  Adicionar Parcela
+                </b-button>
               </div>
             </div>
             <div>
@@ -125,6 +195,175 @@
         </slot>
       </b-card>
     </b-modal>
+
+    <b-modal
+      :id="modal_form_parcela"
+      size="lg"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+      :modal-class="myclass"
+    >
+      <template v-slot:modal-header>
+        <h5>Cadastrar Parcela</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="closePacela()"
+        >
+          X
+        </b-button>
+      </template>
+      <b-card class="mt-0 mb-3" header="Formulário de cadastro Parcela">
+        <slot name="conteudo">
+          <b-form>
+            <div class="row col-12 mt-2">
+              <div class="col-md-4">
+                <label
+                  >Nº Parcela:<b style="color: rgb(245, 153, 153)">*</b></label
+                >
+                <b-form-input
+                  id="id"
+                  type="text"
+                  placeholder="Id"
+                  :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
+                  v-model="form.condicaoPagamento"
+                  disabled
+                >
+                </b-form-input>
+                <small style="font-size: 11px; color: red">
+                  {{ validationMsg($v.form.condicaoPagamento) }}
+                </small>
+              </div>
+              <div class="col-md-4">
+                <label>Prazo:<b style="color: rgb(245, 153, 153)">*</b></label>
+                <b-form-input
+                  id="servico"
+                  type="text"
+                  placeholder="Prazo"
+                  :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
+                  v-model="form.condicaoPagamento"
+                  :disabled="form.disabled"
+                >
+                </b-form-input>
+                <small style="font-size: 11px; color: red">
+                  {{ validationMsg($v.form.condicaoPagamento) }}
+                </small>
+              </div>
+              <div class="col-md-4">
+                <label
+                  >Porcentagem:<b style="color: rgb(245, 153, 153)">*</b></label
+                >
+                <b-form-input
+                  id="servico"
+                  type="text"
+                  placeholder="Porcentagem"
+                  :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
+                  v-model="form.condicaoPagamento"
+                  :disabled="form.disabled"
+                >
+                </b-form-input>
+                <small style="font-size: 11px; color: red">
+                  {{ validationMsg($v.form.condicaoPagamento) }}
+                </small>
+              </div>
+            </div>
+            <div class="row col-12">
+              <!-- <div class="col-md-4">
+                <label>Prazo:<b style="color: rgb(245, 153, 153)">*</b></label>
+                <b-form-input
+                  id="servico"
+                  type="text"
+                  placeholder="Prazo"
+                  :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
+                  v-model="form.condicaoPagamento"
+                  :disabled="form.disabled"
+                >
+                </b-form-input>
+                <small style="font-size: 11px; color: red">
+                  {{ validationMsg($v.form.condicaoPagamento) }}
+                </small>
+              </div> -->
+              <!-- <div class="col-md-12 mt-2">
+                <label
+                  >Forma de Pagamento:<b style="color: rgb(245, 153, 153)">*</b></label
+                >
+                <b-form-input
+                  id="servico"
+                  type="text"
+                  placeholder="Selecione uma forma de Pagamento"
+                  :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
+                  v-model="form.condicaoPagamento"
+                  :disabled="form.disabled"
+                >
+                </b-form-input>
+                <small style="font-size: 11px; color: red">
+                  {{ validationMsg($v.form.condicaoPagamento) }}
+                </small>
+              </div> -->
+              <div class="col-md-12">
+                <label
+                  >Cidade:<b style="color: rgb(245, 153, 153)"> *</b></label
+                >
+
+                <b-input-group>
+                  <b-form-input
+                    id="cidade"
+                    type="text"
+                    v-model="form.cidade"
+                    placeholder="Cidade"
+                    disabled
+                  >
+                  </b-form-input>
+                  <b-input-group-append>
+                    <b-button
+                      @click="showSearchCidade()"
+                      text="Button"
+                      variant="dark"
+                      :disabled="form.disabled"
+                      title="Pesquisar Cidade"
+                      ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-search"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+                        /></svg
+                    ></b-button>
+                  </b-input-group-append>
+                </b-input-group>
+              </div>
+            </div>
+          </b-form>
+        </slot>
+        <slot name="botao mb-3">
+          <div class="d-flex justify-content-end mt-3">
+            <b-button
+              class="btn btn-sm me-1"
+              type="button"
+              variant="dark"
+              @click.prevent="closePacela()"
+            >
+              Cancelar
+            </b-button>
+            <b-button
+              class="btn btn-sm me-1"
+              type="button"
+              variant="dark"
+              @click.prevent="onSubmitParcela()"
+              >Adicionar <i class="bx bx-check"></i>
+            </b-button>
+          </div>
+        </slot>
+        <slot name="rodape"> </slot>
+      </b-card>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -152,6 +391,8 @@ export default {
       headerBgVariant: "dark",
       headerTextVariant: "light",
       modal_form_condicaoPagamento: "modal_form_condicaoPagamento",
+      modal_form_parcela: "modal_form_parcela",
+      myclass: "myclass",
     };
   },
   filters: {
@@ -249,6 +490,15 @@ export default {
         }
       }
     },
+    openModelParcela() {
+      this.$bvModal.show(this.modal_form_parcela);
+    },
+    closePacela() {
+      this.$bvModal.hide(this.modal_form_parcela);
+    },
+    onSubmitParcela() {
+      console.log("Parcela enviada");
+    },
   },
 };
 </script>
@@ -256,4 +506,16 @@ export default {
 .fail-error {
   border: 1px solid red;
 }
+.tableTr {
+  font-family: monospace;
+  font-weight: 100;
+}
+.myclass > div {
+  top: 150px !important;
+  height: 500px !important;
+  width: 500px !important;
+}
+/* .myclass > .modal-dialog > .modal-content {
+  background-color: red !important;
+} */
 </style>

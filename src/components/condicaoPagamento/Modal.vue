@@ -259,7 +259,7 @@
                 <b-form-input
                   id="servico"
                   type="text"
-                  placeholder="Porcentagem"
+                  placeholder="%"
                   :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
                   v-model="form.condicaoPagamento"
                   :disabled="form.disabled"
@@ -271,49 +271,16 @@
               </div>
             </div>
             <div class="row col-12">
-              <!-- <div class="col-md-4">
-                <label>Prazo:<b style="color: rgb(245, 153, 153)">*</b></label>
-                <b-form-input
-                  id="servico"
-                  type="text"
-                  placeholder="Prazo"
-                  :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
-                  v-model="form.condicaoPagamento"
-                  :disabled="form.disabled"
-                >
-                </b-form-input>
-                <small style="font-size: 11px; color: red">
-                  {{ validationMsg($v.form.condicaoPagamento) }}
-                </small>
-              </div> -->
-              <!-- <div class="col-md-12 mt-2">
+              <div class="col-md-12 mt-2">
                 <label
-                  >Forma de Pagamento:<b style="color: rgb(245, 153, 153)">*</b></label
+                  >Forma de Pagamento:<b style="color: rgb(245, 153, 153)"> *</b></label
                 >
-                <b-form-input
-                  id="servico"
-                  type="text"
-                  placeholder="Selecione uma forma de Pagamento"
-                  :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
-                  v-model="form.condicaoPagamento"
-                  :disabled="form.disabled"
-                >
-                </b-form-input>
-                <small style="font-size: 11px; color: red">
-                  {{ validationMsg($v.form.condicaoPagamento) }}
-                </small>
-              </div> -->
-              <div class="col-md-12">
-                <label
-                  >Cidade:<b style="color: rgb(245, 153, 153)"> *</b></label
-                >
-
                 <b-input-group>
                   <b-form-input
                     id="cidade"
                     type="text"
                     v-model="form.cidade"
-                    placeholder="Cidade"
+                    placeholder="Pesquise uma forma de Pagamento"
                     disabled
                   >
                   </b-form-input>
@@ -393,6 +360,14 @@ export default {
       modal_form_condicaoPagamento: "modal_form_condicaoPagamento",
       modal_form_parcela: "modal_form_parcela",
       myclass: "myclass",
+      parcela:{
+        numero: 0,
+        prazo:0,
+        porcentagem:0,
+        id_forma_pg:0,
+        forma_pg:""
+      },
+      parcelas:[]
     };
   },
   filters: {

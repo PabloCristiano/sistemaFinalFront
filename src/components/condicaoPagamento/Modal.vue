@@ -110,31 +110,117 @@
                       style="background: darkslategray; color: white"
                     >
                       <th scope="col" class="tableTr">Parcela</th>
-                      <th scope="col" class="tableTr">Prazo</th>
-                      <th scope="col" class="tableTr">Porcentagem</th>
+                      <th scope="col" class="tableTr">Prazo (Dias)</th>
+                      <th scope="col" class="tableTr">Porcentagem (%)</th>
                       <th scope="col" class="tableTr">Forma de Pagamento</th>
                       <th scope="col" class="tableTr">Ações</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr class="tableTr text-center">
-                      <td>01</td>
-                      <td>30 dias</td>
-                      <td>100%</td>
-                      <td>PIX</td>
+                    <tr
+                      class="tableTr text-center"
+                      v-for="(item, key) in parcelas"
+                      :key="key"
+                    >
+                      <!-- <td><b>{{ parcelas[key].numero }}</b></td> -->
+                      <td class="col-md-1">
+                        <input
+                          type="text"
+                          v-model="parcelas[key].numero"
+                          class="form-control text-center"
+                          disabled="true"
+                        />
+                      </td>
+                      <td class="col-md-2">
+                        <input
+                          type="number"
+                          v-model="parcelas[key].prazo"
+                          class="form-control text-center"
+                          :disabled="!parcelas[key].editing"
+                        />
+                      </td>
+                      <td class="col-md-2">
+                        <input
+                          type="number"
+                          v-model="parcelas[key].porcentagem"
+                          class="form-control text-center"
+                          :disabled="!parcelas[key].editing"
+                        />
+                      </td>
                       <td>
-                        <button
-                          class="btn btn-sm btn me-2"
-                          style="background-color: rgb(212 225 237)"
-                        >
-                          <i class="bx bx-edit-alt"></i>
-                        </button>
-                        <button
-                          class="btn btn-sm btn"
-                          style="background-color: rgb(212 225 237)"
-                        >
-                          <i class="bx bx-trash-alt"></i>
-                        </button>
+                        <b-input-group>
+                          <b-form-input
+                            class="text-center"
+                            id="formapagemento"
+                            type="text"
+                            v-model="parcela.forma_pg"
+                            placeholder="Pesquise uma forma de Pagamento"
+                            disabled
+                          >
+                          </b-form-input>
+                          <b-input-group-append>
+                            <b-button
+                              @click="showSearchformaPagamento()"
+                              text="Button"
+                              variant="dark"
+                              title="Pesquisar Forma de Pagamento"
+                              :disabled="!item.editing"
+                              ><svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                class="bi bi-search"
+                                viewBox="0 0 16 16"
+                              >
+                                <path
+                                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+                                /></svg
+                            ></b-button>
+                          </b-input-group-append>
+                        </b-input-group>
+                      </td>
+                      <td>
+                        <div v-if="!parcelas[key].editing">
+                          <button
+                            @click="toggleEditing(key)"
+                            class="btn btn-sm me-1 mb-1 mt-1"
+                            type="button"
+                            title="EDITAR"
+                            style="background-color: #f0f8ff"
+                          >
+                            <i class="bx bx-edit-alt"></i>
+                          </button>
+                          <button
+                            @click="deleteItem(key)"
+                            class="btn btn-sm me-1 mb-1 mt-1"
+                            type="button"
+                            title="EXCLUIR"
+                            style="background-color: #f0f8ff"
+                          >
+                            <i class="bx bx-trash-alt"></i>
+                          </button>
+                        </div>
+                        <div v-else>
+                          <button
+                            @click="saveChanges(key)"
+                            class="btn btn-sm me-1 mb-1 mt-1"
+                            type="button"
+                            title="EXCLUIR"
+                            style="background-color: #f0f8ff"
+                          >
+                            Salvar
+                          </button>
+                          <button
+                            @click="cancelEditing(key)"
+                            class="btn btn-sm me-1 mb-1 mt-1"
+                            type="button"
+                            title="EXCLUIR"
+                            style="background-color: #f0f8ff"
+                          >
+                            Cancelar
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   </tbody>
@@ -227,7 +313,7 @@
                 <b-form-input
                   id="id"
                   type="text"
-                  placeholder="Id"
+                  placeholder="numeroParcela"
                   :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
                   v-model="parcela.numero"
                   disabled
@@ -404,14 +490,14 @@ export default {
       headerBgVariant: "dark",
       headerTextVariant: "light",
       parcela: {
-        numero: 0,
+        numero: 1,
         prazo: "",
         porcentagem: "",
         idformapg: "",
         forma_pg: "",
       },
       parcelas: [],
-      numParcela:1,
+      numParcela: 1,
     };
   },
   filters: {
@@ -510,16 +596,30 @@ export default {
       }
     },
     openModelParcela() {
+      this.onResetFormaPagamento();
+      this.parcela.numero = this.numParcela;
       this.$bvModal.show(this.modal_form_parcela);
     },
     closePacela() {
       this.$bvModal.hide(this.modal_form_parcela);
     },
     onSubmitParcela() {
-      this.parcela.numero = this.numParcela;
+      var numeroParcela = this.numParcela;
+      var prazoParcela = this.parcela.prazo;
+      var porcentagemParcela = this.parcela.porcentagem;
+      var formaPagamentoParcela = this.parcela.forma_pg;
+      var idformaPagamentoParcela = this.parcela.idformapg;
+      this.parcelas.push({
+        numero: numeroParcela,
+        prazo: prazoParcela,
+        porcentagem: porcentagemParcela,
+        idforma: idformaPagamentoParcela,
+        forma_pg: formaPagamentoParcela,
+        editing: false,
+      });
       this.numParcela = this.numParcela + 1;
-      this.parcelas.push(this.parcela);
       console.log(this.parcelas);
+      this.$bvModal.hide(this.modal_form_parcela);
     },
     showSearchformaPagamento() {
       this.$bvModal.show(this.modal_search_FormaPagamento);
@@ -531,10 +631,42 @@ export default {
       if (obj.column.field === "btn") {
         return;
       }
-      console.log(this.parcela);
       this.parcela.idformapg = obj.row.id;
       this.parcela.forma_pg = obj.row.forma_pg;
       this.$bvModal.hide(this.modal_search_FormaPagamento);
+    },
+    onResetFormaPagamento() {
+      this.parcela.prazo = "";
+      this.parcela.porcentagem = "";
+      this.parcela.forma_pg = "";
+      return;
+    },
+    // toggleEditing(index) {
+    //   console.log(index);
+    //   this.parcelas[index].editing = !this.parcelas[index].editing;
+    // },
+    toggleEditing(index) {
+      this.parcelas[index].editing = !this.parcelas[index].editing;
+    },
+    cancelEditing(index) {
+      this.parcelas[index].editing = false;
+    },
+    saveChanges(index) {
+      console.log(index);
+      this.parcelas[index].editing = false;
+    },
+    deleteItem(index) {
+      this.parcelas.splice(index, 1);
+    },
+    addItem() {
+      this.parcelas.push({
+        id: this.nextId,
+        nome: "",
+        email: "",
+        telefone: "",
+        editing: true,
+      });
+      this.nextId++;
     },
   },
 };

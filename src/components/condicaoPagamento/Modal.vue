@@ -404,10 +404,10 @@ export default {
       headerBgVariant: "dark",
       headerTextVariant: "light",
       parcela: {
-        numero: 0,
-        prazo: 0,
-        porcentagem: 0,
-        idformapg: 0,
+        numero:0,
+        prazo: "",
+        porcentagem:"",
+        idformapg: "",
         forma_pg: "",
       },
       parcelas: [],
@@ -509,13 +509,15 @@ export default {
       }
     },
     openModelParcela() {
+      this.parcela.numero += this.parcela.numero; 
       this.$bvModal.show(this.modal_form_parcela);
     },
     closePacela() {
       this.$bvModal.hide(this.modal_form_parcela);
     },
     onSubmitParcela() {
-      console.log("Parcela enviada");
+      this.parcelas.push(this.parcela);
+      console.log(this.parcelas);
     },
     showSearchformaPagamento() {
       this.$bvModal.show(this.modal_search_FormaPagamento);

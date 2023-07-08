@@ -69,7 +69,11 @@
       </div>
     </b-overlay>
     <br /><br />
-    <Modal :formulario="form_formaPagamento" :funcOnReset="onReset" :funcgetListFormaPagamento ="getListFormaPagamento"></Modal>
+    <Modal
+      :formulario="form_formaPagamento"
+      :funcOnReset="onReset"
+      :funcgetListFormaPagamento="getListFormaPagamento"
+    ></Modal>
   </div>
 </template>
 <script>
@@ -78,6 +82,11 @@ import { VueGoodTable } from "vue-good-table";
 import { ServiceFormaPagamento } from "../../services/serviceFormaPagamento.js";
 export default {
   components: { VueGoodTable, Modal },
+  props: {
+    functionFormaPagamento: {
+      type: Function,
+    },
+  },
   data() {
     return {
       modal_form_formaPagamento: "modal_form_formaPagamento",
@@ -121,8 +130,8 @@ export default {
   },
   methods: {
     selectCellFormaPagamento(params) {
-      if (this.functionEstado) {
-        this.functionEstado(params);
+      if (this.functionFormaPagamento) {
+        this.functionFormaPagamento(params);
       }
     },
     getListFormaPagamento() {

@@ -229,7 +229,7 @@
                   type="text"
                   placeholder="Id"
                   :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
-                  v-model="form.condicaoPagamento"
+                  v-model="parcela.numero"
                   disabled
                 >
                 </b-form-input>
@@ -244,7 +244,7 @@
                   type="text"
                   placeholder="Prazo"
                   :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
-                  v-model="form.condicaoPagamento"
+                  v-model="parcela.prazo"
                   :disabled="form.disabled"
                 >
                 </b-form-input>
@@ -261,7 +261,7 @@
                   type="text"
                   placeholder="%"
                   :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
-                  v-model="form.condicaoPagamento"
+                  v-model="parcela.porcentagem"
                   :disabled="form.disabled"
                 >
                 </b-form-input>
@@ -273,20 +273,22 @@
             <div class="row col-12">
               <div class="col-md-12 mt-2">
                 <label
-                  >Forma de Pagamento:<b style="color: rgb(245, 153, 153)"> *</b></label
+                  >Forma de Pagamento:<b style="color: rgb(245, 153, 153)">
+                    *</b
+                  ></label
                 >
                 <b-input-group>
                   <b-form-input
                     id="cidade"
                     type="text"
-                    v-model="form.cidade"
+                    v-model="parcela.forma_pg"
                     placeholder="Pesquise uma forma de Pagamento"
                     disabled
                   >
                   </b-form-input>
                   <b-input-group-append>
                     <b-button
-                      @click="showSearchCidade()"
+                      @click="showSearchformaPagamento()"
                       text="Button"
                       variant="dark"
                       :disabled="form.disabled"
@@ -331,12 +333,51 @@
         <slot name="rodape"> </slot>
       </b-card>
     </b-modal>
+    <b-modal
+      :id="modal_search_FormaPagamento"
+      size="xl"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+    >
+      <template v-slot:modal-header>
+        <h5>Pesquisar Forma de Pagamento</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="fecharModalSearchFormaPagamento()"
+        >
+          X
+        </b-button>
+      </template>
+      <b-container fluid>
+        <HomeFormaPagamento
+          :functionFormaPagamento="changeSearchFormaPagamento"
+        ></HomeFormaPagamento>
+      </b-container>
+      <b-container
+        class="col-sm-12 col-md-12 mt-3"
+        style="text-align: center"
+        footer
+      >
+        <b-button
+          @click="fecharModalSearchFormaPagamento()"
+          type="button"
+          id=""
+          class="btn btn-dark btn-sm"
+          >Fechar Pesquisa Forma de Pagamento</b-button
+        >
+      </b-container>
+    </b-modal>
   </div>
 </template>
 <script>
 import * as validators from "vuelidate/lib/validators";
 import { validationMessage } from "vuelidate-messages";
 // import { ServiceFormaPagamento } from "../../services/serviceFormaPagamento.js";
+import HomeFormaPagamento from "../formaPagamento/HomeFormaPagamento.vue";
 import { formataDataTempo } from "../../rules/filters";
 const formMessages = {
   required: () => "Campo Obrigatório",
@@ -347,6 +388,7 @@ const formMessages = {
   integer: () => "Campo deve ser um Numero inteiro",
 };
 export default {
+  components: { HomeFormaPagamento },
   props: {
     formulario: { type: Object },
     funcOnReset: { type: Function },
@@ -354,20 +396,21 @@ export default {
   },
   data() {
     return {
+      modal_form_condicaoPagamento: "modal_form_condicaoPagamento",
+      modal_form_parcela: "modal_form_parcela",
+      modal_search_FormaPagamento: "modal_search_FormaPagamento",
+      myclass: "myclass",
       form: this.formulario,
       headerBgVariant: "dark",
       headerTextVariant: "light",
-      modal_form_condicaoPagamento: "modal_form_condicaoPagamento",
-      modal_form_parcela: "modal_form_parcela",
-      myclass: "myclass",
-      parcela:{
+      parcela: {
         numero: 0,
-        prazo:0,
-        porcentagem:0,
-        id_forma_pg:0,
-        forma_pg:""
+        prazo: 0,
+        porcentagem: 0,
+        idformapg: 0,
+        forma_pg: "",
       },
-      parcelas:[]
+      parcelas: [],
     };
   },
   filters: {
@@ -473,6 +516,20 @@ export default {
     },
     onSubmitParcela() {
       console.log("Parcela enviada");
+    },
+    showSearchformaPagamento() {
+      this.$bvModal.show(this.modal_search_FormaPagamento);
+    },
+    fecharModalSearchFormaPagamento() {
+      this.$bvModal.hide(this.modal_search_FormaPagamento);
+    },
+    changeSearchFormaPagamento(obj) {
+      if (obj.column.field === "btn") {
+        return;
+      }
+      this.parcela.idformapg = obj.row.id;
+      this.parcela.forma_pg = obj.row.forma_pg;
+      this.$bvModal.hide(this.modal_search_FormaPagamento);
     },
   },
 };

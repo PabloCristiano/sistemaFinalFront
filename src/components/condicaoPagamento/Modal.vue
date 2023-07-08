@@ -527,6 +527,7 @@ export default {
       if (obj.column.field === "btn") {
         return;
       }
+      console.log(this.parcela);
       this.parcela.idformapg = obj.row.id;
       this.parcela.forma_pg = obj.row.forma_pg;
       this.$bvModal.hide(this.modal_search_FormaPagamento);

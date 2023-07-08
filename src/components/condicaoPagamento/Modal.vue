@@ -411,6 +411,7 @@ export default {
         forma_pg: "",
       },
       parcelas: [],
+      numParcela :0,
     };
   },
   filters: {
@@ -509,7 +510,8 @@ export default {
       }
     },
     openModelParcela() {
-      this.parcela.numero += this.parcela.numero; 
+      this.numParcela = this.numParcela + 1;
+      this.parcela.numero = this.numParcela;
       this.$bvModal.show(this.modal_form_parcela);
     },
     closePacela() {

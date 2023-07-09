@@ -534,6 +534,7 @@ export default {
       key_parcela: "",
       total_porcentagem: 0,
       totalVerifica: 0,
+      verificaSaveParcela: 0,
     };
   },
   filters: {
@@ -728,23 +729,58 @@ export default {
     toggleEditingParcela(index) {
       console.log(index, "editar");
       this.parcelas[index].editing = !this.parcelas[index].editing;
+      console.log(this.parcelas);
     },
     cancelEditingParcela(index) {
       this.parcelas[index].editing = false;
     },
     saveChangesParcela(index) {
       console.log(index, "salvar", this.parcelas);
-      this.parcelas[index].editing = false;
-      console.log();
-      return;
+      this.total_porcentagem = 0;
+      this.verificaSaveParcela = parseFloat(this.parcelas[index].porcentagem);
+      
+      console.log(this.verificaSaveParcela);
+
+      for (var i = 0; i < this.parcelas.length; i++) {
+        this.total_porcentagem =
+          this.total_porcentagem + parseFloat(this.parcelas[i].porcentagem);
+      }
+
+      if (this.total_porcentagem > 100) {
+        notyf_Parcela.error(
+          "Total de Parcelas não podem passar de 100% !"
+        );
+        this.parcelas[index].porcentagem = this.verificaSaveParcela;
+        console.log(this.verificaSaveParcela);
+        this.total_porcentagem = 0;
+        for (var j = 0; j < this.parcelas.length; j++) {
+          this.total_porcentagem =
+            this.total_porcentagem + parseFloat(this.parcelas[j].porcentagem);
+        }
+        this.total_porcentagem =
+            this.total_porcentagem - parseFloat(this.verificaSaveParcela);
+        return;
+      } else {
+        this.total_porcentagem = 0;
+        for (var h = 0; h < this.parcelas.length; h++) {
+          this.total_porcentagem =
+            this.total_porcentagem + parseFloat(this.parcelas[h].porcentagem);
+        }
+        this.parcelas[index].editing = false;
+        return;
+      }
     },
     deleteItemParcela(index) {
       this.parcelas.splice(index, 1);
-      this.total_porcentagem = this.total_porcentagem - this.parcelas[index].porcentagem;
-      this.numParcela = this.numParcela -1;
+      this.total_porcentagem = 0;
+      this.numParcela = this.numParcela - 1;
+
       for (var i = 0; i < this.parcelas.length; i++) {
         this.parcelas[i].numero = i + 1;
+        this.total_porcentagem =
+          this.total_porcentagem + parseFloat(this.parcelas[i].porcentagem);
       }
+      return;
     },
     addItem() {
       this.parcelas.push({

@@ -233,7 +233,7 @@
                   class="btn btn-sm"
                   type="button"
                   variant="dark"
-                  :disabled="total_porcentagem  > 100 ? true : false"
+                  :disabled="total_porcentagem  >= 100 ? true : false"
                   @click.prevent="openModelParcela()"
                 >
                   Adicionar Parcela

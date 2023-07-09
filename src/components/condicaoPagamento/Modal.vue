@@ -499,7 +499,6 @@ export default {
       },
       parcelas: [],
       numParcela:1,
-      obj_array:{},
       key_parcela:""
     };
   },
@@ -641,7 +640,6 @@ export default {
       this.parcela.idformapg = obj.row.id;
       this.parcela.forma_pg = obj.row.forma_pg;
       this.$bvModal.hide(this.modal_search_FormaPagamento);
-      this.obj_array = obj;
       if(this.parcelas[this.key_parcela]){
         console.log('parcela');
         this.parcelas[this.key_parcela].idformapagamento = obj.row.id;

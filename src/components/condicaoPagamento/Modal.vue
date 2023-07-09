@@ -582,6 +582,7 @@ export default {
       //const vm = this;
       if (this.$v.form.$invalid) {
         this.$v.form.$touch();
+        this.$v.$touch();
       } else {
         if (this.form.btn === "Salvar") {
           console.log(this.form);
@@ -738,27 +739,21 @@ export default {
       console.log(index, "salvar", this.parcelas);
       this.total_porcentagem = 0;
       this.verificaSaveParcela = parseFloat(this.parcelas[index].porcentagem);
-      
-      console.log(this.verificaSaveParcela);
-
       for (var i = 0; i < this.parcelas.length; i++) {
         this.total_porcentagem =
           this.total_porcentagem + parseFloat(this.parcelas[i].porcentagem);
       }
 
       if (this.total_porcentagem > 100) {
-        notyf_Parcela.error(
-          "Total de Parcelas não podem passar de 100% !"
-        );
+        notyf_Parcela.error("Total de Parcelas não podem passar de 100% !");
         this.parcelas[index].porcentagem = this.verificaSaveParcela;
-        console.log(this.verificaSaveParcela);
         this.total_porcentagem = 0;
         for (var j = 0; j < this.parcelas.length; j++) {
           this.total_porcentagem =
             this.total_porcentagem + parseFloat(this.parcelas[j].porcentagem);
         }
         this.total_porcentagem =
-            this.total_porcentagem - parseFloat(this.verificaSaveParcela);
+          this.total_porcentagem - parseFloat(this.verificaSaveParcela);
         return;
       } else {
         this.total_porcentagem = 0;

@@ -314,28 +314,24 @@
                   id="id"
                   type="text"
                   placeholder="numeroParcela"
-                  :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
                   v-model="parcela.numero"
                   disabled
                 >
                 </b-form-input>
-                <small style="font-size: 11px; color: red">
-                  {{ validationMsg($v.form.condicaoPagamento) }}
-                </small>
               </div>
               <div class="col-md-4">
                 <label>Prazo:<b style="color: rgb(245, 153, 153)">*</b></label>
                 <b-form-input
-                  id="servico"
-                  type="text"
+                  id="prazo"
+                  type="number"
                   placeholder="Prazo"
-                  :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
+                  :class="{ 'fail-error': $v.parcela.prazo.$error }"
                   v-model="parcela.prazo"
                   :disabled="form.disabled"
                 >
                 </b-form-input>
                 <small style="font-size: 11px; color: red">
-                  {{ validationMsg($v.form.condicaoPagamento) }}
+                  {{ validationMsg($v.parcela.prazo) }}
                 </small>
               </div>
               <div class="col-md-4">
@@ -343,16 +339,16 @@
                   >Porcentagem:<b style="color: rgb(245, 153, 153)">*</b></label
                 >
                 <b-form-input
-                  id="servico"
-                  type="text"
+                  id="porcentagem"
+                  type="number"
                   placeholder="%"
-                  :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
+                  :class="{ 'fail-error': $v.parcela.porcentagem.$error }"
                   v-model="parcela.porcentagem"
                   :disabled="form.disabled"
                 >
                 </b-form-input>
                 <small style="font-size: 11px; color: red">
-                  {{ validationMsg($v.form.condicaoPagamento) }}
+                  {{ validationMsg($v.parcela.porcentagem) }}
                 </small>
               </div>
             </div>
@@ -365,9 +361,10 @@
                 >
                 <b-input-group>
                   <b-form-input
-                    id="cidade"
+                    id="input_formaPagamento"
                     type="text"
                     v-model="parcela.forma_pg"
+                    :class="{ 'fail-error': $v.parcela.forma_pg.$error }"
                     placeholder="Pesquise uma forma de Pagamento"
                     disabled
                   >
@@ -393,6 +390,9 @@
                     ></b-button>
                   </b-input-group-append>
                 </b-input-group>
+                <small style="font-size: 11px; color: red">
+                  {{ validationMsg($v.parcela.forma_pg) }}
+                </small>
               </div>
             </div>
           </b-form>
@@ -463,6 +463,7 @@
 <script>
 import * as validators from "vuelidate/lib/validators";
 import { validationMessage } from "vuelidate-messages";
+import Rules from "../../rules/rules";
 // import { ServiceFormaPagamento } from "../../services/serviceFormaPagamento.js";
 import HomeFormaPagamento from "../formaPagamento/HomeFormaPagamento.vue";
 import { formataDataTempo } from "../../rules/filters";
@@ -473,6 +474,8 @@ const formMessages = {
   txtMaxLen: ({ $params }) =>
     `Campo maximo ${$params.txtMaxLen.max} characters.`,
   integer: () => "Campo deve ser um Numero inteiro",
+  txtNumeroPositivo: () => "Campo deve ser Positivo/Maior que zero.",
+  maxValue:()=> "Campo deve ser menor ou máx 100"
 };
 export default {
   components: { HomeFormaPagamento },
@@ -492,14 +495,14 @@ export default {
       headerTextVariant: "light",
       parcela: {
         numero: 1,
-        prazo: "",
-        porcentagem: "",
-        idformapg: "",
+        prazo: 0,
+        porcentagem: 0,
+        idformapg: 0,
         forma_pg: "",
       },
       parcelas: [],
-      numParcela:1,
-      key_parcela:""
+      numParcela: 1,
+      key_parcela: "",
     };
   },
   filters: {
@@ -512,6 +515,22 @@ export default {
         txtMinLen: validators.minLength(3),
       },
     },
+    parcela: {
+      prazo: {
+        required: validators.required,
+        integer: validators.integer,
+        txtNumeroPositivo: Rules.isPositiveNumber,
+      },
+      porcentagem: {
+        required: validators.required,
+        decimal: validators.decimal,
+        maxValue: validators.maxValue(100),
+        txtNumeroPositivo: Rules.isPositiveNumber,
+      },
+      forma_pg: {
+        required: validators.required,
+      },
+    },
   },
   methods: {
     validationMsg: validationMessage(formMessages),
@@ -519,7 +538,8 @@ export default {
       this.funcgetListCondicaoPagamento();
     },
     onReset() {
-      this.$v.$reset();
+      this.$v.form.$reset();
+      this.$v.parcela.$reset();
       this.funcOnReset();
     },
     closeCondicaoPagamento() {
@@ -528,8 +548,8 @@ export default {
     },
     onSubmit() {
       //const vm = this;
-      if (this.$v.$invalid) {
-        this.$v.$touch();
+      if (this.$v.form.$invalid) {
+        this.$v.form.$touch();
       } else {
         if (this.form.btn === "Salvar") {
           console.log(this.form);
@@ -603,31 +623,36 @@ export default {
       this.$bvModal.show(this.modal_form_parcela);
     },
     closePacela() {
+      this.$v.parcela.$reset();
       this.$bvModal.hide(this.modal_form_parcela);
     },
     onSubmitParcela() {
-      var numeroParcela = this.numParcela;
-      var prazoParcela = this.parcela.prazo;
-      var porcentagemParcela = this.parcela.porcentagem;
-      var formaPagamentoParcela = this.parcela.forma_pg;
-      var idformaPagamentoParcela = this.parcela.idformapg;
-      this.parcelas.push({
-        numero: numeroParcela,
-        prazo: prazoParcela,
-        porcentagem: porcentagemParcela,
-        idformapagamento: idformaPagamentoParcela,
-        forma_pg: formaPagamentoParcela,
-        editing: false,
-      });
-      this.numParcela++;
-      console.log(this.parcelas);
-      this.$bvModal.hide(this.modal_form_parcela);
+      if (this.$v.parcela.$invalid) {
+        this.$v.parcela.$touch();
+      } else {
+        var numeroParcela = this.numParcela;
+        var prazoParcela = parseFloat(this.parcela.prazo);
+        var porcentagemParcela = parseFloat(this.parcela.porcentagem);
+        var formaPagamentoParcela = this.parcela.forma_pg;
+        var idformaPagamentoParcela = this.parcela.idformapg;
+        this.parcelas.push({
+          numero: numeroParcela,
+          prazo: prazoParcela,
+          porcentagem: parseFloat(porcentagemParcela.toFixed(2)),
+          idformapagamento: idformaPagamentoParcela,
+          forma_pg: formaPagamentoParcela,
+          editing: false,
+        });
+        this.numParcela++;
+        console.log(this.parcelas);
+        this.$bvModal.hide(this.modal_form_parcela);
+      }
     },
     showSearchformaPagamento() {
       this.$bvModal.show(this.modal_search_FormaPagamento);
     },
-    showSearchformaPagamento_parcela(key){
-      this.key_parcela = key
+    showSearchformaPagamento_parcela(key) {
+      this.key_parcela = key;
       this.$bvModal.show(this.modal_search_FormaPagamento);
     },
     fecharModalSearchFormaPagamento() {
@@ -640,8 +665,8 @@ export default {
       this.parcela.idformapg = obj.row.id;
       this.parcela.forma_pg = obj.row.forma_pg;
       this.$bvModal.hide(this.modal_search_FormaPagamento);
-      if(this.parcelas[this.key_parcela]){
-        console.log('parcela');
+      if (this.parcelas[this.key_parcela]) {
+        console.log("parcela");
         this.parcelas[this.key_parcela].idformapagamento = obj.row.id;
         this.parcelas[this.key_parcela].forma_pg = obj.row.forma_pg;
         return;
@@ -649,27 +674,28 @@ export default {
       return;
     },
     onResetFormaPagamento() {
+      this.$v.parcela.$reset();
       this.parcela.prazo = "";
       this.parcela.porcentagem = "";
       this.parcela.forma_pg = "";
       return;
     },
     toggleEditing(index) {
-      console.log(index, 'editar');
+      console.log(index, "editar");
       this.parcelas[index].editing = !this.parcelas[index].editing;
     },
     cancelEditing(index) {
       this.parcelas[index].editing = false;
     },
     saveChanges(index) {
-      console.log(index, 'salvar');
+      console.log(index, "salvar");
       this.parcelas[index].editing = false;
-      console.log( this.parcelas);
+      console.log(this.parcelas);
       return;
     },
     deleteItem(index) {
       this.parcelas.splice(index, 1);
-      console.log(index, 'delete');
+      console.log(index, "delete");
     },
     addItem() {
       this.parcelas.push({

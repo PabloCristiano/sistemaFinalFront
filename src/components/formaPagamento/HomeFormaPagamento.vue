@@ -86,6 +86,9 @@ export default {
     functionFormaPagamento: {
       type: Function,
     },
+    functionFormaPagamento_parcela:{
+      type: Function,
+    }
   },
   data() {
     return {

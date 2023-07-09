@@ -153,14 +153,14 @@
                             class="text-center"
                             id="formapagemento"
                             type="text"
-                            v-model="parcela.forma_pg"
+                            v-model="parcelas[key].forma_pg"
                             placeholder="Pesquise uma forma de Pagamento"
                             disabled
                           >
                           </b-form-input>
                           <b-input-group-append>
                             <b-button
-                              @click="showSearchformaPagamento()"
+                              @click="showSearchformaPagamento_parcela(key)"
                               text="Button"
                               variant="dark"
                               title="Pesquisar Forma de Pagamento"
@@ -187,7 +187,7 @@
                             class="btn btn-sm me-1 mb-1 mt-1"
                             type="button"
                             title="EDITAR"
-                            style="background-color: #f0f8ff"
+                            style="background-color: rgb(254 255 7 / 56%)"
                           >
                             <i class="bx bx-edit-alt"></i>
                           </button>
@@ -196,7 +196,7 @@
                             class="btn btn-sm me-1 mb-1 mt-1"
                             type="button"
                             title="EXCLUIR"
-                            style="background-color: #f0f8ff"
+                            style="background-color: rgb(235 32 63 / 65%)"
                           >
                             <i class="bx bx-trash-alt"></i>
                           </button>
@@ -206,19 +206,19 @@
                             @click="saveChanges(key)"
                             class="btn btn-sm me-1 mb-1 mt-1"
                             type="button"
-                            title="EXCLUIR"
-                            style="background-color: #f0f8ff"
+                            title="Salvar"
+                            style="background-color: #28a74563"
                           >
-                            Salvar
+                            <i class="bx bx-check"></i>
                           </button>
                           <button
-                            @click="cancelEditing(key)"
+                            @click="deleteItem(key)"
                             class="btn btn-sm me-1 mb-1 mt-1"
                             type="button"
                             title="EXCLUIR"
-                            style="background-color: #f0f8ff"
+                            style="background-color: rgb(235 32 63 / 65%)"
                           >
-                            Cancelar
+                            <i class="bx bx-trash-alt"></i>
                           </button>
                         </div>
                       </td>
@@ -281,7 +281,7 @@
         </slot>
       </b-card>
     </b-modal>
-
+    <!-- Modal Parcela -->
     <b-modal
       :id="modal_form_parcela"
       size="lg"
@@ -378,7 +378,7 @@
                       text="Button"
                       variant="dark"
                       :disabled="form.disabled"
-                      title="Pesquisar Cidade"
+                      title="Pesquisar Forma de Pagamento"
                       ><svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -419,6 +419,7 @@
         <slot name="rodape"> </slot>
       </b-card>
     </b-modal>
+    <!-- modal Forma de Pagamento -->
     <b-modal
       :id="modal_search_FormaPagamento"
       size="xl"
@@ -497,7 +498,9 @@ export default {
         forma_pg: "",
       },
       parcelas: [],
-      numParcela: 1,
+      numParcela:1,
+      obj_array:{},
+      key_parcela:""
     };
   },
   filters: {
@@ -613,15 +616,19 @@ export default {
         numero: numeroParcela,
         prazo: prazoParcela,
         porcentagem: porcentagemParcela,
-        idforma: idformaPagamentoParcela,
+        idformapagamento: idformaPagamentoParcela,
         forma_pg: formaPagamentoParcela,
         editing: false,
       });
-      this.numParcela = this.numParcela + 1;
+      this.numParcela++;
       console.log(this.parcelas);
       this.$bvModal.hide(this.modal_form_parcela);
     },
     showSearchformaPagamento() {
+      this.$bvModal.show(this.modal_search_FormaPagamento);
+    },
+    showSearchformaPagamento_parcela(key){
+      this.key_parcela = key
       this.$bvModal.show(this.modal_search_FormaPagamento);
     },
     fecharModalSearchFormaPagamento() {
@@ -634,6 +641,14 @@ export default {
       this.parcela.idformapg = obj.row.id;
       this.parcela.forma_pg = obj.row.forma_pg;
       this.$bvModal.hide(this.modal_search_FormaPagamento);
+      this.obj_array = obj;
+      if(this.parcelas[this.key_parcela]){
+        console.log('parcela');
+        this.parcelas[this.key_parcela].idformapagamento = obj.row.id;
+        this.parcelas[this.key_parcela].forma_pg = obj.row.forma_pg;
+        return;
+      }
+      return;
     },
     onResetFormaPagamento() {
       this.parcela.prazo = "";
@@ -641,22 +656,22 @@ export default {
       this.parcela.forma_pg = "";
       return;
     },
-    // toggleEditing(index) {
-    //   console.log(index);
-    //   this.parcelas[index].editing = !this.parcelas[index].editing;
-    // },
     toggleEditing(index) {
+      console.log(index, 'editar');
       this.parcelas[index].editing = !this.parcelas[index].editing;
     },
     cancelEditing(index) {
       this.parcelas[index].editing = false;
     },
     saveChanges(index) {
-      console.log(index);
+      console.log(index, 'salvar');
       this.parcelas[index].editing = false;
+      console.log( this.parcelas);
+      return;
     },
     deleteItem(index) {
       this.parcelas.splice(index, 1);
+      console.log(index, 'delete');
     },
     addItem() {
       this.parcelas.push({

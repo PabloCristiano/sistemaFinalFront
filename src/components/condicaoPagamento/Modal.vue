@@ -52,7 +52,7 @@
                   :disabled="form.disabled"
                 >
                 </b-form-input>
-                <small style="font-size: 11px; color: red">
+                <small style="font-size: 11px; color: rgb(228 96 96)">
                   {{ validationMsg($v.form.condicaoPagamento) }}
                 </small>
               </div>
@@ -330,7 +330,7 @@
                   :disabled="form.disabled"
                 >
                 </b-form-input>
-                <small style="font-size: 11px; color: red">
+                <small style="font-size: 11px; color: rgb(228 96 96)">
                   {{ validationMsg($v.parcela.prazo) }}
                 </small>
               </div>
@@ -347,7 +347,7 @@
                   :disabled="form.disabled"
                 >
                 </b-form-input>
-                <small style="font-size: 11px; color: red">
+                <small style="font-size: 11px; color: rgb(228 96 96)">
                   {{ validationMsg($v.parcela.porcentagem) }}
                 </small>
               </div>
@@ -390,7 +390,7 @@
                     ></b-button>
                   </b-input-group-append>
                 </b-input-group>
-                <small style="font-size: 11px; color: red">
+                <small style="font-size: 11px; color: rgb(228 96 96)">
                   {{ validationMsg($v.parcela.forma_pg) }}
                 </small>
               </div>
@@ -712,7 +712,7 @@ export default {
 </script>
 <style>
 .fail-error {
-  border: 1px solid red;
+  border: 2px solid #e46060bb !important;
 }
 .tableTr {
   font-family: monospace;

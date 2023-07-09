@@ -142,7 +142,7 @@ export default {
   props: {
     formulario: { type: Object },
     funcOnReset: { type: Function },
-    funcgetListFormaPagamento:{type: Function}
+    funcgetListFormaPagamento: { type: Function },
   },
   data() {
     return {
@@ -165,7 +165,7 @@ export default {
   },
   methods: {
     validationMsg: validationMessage(formMessages),
-    function_getListFormaPagamento(){
+    function_getListFormaPagamento() {
       this.funcgetListFormaPagamento();
     },
     onReset() {
@@ -227,22 +227,21 @@ export default {
         }
         if (this.form.btn === "Excluir") {
           ServiceFormaPagamento.excluirFormaPagamento(this.form.id)
-           .then((obj) => {
-           
-             if (obj.status === 200) {
-               notyf.success(obj.data.success);
-               this.onReset();
-               this.$bvModal.hide(this.modal_form_formaPagamento);
-               this.function_getListFormaPagamento();
-             } else {
-               if (obj.response.data.erro.length > 0) {
-                 notyf.error(obj.response.data.erro[0]);
-               }
-             }
-           })
-           .catch((error) => {
-             console.log(error);
-           });
+            .then((obj) => {
+              if (obj.status === 200) {
+                notyf.success(obj.data.success);
+                this.onReset();
+                this.$bvModal.hide(this.modal_form_formaPagamento);
+                this.function_getListFormaPagamento();
+              } else {
+                if (obj.response.data.erro.length > 0) {
+                  notyf.error(obj.response.data.erro[0]);
+                }
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
       }
     },
@@ -251,6 +250,6 @@ export default {
 </script>
 <style>
 .fail-error {
-  border: 1px solid red;
+  border: 2px solid #e46060bb;
 }
 </style>

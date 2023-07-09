@@ -313,7 +313,7 @@ export default {
 </script>
 <style>
 .fail-error {
-    border: 1px solid red;
+    border: 2px solid #e46060bb;
 }
 </style>
   

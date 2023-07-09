@@ -122,7 +122,6 @@
                       v-for="(item, key) in parcelas"
                       :key="key"
                     >
-                      <!-- <td><b>{{ parcelas[key].numero }}</b></td> -->
                       <td class="col-md-1">
                         <input
                           type="text"
@@ -233,17 +232,16 @@
                   class="btn btn-sm"
                   type="button"
                   variant="dark"
-                  :disabled="total_porcentagem  >= 100 ? true : false"
+                  :disabled="total_porcentagem >= 100 ? true : false"
                   @click.prevent="openModelParcela()"
                 >
                   Adicionar Parcela
                 </b-button>
               </div>
             </div>
-            <div>
-              <small class="mt-2" style="font-size: 12px"
-                >Campos com <b style="color: rgb(245, 153, 153)">*</b> são
-                obrigatórios !</small
+            <div class="row col-12 mb-3 text-end">
+              <small class="mt-2" style="font-size: 10px"
+                ><b>Total Porcentagem: {{ total_porcentagem }}%</b></small
               >
             </div>
           </b-form>
@@ -269,6 +267,12 @@
           </div>
         </slot>
         <slot name="rodape">
+          <div>
+            <small class="" style="font-size: 10px"
+              >Campos com <b style="color: rgb(245, 153, 153)">*</b> são
+              obrigatórios !</small
+            >
+          </div>
           <div class="col-12">
             <small class="col-6 me-1" style="font-size: 11px"
               ><b>Data Criação:</b>
@@ -529,7 +533,7 @@ export default {
       numParcela: 1,
       key_parcela: "",
       total_porcentagem: 0,
-      totalVerifica:0
+      totalVerifica: 0,
     };
   },
   filters: {
@@ -657,10 +661,12 @@ export default {
       if (this.$v.parcela.$invalid) {
         this.$v.parcela.$touch();
       } else {
-         this.totalVerifica = 0;
-         this.totalVerifica = this.total_porcentagem  + parseFloat(this.parcela.porcentagem);
+        this.totalVerifica = 0;
+        this.totalVerifica =
+          this.total_porcentagem + parseFloat(this.parcela.porcentagem);
         if (this.totalVerifica <= 100) {
-          this.total_porcentagem = this.total_porcentagem + parseFloat(this.parcela.porcentagem);
+          this.total_porcentagem =
+            this.total_porcentagem + parseFloat(this.parcela.porcentagem);
           var numeroParcela = this.numParcela;
           var prazoParcela = parseFloat(this.parcela.prazo);
           var porcentagemParcela = parseFloat(this.parcela.porcentagem);
@@ -678,8 +684,12 @@ export default {
           console.log(this.parcelas);
           this.$bvModal.hide(this.modal_form_parcela);
         } else {
-          var msg = 100 - this.total_porcentagem 
-          notyf_Parcela.error("Total de Parcelas não podem passar de 100% !  Disponivel: " + msg + "%");
+          var msg = 100 - this.total_porcentagem;
+          notyf_Parcela.error(
+            "Total de Parcelas não podem passar de 100% !  Disponivel: " +
+              msg +
+              "%"
+          );
         }
       }
     },
@@ -730,7 +740,11 @@ export default {
     },
     deleteItemParcela(index) {
       this.parcelas.splice(index, 1);
-      console.log(index, "delete");
+      this.total_porcentagem = this.total_porcentagem - this.parcelas[index].porcentagem;
+      this.numParcela = this.numParcela -1;
+      for (var i = 0; i < this.parcelas.length; i++) {
+        this.parcelas[i].numero = i + 1;
+      }
     },
     addItem() {
       this.parcelas.push({

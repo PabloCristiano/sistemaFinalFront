@@ -183,7 +183,7 @@
                       <td>
                         <div v-if="!parcelas[key].editing">
                           <button
-                            @click="toggleEditing(key)"
+                            @click="toggleEditingParcela(key)"
                             class="btn btn-sm me-1 mb-1 mt-1"
                             type="button"
                             title="EDITAR"
@@ -192,7 +192,7 @@
                             <i class="bx bx-edit-alt"></i>
                           </button>
                           <button
-                            @click="deleteItem(key)"
+                            @click="deleteItemParcela(key)"
                             class="btn btn-sm me-1 mb-1 mt-1"
                             type="button"
                             title="EXCLUIR"
@@ -203,7 +203,7 @@
                         </div>
                         <div v-else>
                           <button
-                            @click="saveChanges(key)"
+                            @click="saveChangesParcela(key)"
                             class="btn btn-sm me-1 mb-1 mt-1"
                             type="button"
                             title="Salvar"
@@ -212,7 +212,7 @@
                             <i class="bx bx-check"></i>
                           </button>
                           <button
-                            @click="deleteItem(key)"
+                            @click="deleteItemParcela(key)"
                             class="btn btn-sm me-1 mb-1 mt-1"
                             type="button"
                             title="EXCLUIR"
@@ -233,6 +233,7 @@
                   class="btn btn-sm"
                   type="button"
                   variant="dark"
+                  :disabled="total_porcentagem  > 100 ? true : false"
                   @click.prevent="openModelParcela()"
                 >
                   Adicionar Parcela
@@ -467,6 +468,7 @@ import Rules from "../../rules/rules";
 // import { ServiceFormaPagamento } from "../../services/serviceFormaPagamento.js";
 import HomeFormaPagamento from "../formaPagamento/HomeFormaPagamento.vue";
 import { formataDataTempo } from "../../rules/filters";
+import { Notyf } from "notyf";
 const formMessages = {
   required: () => "Campo Obrigatório",
   txtMinLen: ({ $params }) =>
@@ -475,8 +477,31 @@ const formMessages = {
     `Campo maximo ${$params.txtMaxLen.max} characters.`,
   integer: () => "Campo deve ser um Numero inteiro",
   txtNumeroPositivo: () => "Campo deve ser Positivo/Maior que zero.",
-  maxValue:()=> "Campo deve ser menor ou máx 100"
+  maxValue: () => "Campo deve ser menor ou máx 100",
 };
+const notyf_Parcela = new Notyf({
+  position: {
+    x: "center",
+    y: "top",
+  },
+  types: [
+    {
+      type: "warning",
+      background: "orange",
+      icon: {
+        className: "material-icons",
+        tagName: "i",
+        text: "warning",
+      },
+    },
+    {
+      type: "error",
+      background: "indianred",
+      duration: 5000,
+      dismissible: true,
+    },
+  ],
+});
 export default {
   components: { HomeFormaPagamento },
   props: {
@@ -503,6 +528,8 @@ export default {
       parcelas: [],
       numParcela: 1,
       key_parcela: "",
+      total_porcentagem: 0,
+      totalVerifica:0
     };
   },
   filters: {
@@ -630,22 +657,30 @@ export default {
       if (this.$v.parcela.$invalid) {
         this.$v.parcela.$touch();
       } else {
-        var numeroParcela = this.numParcela;
-        var prazoParcela = parseFloat(this.parcela.prazo);
-        var porcentagemParcela = parseFloat(this.parcela.porcentagem);
-        var formaPagamentoParcela = this.parcela.forma_pg;
-        var idformaPagamentoParcela = this.parcela.idformapg;
-        this.parcelas.push({
-          numero: numeroParcela,
-          prazo: prazoParcela,
-          porcentagem: parseFloat(porcentagemParcela.toFixed(2)),
-          idformapagamento: idformaPagamentoParcela,
-          forma_pg: formaPagamentoParcela,
-          editing: false,
-        });
-        this.numParcela++;
-        console.log(this.parcelas);
-        this.$bvModal.hide(this.modal_form_parcela);
+         this.totalVerifica = 0;
+         this.totalVerifica = this.total_porcentagem  + parseFloat(this.parcela.porcentagem);
+        if (this.totalVerifica <= 100) {
+          this.total_porcentagem = this.total_porcentagem + parseFloat(this.parcela.porcentagem);
+          var numeroParcela = this.numParcela;
+          var prazoParcela = parseFloat(this.parcela.prazo);
+          var porcentagemParcela = parseFloat(this.parcela.porcentagem);
+          var formaPagamentoParcela = this.parcela.forma_pg;
+          var idformaPagamentoParcela = this.parcela.idformapg;
+          this.parcelas.push({
+            numero: numeroParcela,
+            prazo: prazoParcela,
+            porcentagem: porcentagemParcela,
+            idformapagamento: idformaPagamentoParcela,
+            forma_pg: formaPagamentoParcela,
+            editing: false,
+          });
+          this.numParcela++;
+          console.log(this.parcelas);
+          this.$bvModal.hide(this.modal_form_parcela);
+        } else {
+          var msg = 100 - this.total_porcentagem 
+          notyf_Parcela.error("Total de Parcelas não podem passar de 100% !  Disponivel: " + msg + "%");
+        }
       }
     },
     showSearchformaPagamento() {
@@ -680,20 +715,20 @@ export default {
       this.parcela.forma_pg = "";
       return;
     },
-    toggleEditing(index) {
+    toggleEditingParcela(index) {
       console.log(index, "editar");
       this.parcelas[index].editing = !this.parcelas[index].editing;
     },
-    cancelEditing(index) {
+    cancelEditingParcela(index) {
       this.parcelas[index].editing = false;
     },
-    saveChanges(index) {
-      console.log(index, "salvar");
+    saveChangesParcela(index) {
+      console.log(index, "salvar", this.parcelas);
       this.parcelas[index].editing = false;
-      console.log(this.parcelas);
+      console.log();
       return;
     },
-    deleteItem(index) {
+    deleteItemParcela(index) {
       this.parcelas.splice(index, 1);
       console.log(index, "delete");
     },

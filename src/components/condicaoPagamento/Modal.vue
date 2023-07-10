@@ -59,7 +59,7 @@
             </div>
             <div class="row col-12 mt-2">
               <div class="col-md-4">
-                <label>Juros:</label>
+                <label>Juros:<b style="color: rgb(245, 153, 153)"> *</b></label>
                 <b-input-group append="%">
                   <b-form-input
                     id="juros"
@@ -77,7 +77,7 @@
                 </small>
               </div>
               <div class="col-md-4">
-                <label>Multa:</label>
+                <label>Multa:<b style="color: rgb(245, 153, 153)"> *</b></label>
                 <b-input-group append="%">
                   <b-form-input
                     id="limiteCredito"
@@ -95,7 +95,9 @@
                 </small>
               </div>
               <div class="col-md-4">
-                <label>Desconto:</label>
+                <label
+                  >Desconto:<b style="color: rgb(245, 153, 153)"> *</b></label
+                >
                 <b-input-group append="%">
                   <b-form-input
                     id="desconto"
@@ -677,7 +679,8 @@ export default {
         this.$v.$touch();
       } else {
         if (this.form.btn === "Salvar") {
-          console.log(this.form);
+          var formData = this.createFormData(this.form,this.parcelas);
+          console.log(formData);
           alert("Condição de Pagamento enviadooo");
           //   ServiceFormaPagamento.storeFormaPagamento(this.form)
           //     .then((response) => {
@@ -919,6 +922,20 @@ export default {
       this.validationParcela.TotalValorPecent = this.total_porcentagem;
       return;
     },
+    createFormData(form,parcela){
+      const formData = {
+        id: form.id,
+        condicaoPagamento: form.condicaoPagamento,
+        juros: form.juros,
+        multa: form.multa,
+        desconto: form.desconto,
+        data_create: form.data_create,
+        data_alt: form.data_alt,
+        totalPorcentagem: form.totalPorcentagem,
+        parcelas: parcela
+      }
+      return formData;
+    }
   },
 };
 </script>

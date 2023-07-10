@@ -131,7 +131,7 @@
                   <tbody>
                     <tr
                       class="tableTr text-center"
-                      :class="{ disabledTeste: !parcelas[key].desativar }"
+                      :class="{ disabled: !parcelas[key].desativar }"
                       v-for="(item, key) in parcelas"
                       :key="key"
                     >
@@ -164,7 +164,7 @@
                           v-model="parcelas[key].porcentagem"
                           class="form-control text-center"
                           :class="{
-                            'fail-error': parcelas[key].mgsPorcentagem
+                            'fail-error': parcelas[key].mgsPorcentagem,
                           }"
                           :disabled="!parcelas[key].editing"
                         />
@@ -295,6 +295,7 @@
             </b-button>
             <b-button
               class="btn btn-sm me-1"
+              :class="{ disabled: buttonLock }"
               type="button"
               variant="dark"
               @click.prevent="onSubmit()"
@@ -523,12 +524,12 @@ const formMessages = {
   maxValue: () => "Campo máx 100",
   maxValuePorcentagem: () => "Porcentagem máx 100%",
   minValuePorcentagem: () => "Parcela(s) deve conter total de 100%",
-  maxValuePercent: () => "Excedeu 100% da(s) parcelas"
+  maxValuePercent: () => "Excedeu 100% da(s) parcelas",
 };
 const notyf_Parcela = new Notyf({
   position: {
     x: "center",
-    y: "top"
+    y: "top",
   },
   types: [
     {
@@ -537,23 +538,23 @@ const notyf_Parcela = new Notyf({
       icon: {
         className: "material-icons",
         tagName: "i",
-        text: "warning"
-      }
+        text: "warning",
+      },
     },
     {
       type: "error",
       background: "indianred",
       duration: 5000,
-      dismissible: true
-    }
-  ]
+      dismissible: true,
+    },
+  ],
 });
 export default {
   components: { HomeFormaPagamento },
   props: {
     formulario: { type: Object },
     funcOnReset: { type: Function },
-    funcgetListCondicaoPagamento: { type: Function }
+    funcgetListCondicaoPagamento: { type: Function },
   },
   data() {
     return {
@@ -569,7 +570,7 @@ export default {
         prazo: 0,
         porcentagem: 0,
         idformapg: 0,
-        forma_pg: ""
+        forma_pg: "",
       },
       parcelas: [],
       validationParcela: {
@@ -577,79 +578,80 @@ export default {
         porcentagem: 0,
         idformapg: 0,
         forma_pg: "",
-        TotalValorPecent: 0
+        TotalValorPecent: 0,
       },
       numParcela: 1,
       key_parcela: "",
       total_porcentagem: 0,
       totalVerifica: 0,
-      verificaSaveParcela: 0
+      verificaSaveParcela: 0,
+      buttonLock: false,
     };
   },
   filters: {
-    formataDataTempo
+    formataDataTempo,
   },
   validations: {
     form: {
       condicaoPagamento: {
         required: validators.required,
-        txtMinLen: validators.minLength(3)
+        txtMinLen: validators.minLength(3),
       },
       juros: {
         required: validators.required,
         decimal: validators.decimal,
-        txtNumeroisPositivo: Rules.isNumber
+        txtNumeroisPositivo: Rules.isNumber,
       },
       multa: {
         required: validators.required,
         decimal: validators.decimal,
-        txtNumeroisPositivo: Rules.isNumber
+        txtNumeroisPositivo: Rules.isNumber,
       },
       desconto: {
         required: validators.required,
         decimal: validators.decimal,
-        txtNumeroisPositivo: Rules.isNumber
+        txtNumeroisPositivo: Rules.isNumber,
       },
       totalPorcentagem: {
         required_Parcela: validators.required,
         decimal: validators.decimal,
         maxValuePorcentagem: validators.maxValue(100),
         minValuePorcentagem: validators.minValue(100),
-        txtNumeroisPositivo: Rules.isNumber
-      }
+        txtNumeroisPositivo: Rules.isNumber,
+      },
     },
     parcela: {
       prazo: {
         required: validators.required,
         integer: validators.integer,
-        txtNumeroPositivo: Rules.isPositiveNumber
+        txtNumeroPositivo: Rules.isPositiveNumber,
       },
       porcentagem: {
         required: validators.required,
         decimal: validators.decimal,
         maxValue: validators.maxValue(100),
-        txtNumeroPositivo: Rules.isPositiveNumber
+        txtNumeroPositivo: Rules.isPositiveNumber,
       },
       forma_pg: {
-        required: validators.required
-      }
+        required: validators.required,
+      },
     },
     validationParcela: {
       prazo: {
         required: validators.required,
         integer: validators.integer,
-        txtNumeroPositivo: Rules.isPositiveNumber
+        txtNumeroPositivo: Rules.isPositiveNumber,
       },
       porcentagem: {
         required: validators.required,
         decimal: validators.decimal,
         maxValue: validators.maxValue(100),
-        txtNumeroPositivo: Rules.isPositiveNumber
+        txtNumeroPositivo: Rules.isPositiveNumber,
       },
       TotalValorPecent: {
-        maxValuePercent: validators.maxValue(100)
-      }
-    }
+        maxValuePercent: validators.maxValue(100),
+      },
+    },
   },
   methods: {
     validationMsg: validationMessage(formMessages),
@@ -774,7 +776,7 @@ export default {
             editing: false,
             mgsPrazo: false,
             mgsPorcentagem: false,
-            desativar: true
+            desativar: true,
           });
           this.numParcela++;
           console.log(this.parcelas);
@@ -822,6 +824,7 @@ export default {
     },
     toggleEditingParcela(index) {
       this.parcelas[index].editing = !this.parcelas[index].editing;
+      this.buttonLock = true;
       //desativar linhas na tabela
       this.parcelas.forEach((row, rowIndex) => {
         row.desativar = rowIndex === index; // Ativa ou desativa a linha clicada
@@ -880,6 +883,7 @@ export default {
         this.parcelas.forEach((row) => {
           row.desativar = true;
         });
+        this.buttonLock = false;
       }
     },
     deleteItemParcela(index) {
@@ -896,6 +900,7 @@ export default {
       this.parcelas.forEach((row) => {
         row.desativar = true;
       });
+      this.buttonLock = false;
       return;
     },
     addItem() {
@@ -904,7 +909,7 @@ export default {
         nome: "",
         email: "",
         telefone: "",
-        editing: true
+        editing: true,
       });
       this.nextId++;
     },
@@ -913,8 +918,8 @@ export default {
       this.validationParcela.porcentagem = this.parcelas[index].porcentagem;
       this.validationParcela.TotalValorPecent = this.total_porcentagem;
       return;
-    }
-  }
+    },
+  },
 };
 </script>
 <style>
@@ -933,7 +938,7 @@ export default {
 /* .myclass > .modal-dialog > .modal-content {
   background-color: red !important;
 } */
-.disabledTeste {
+.disabled {
   pointer-events: none; /* Impede interações com elementos filhos */
   opacity: 0.5; /* Opacidade reduzida para indicar desabilitação */
 }

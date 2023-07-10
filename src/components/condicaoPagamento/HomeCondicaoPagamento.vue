@@ -188,6 +188,10 @@ export default {
     onReset() {
       this.form_CondicaoPagamento.id = "";
       this.form_CondicaoPagamento.condicaoPagamento = "";
+      this.form_CondicaoPagamento.juros = "";
+      this.form_CondicaoPagamento.multa = "";
+      this.form_CondicaoPagamento.desconto = "";
+      this.form_CondicaoPagamento.totalPorcentagem = "";
       this.form_CondicaoPagamento.data_create = "";
       this.form_CondicaoPagamento.data_alt = "";
       this.form_CondicaoPagamento.disabled = false;

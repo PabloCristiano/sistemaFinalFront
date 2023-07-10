@@ -62,43 +62,55 @@
                 <label>Juros:</label>
                 <b-input-group append="%">
                   <b-form-input
-                    id="limiteCredito"
-                    type="text"
-                    v-model="form.limiteCredito"
+                    id="juros"
+                    type="number"
+                    v-model="form.juros"
+                    :class="{ 'fail-error': $v.form.juros.$error }"
                     placeholder="0,00"
                     :title="form.limiteCredito"
                     :disabled="form.disabled"
                   >
                   </b-form-input>
                 </b-input-group>
+                <small style="font-size: 11px; color: rgb(228 96 96)">
+                  {{ validationMsg($v.form.juros) }}
+                </small>
               </div>
               <div class="col-md-4">
                 <label>Multa:</label>
                 <b-input-group append="%">
                   <b-form-input
                     id="limiteCredito"
-                    type="text"
-                    v-model="form.limiteCredito"
+                    type="number"
+                    v-model="form.multa"
+                    :class="{ 'fail-error': $v.form.multa.$error }"
                     placeholder="0,00"
-                    :title="form.limiteCredito"
+                    :title="form.multa"
                     :disabled="form.disabled"
                   >
                   </b-form-input>
                 </b-input-group>
+                <small style="font-size: 11px; color: rgb(228 96 96)">
+                  {{ validationMsg($v.form.multa) }}
+                </small>
               </div>
               <div class="col-md-4">
                 <label>Desconto:</label>
                 <b-input-group append="%">
                   <b-form-input
-                    id="limiteCredito"
-                    type="text"
-                    v-model="form.limiteCredito"
+                    id="desconto"
+                    type="number"
+                    v-model="form.desconto"
+                    :class="{ 'fail-error': $v.form.desconto.$error }"
                     placeholder="0,00"
-                    :title="form.limiteCredito"
+                    :title="form.desconto"
                     :disabled="form.disabled"
                   >
                   </b-form-input>
                 </b-input-group>
+                <small style="font-size: 11px; color: rgb(228 96 96)">
+                  {{ validationMsg($v.form.desconto) }}
+                </small>
               </div>
             </div>
             <div class="row col-12 mt-02" style="margin-top: 20px" v-if="true">
@@ -243,6 +255,11 @@
               <small class="mt-2" style="font-size: 10px"
                 ><b>Total Porcentagem: {{ total_porcentagem }}%</b></small
               >
+            </div>
+            <div class="row col-md-12 text-center mt-2">
+              <small style="font-size: 15px; color: rgb(228 96 96)">
+                {{ validationMsg($v.form.totalPorcentagem) }}
+              </small>
             </div>
           </b-form>
         </slot>
@@ -481,7 +498,11 @@ const formMessages = {
     `Campo maximo ${$params.txtMaxLen.max} characters.`,
   integer: () => "Campo deve ser um Numero inteiro",
   txtNumeroPositivo: () => "Campo deve ser Positivo/Maior que zero.",
+  txtNumeroisPositivo: () => "Campo deve ser Positivo.",
   maxValue: () => "Campo deve ser menor ou máx 100",
+  maxValuePorcentagem: () => "Porcentagem deve no máximo 100%",
+  minValuePorcentagem: () =>
+    "Deve conter minímo uma Parcela com porcentagem de 100%",
 };
 const notyf_Parcela = new Notyf({
   position: {
@@ -546,6 +567,28 @@ export default {
         required: validators.required,
         txtMinLen: validators.minLength(3),
       },
+      juros: {
+        required: validators.required,
+        decimal: validators.decimal,
+        txtNumeroisPositivo: Rules.isNumber,
+      },
+      multa: {
+        required: validators.required,
+        decimal: validators.decimal,
+        txtNumeroisPositivo: Rules.isNumber,
+      },
+      desconto: {
+        required: validators.required,
+        decimal: validators.decimal,
+        txtNumeroisPositivo: Rules.isNumber,
+      },
+      totalPorcentagem: {
+        required: validators.required,
+        decimal: validators.decimal,
+        maxValuePorcentagem: validators.maxValue(100),
+        minValuePorcentagem: validators.minValue(100),
+        txtNumeroisPositivo: Rules.isNumber,
+      },
     },
     parcela: {
       prazo: {
@@ -586,6 +629,7 @@ export default {
       } else {
         if (this.form.btn === "Salvar") {
           console.log(this.form);
+          alert('Condição de Pagamento enviadooo');
           //   ServiceFormaPagamento.storeFormaPagamento(this.form)
           //     .then((response) => {
           //       if (response.status === 200) {
@@ -693,6 +737,7 @@ export default {
               "%"
           );
         }
+        this.form.totalPorcentagem = this.total_porcentagem;
       }
     },
     showSearchformaPagamento() {
@@ -754,6 +799,7 @@ export default {
         }
         this.total_porcentagem =
           this.total_porcentagem - parseFloat(this.verificaSaveParcela);
+        this.form.totalPorcentagem = this.total_porcentagem;
         return;
       } else {
         this.total_porcentagem = 0;
@@ -762,6 +808,7 @@ export default {
             this.total_porcentagem + parseFloat(this.parcelas[h].porcentagem);
         }
         this.parcelas[index].editing = false;
+        this.form.totalPorcentagem = this.total_porcentagem;
         return;
       }
     },
@@ -775,6 +822,7 @@ export default {
         this.total_porcentagem =
           this.total_porcentagem + parseFloat(this.parcelas[i].porcentagem);
       }
+      this.form.totalPorcentagem = this.total_porcentagem;
       return;
     },
     addItem() {

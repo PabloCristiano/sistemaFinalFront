@@ -129,9 +129,10 @@ export default {
       form_CondicaoPagamento: {
         id: "",
         condicaoPagamento: "",
-        juros: 0,
-        multa: 0,
-        desconta: 0,
+        juros: "",
+        multa: "",
+        desconto: "",
+        totalPorcentagem: 0,
         data_create: "",
         data_alt: "",
         titulo: "",

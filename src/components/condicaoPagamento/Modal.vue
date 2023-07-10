@@ -119,7 +119,7 @@
                   <thead class="fixed-header">
                     <tr
                       class="table text-center"
-                      style="background: darkslategray; color: white"
+                      style="background: #212529; color: white"
                     >
                       <th scope="col" class="tableTr">Parcela</th>
                       <th scope="col" class="tableTr">Prazo (Dias)</th>

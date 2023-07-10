@@ -131,6 +131,7 @@
                   <tbody>
                     <tr
                       class="tableTr text-center"
+                      :class="{ disabledTeste: !parcelas[key].desativar }"
                       v-for="(item, key) in parcelas"
                       :key="key"
                     >
@@ -172,7 +173,9 @@
                           v-if="parcelas[key].mgsPorcentagem"
                         >
                           {{ validationMsg($v.validationParcela.porcentagem) }}
-                          {{ validationMsg($v.validationParcela.TotalValorPecent) }}
+                          {{
+                            validationMsg($v.validationParcela.TotalValorPecent)
+                          }}
                         </small>
                       </td>
                       <td>
@@ -574,7 +577,7 @@ export default {
         porcentagem: 0,
         idformapg: 0,
         forma_pg: "",
-        TotalValorPecent:0,
+        TotalValorPecent: 0
       },
       numParcela: 1,
       key_parcela: "",
@@ -643,8 +646,8 @@ export default {
         maxValue: validators.maxValue(100),
         txtNumeroPositivo: Rules.isPositiveNumber
       },
-      TotalValorPecent:{
-        maxValuePercent: validators.maxValue(100),
+      TotalValorPecent: {
+        maxValuePercent: validators.maxValue(100)
       }
     }
   },
@@ -770,7 +773,8 @@ export default {
             forma_pg: formaPagamentoParcela,
             editing: false,
             mgsPrazo: false,
-            mgsPorcentagem: false
+            mgsPorcentagem: false,
+            desativar: true
           });
           this.numParcela++;
           console.log(this.parcelas);
@@ -778,9 +782,7 @@ export default {
         } else {
           var msg = 100 - this.total_porcentagem;
           notyf_Parcela.error(
-            "Excedeu 100% da(s) parcelas!  Disponivel: " +
-              msg +
-              "%"
+            "Excedeu 100% da(s) parcelas!  Disponivel: " + msg + "%"
           );
         }
         this.form.totalPorcentagem = this.total_porcentagem;
@@ -820,6 +822,10 @@ export default {
     },
     toggleEditingParcela(index) {
       this.parcelas[index].editing = !this.parcelas[index].editing;
+      //desativar linhas na tabela
+      this.parcelas.forEach((row, rowIndex) => {
+        row.desativar = rowIndex === index; // Ativa ou desativa a linha clicada
+      });
     },
     cancelEditingParcela(index) {
       this.parcelas[index].editing = false;
@@ -849,7 +855,7 @@ export default {
         if (this.total_porcentagem > 100) {
           this.setValidationParcela(index);
           this.parcelas[index].mgsPorcentagem =
-          this.$v.validationParcela.TotalValorPecent.$invalid;
+            this.$v.validationParcela.TotalValorPecent.$invalid;
 
           this.parcelas[index].porcentagem = this.verificaSaveParcela;
           this.total_porcentagem = 0;
@@ -869,8 +875,11 @@ export default {
           }
           this.parcelas[index].editing = false;
           this.form.totalPorcentagem = this.total_porcentagem;
-          return;
         }
+        //desativar linhas Tabela
+        this.parcelas.forEach((row) => {
+          row.desativar = true;
+        });
       }
     },
     deleteItemParcela(index) {
@@ -884,6 +893,9 @@ export default {
           this.total_porcentagem + parseFloat(this.parcelas[i].porcentagem);
       }
       this.form.totalPorcentagem = this.total_porcentagem;
+      this.parcelas.forEach((row) => {
+        row.desativar = true;
+      });
       return;
     },
     addItem() {
@@ -921,4 +933,8 @@ export default {
 /* .myclass > .modal-dialog > .modal-content {
   background-color: red !important;
 } */
+.disabledTeste {
+  pointer-events: none; /* Impede interações com elementos filhos */
+  opacity: 0.5; /* Opacidade reduzida para indicar desabilitação */
+}
 </style>

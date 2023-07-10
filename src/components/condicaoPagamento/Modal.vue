@@ -163,7 +163,7 @@
                           v-model="parcelas[key].porcentagem"
                           class="form-control text-center"
                           :class="{
-                            'fail-error': parcelas[key].mgsPorcentagem,
+                            'fail-error': parcelas[key].mgsPorcentagem
                           }"
                           :disabled="!parcelas[key].editing"
                         />
@@ -172,6 +172,7 @@
                           v-if="parcelas[key].mgsPorcentagem"
                         >
                           {{ validationMsg($v.validationParcela.porcentagem) }}
+                          {{ validationMsg($v.validationParcela.TotalValorPecent) }}
                         </small>
                       </td>
                       <td>
@@ -516,14 +517,15 @@ const formMessages = {
   integer: () => "Campo deve ser um Numero inteiro",
   txtNumeroPositivo: () => "Campo deve ser Positivo/Maior que zero.",
   txtNumeroisPositivo: () => "Campo deve ser Positivo.",
-  maxValue: () => "Campo deve ser menor ou máx 100",
-  maxValuePorcentagem: () => "Porcentagem deve no máximo 100%",
+  maxValue: () => "Campo máx 100",
+  maxValuePorcentagem: () => "Porcentagem máx 100%",
   minValuePorcentagem: () => "Parcela(s) deve conter total de 100%",
+  maxValuePercent: () => "Excedeu 100% da(s) parcelas"
 };
 const notyf_Parcela = new Notyf({
   position: {
     x: "center",
-    y: "top",
+    y: "top"
   },
   types: [
     {
@@ -532,23 +534,23 @@ const notyf_Parcela = new Notyf({
       icon: {
         className: "material-icons",
         tagName: "i",
-        text: "warning",
-      },
+        text: "warning"
+      }
     },
     {
       type: "error",
       background: "indianred",
       duration: 5000,
-      dismissible: true,
-    },
-  ],
+      dismissible: true
+    }
+  ]
 });
 export default {
   components: { HomeFormaPagamento },
   props: {
     formulario: { type: Object },
     funcOnReset: { type: Function },
-    funcgetListCondicaoPagamento: { type: Function },
+    funcgetListCondicaoPagamento: { type: Function }
   },
   data() {
     return {
@@ -564,7 +566,7 @@ export default {
         prazo: 0,
         porcentagem: 0,
         idformapg: 0,
-        forma_pg: "",
+        forma_pg: ""
       },
       parcelas: [],
       validationParcela: {
@@ -572,75 +574,79 @@ export default {
         porcentagem: 0,
         idformapg: 0,
         forma_pg: "",
+        TotalValorPecent:0,
       },
       numParcela: 1,
       key_parcela: "",
       total_porcentagem: 0,
       totalVerifica: 0,
-      verificaSaveParcela: 0,
+      verificaSaveParcela: 0
     };
   },
   filters: {
-    formataDataTempo,
+    formataDataTempo
   },
   validations: {
     form: {
       condicaoPagamento: {
         required: validators.required,
-        txtMinLen: validators.minLength(3),
+        txtMinLen: validators.minLength(3)
       },
       juros: {
         required: validators.required,
         decimal: validators.decimal,
-        txtNumeroisPositivo: Rules.isNumber,
+        txtNumeroisPositivo: Rules.isNumber
       },
       multa: {
         required: validators.required,
         decimal: validators.decimal,
-        txtNumeroisPositivo: Rules.isNumber,
+        txtNumeroisPositivo: Rules.isNumber
       },
       desconto: {
         required: validators.required,
         decimal: validators.decimal,
-        txtNumeroisPositivo: Rules.isNumber,
+        txtNumeroisPositivo: Rules.isNumber
       },
       totalPorcentagem: {
         required_Parcela: validators.required,
         decimal: validators.decimal,
         maxValuePorcentagem: validators.maxValue(100),
         minValuePorcentagem: validators.minValue(100),
-        txtNumeroisPositivo: Rules.isNumber,
-      },
+        txtNumeroisPositivo: Rules.isNumber
+      }
     },
     parcela: {
       prazo: {
         required: validators.required,
         integer: validators.integer,
-        txtNumeroPositivo: Rules.isPositiveNumber,
+        txtNumeroPositivo: Rules.isPositiveNumber
       },
       porcentagem: {
         required: validators.required,
         decimal: validators.decimal,
         maxValue: validators.maxValue(100),
-        txtNumeroPositivo: Rules.isPositiveNumber,
+        txtNumeroPositivo: Rules.isPositiveNumber
       },
       forma_pg: {
-        required: validators.required,
-      },
+        required: validators.required
+      }
     },
     validationParcela: {
       prazo: {
         required: validators.required,
         integer: validators.integer,
-        txtNumeroPositivo: Rules.isPositiveNumber,
+        txtNumeroPositivo: Rules.isPositiveNumber
       },
       porcentagem: {
         required: validators.required,
         decimal: validators.decimal,
         maxValue: validators.maxValue(100),
-        txtNumeroPositivo: Rules.isPositiveNumber,
+        txtNumeroPositivo: Rules.isPositiveNumber
       },
-    },
+      TotalValorPecent:{
+        maxValuePercent: validators.maxValue(100),
+      }
+    }
   },
   methods: {
     validationMsg: validationMessage(formMessages),
@@ -764,7 +770,7 @@ export default {
             forma_pg: formaPagamentoParcela,
             editing: false,
             mgsPrazo: false,
-            mgsPorcentagem: false,
+            mgsPorcentagem: false
           });
           this.numParcela++;
           console.log(this.parcelas);
@@ -772,7 +778,7 @@ export default {
         } else {
           var msg = 100 - this.total_porcentagem;
           notyf_Parcela.error(
-            "Total de Parcelas não podem passar de 100% !  Disponivel: " +
+            "Excedeu 100% da(s) parcelas!  Disponivel: " +
               msg +
               "%"
           );
@@ -820,8 +826,8 @@ export default {
     },
     saveChangesParcela(index) {
       this.$v.validationParcela.$reset();
-      // console.log(index, "salvar", this.parcelas);
       this.setValidationParcela(index);
+
       if (this.$v.validationParcela.$invalid) {
         this.parcelas[index].mgsPrazo =
           this.$v.validationParcela.prazo.$invalid;
@@ -841,6 +847,10 @@ export default {
         }
 
         if (this.total_porcentagem > 100) {
+          this.setValidationParcela(index);
+          this.parcelas[index].mgsPorcentagem =
+          this.$v.validationParcela.TotalValorPecent.$invalid;
+
           this.parcelas[index].porcentagem = this.verificaSaveParcela;
           this.total_porcentagem = 0;
           for (var j = 0; j < this.parcelas.length; j++) {
@@ -882,16 +892,17 @@ export default {
         nome: "",
         email: "",
         telefone: "",
-        editing: true,
+        editing: true
       });
       this.nextId++;
     },
     setValidationParcela(index) {
       this.validationParcela.prazo = this.parcelas[index].prazo;
       this.validationParcela.porcentagem = this.parcelas[index].porcentagem;
+      this.validationParcela.TotalValorPecent = this.total_porcentagem;
       return;
-    },
-  },
+    }
+  }
 };
 </script>
 <style>

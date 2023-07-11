@@ -782,7 +782,6 @@ export default {
             desativar: true,
           });
           this.numParcela++;
-          console.log(this.parcelas);
           this.$bvModal.hide(this.modal_form_parcela);
         } else {
           var msg = 100 - this.total_porcentagem;
@@ -811,7 +810,6 @@ export default {
       this.parcela.forma_pg = obj.row.forma_pg;
       this.$bvModal.hide(this.modal_search_FormaPagamento);
       if (this.parcelas[this.key_parcela]) {
-        console.log("parcela");
         this.parcelas[this.key_parcela].idformapagamento = obj.row.id;
         this.parcelas[this.key_parcela].forma_pg = obj.row.forma_pg;
         return;

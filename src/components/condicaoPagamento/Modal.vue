@@ -930,6 +930,7 @@ export default {
         data_create: form.data_create,
         data_alt: form.data_alt,
         totalPorcentagem: form.totalPorcentagem,
+        qtd_parcelas : parcela.length,
         parcelas: parcela
       }
       return formData;

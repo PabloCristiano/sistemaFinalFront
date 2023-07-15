@@ -173,19 +173,19 @@ export default {
     },
     showModalAlterarCondicaoPagamento(id) {
       console.log(id);
-      //   this.onReset();
-      //   var titulo = "Alterar Condição de Pagamento";
-      //   var btn = "Alterar";
-      //   var disabled = false;
-      //   this.funcGetById(id, titulo, btn, disabled);
+        this.onReset();
+        var titulo = "Alterar Condição de Pagamento";
+        var btn = "Alterar";
+        var disabled = false;
+        this.funcGetById(id, titulo, btn, disabled);
     },
     showModalExcluirCondicaoPagamento(id) {
       console.log(id);
-      //   this.onReset();
-      //   var titulo = "Excluir Condição de Pagamento";
-      //   var btn = "Excluir";
-      //   var disabled = true;
-      //   this.funcGetById(id, titulo, btn, disabled);
+      this.onReset();
+      var titulo = "Excluir Condição de Pagamento";
+      var btn = "Excluir";
+      var disabled = true;
+      this.funcGetById(id, titulo, btn, disabled);
     },
     onReset() {
       this.form_CondicaoPagamento.id = "";
@@ -198,25 +198,29 @@ export default {
       this.form_CondicaoPagamento.data_alt = "";
       this.form_CondicaoPagamento.disabled = false;
     },
-    // funcGetById(id, titulo, btn, disabled) {
-    //   this.isLoading = true;
-    //   ServiceCondicaoPagamento.getById(id)
-    //     .then((obj) => {
-    //       this.form_CondicaoPagamento.id = obj.data[0].id;
-    //       this.form_CondicaoPagamento.forma_pg = obj.data[0].forma_pg;
-    //       this.form_CondicaoPagamento.data_create = obj.data[0].data_create;
-    //       this.form_CondicaoPagamento.data_alt = obj.data[0].data_alt;
-    //       this.form_CondicaoPagamento.titulo = titulo;
-    //       this.form_CondicaoPagamento.btn = btn;
-    //       this.form_CondicaoPagamento.disabled = disabled;
-    //       this.isLoading = false;
-    //       this.$bvModal.show(this.modal_form_condicaoPagamento);
-    //       return;
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // },
+    funcGetById(id, titulo, btn, disabled) {
+      this.isLoading = true;
+      ServiceCondicaoPagamento.getById(id)
+        .then((obj) => {
+          console.log(titulo, btn, disabled, obj);
+          this.form_CondicaoPagamento.id = obj.data[0].id;
+          this.form_CondicaoPagamento.condicao_pagamento = obj.data[0].condicao_pagamento;
+          this.form_CondicaoPagamento.juros = obj.data[0].juros;
+          this.form_CondicaoPagamento.multa = obj.data[0].multa;
+          this.form_CondicaoPagamento.desconto = obj.data[0].desconto;
+          // this.form_CondicaoPagamento.data_create = obj.data[0].data_create;
+          // this.form_CondicaoPagamento.data_alt = obj.data[0].data_alt;
+          this.form_CondicaoPagamento.titulo = titulo;
+          this.form_CondicaoPagamento.btn = btn;
+          this.form_CondicaoPagamento.disabled = disabled;
+          this.isLoading = false;
+          this.$bvModal.show(this.modal_form_condicaoPagamento);
+          return;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
 };
 </script>

@@ -79,6 +79,7 @@
 <script>
 import Modal from "./Modal.vue";
 import { VueGoodTable } from "vue-good-table";
+import { ServiceCondicaoPagamento } from "@/services/serviceCondicaoPagamento";
 export default {
   components: { VueGoodTable, Modal },
   data() {
@@ -128,11 +129,12 @@ export default {
       ],
       form_CondicaoPagamento: {
         id: "",
-        condicaoPagamento: "",
+        condicao_pagamento: "",
         juros: "",
         multa: "",
         desconto: "",
         totalPorcentagem: 0,
+        qtd_parcela:0,
         data_create: "",
         data_alt: "",
         titulo: "",
@@ -151,17 +153,17 @@ export default {
       }
     },
     getListCondicaoPagamento() {
-      //   this.isLoading = true;
-      //   ServiceFormaPagamento.getAll()
-      //     .then((obj) => {
-      //       if (obj) {
-      //         this.formaPagamentos = obj;
-      //       }
-      //       this.isLoading = false;
-      //     })
-      //     .catch((error) => {
-      //       console.log(error);
-      //     });
+        this.isLoading = true;
+        ServiceCondicaoPagamento.getAll()
+          .then((obj) => {
+            if (obj) {
+              this.condicaoPagamentos = obj;
+            }
+            this.isLoading = false;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
     },
     ShowModalCondicaoPagamento() {
       this.onReset();
@@ -169,7 +171,7 @@ export default {
       this.form_CondicaoPagamento.btn = "Salvar";
       this.$bvModal.show(this.modal_form_condicaoPagamento);
     },
-    showModalAlterarFormaPagamento(id) {
+    showModalAlterarCondicaoPagamento(id) {
       console.log(id);
       //   this.onReset();
       //   var titulo = "Alterar Condição de Pagamento";
@@ -177,7 +179,7 @@ export default {
       //   var disabled = false;
       //   this.funcGetById(id, titulo, btn, disabled);
     },
-    showModalExcluirFormaPagamento(id) {
+    showModalExcluirCondicaoPagamento(id) {
       console.log(id);
       //   this.onReset();
       //   var titulo = "Excluir Condição de Pagamento";
@@ -187,7 +189,7 @@ export default {
     },
     onReset() {
       this.form_CondicaoPagamento.id = "";
-      this.form_CondicaoPagamento.condicaoPagamento = "";
+      this.form_CondicaoPagamento.condicao_pagamento = "";
       this.form_CondicaoPagamento.juros = "";
       this.form_CondicaoPagamento.multa = "";
       this.form_CondicaoPagamento.desconto = "";
@@ -198,7 +200,7 @@ export default {
     },
     // funcGetById(id, titulo, btn, disabled) {
     //   this.isLoading = true;
-    //   ServiceFormaPagamento.getById(id)
+    //   ServiceCondicaoPagamento.getById(id)
     //     .then((obj) => {
     //       this.form_CondicaoPagamento.id = obj.data[0].id;
     //       this.form_CondicaoPagamento.forma_pg = obj.data[0].forma_pg;

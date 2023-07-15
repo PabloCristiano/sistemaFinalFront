@@ -47,13 +47,13 @@
                   id="servico"
                   type="text"
                   placeholder="Condição de Pagamento"
-                  :class="{ 'fail-error': $v.form.condicaoPagamento.$error }"
-                  v-model="form.condicaoPagamento"
+                  :class="{ 'fail-error': $v.form.condicao_pagamento.$error }"
+                  v-model="form.condicao_pagamento"
                   :disabled="form.disabled"
                 >
                 </b-form-input>
                 <small style="font-size: 11px; color: rgb(228 96 96)">
-                  {{ validationMsg($v.form.condicaoPagamento) }}
+                  {{ validationMsg($v.form.condicao_pagamento) }}
                 </small>
               </div>
             </div>
@@ -595,7 +595,7 @@ export default {
   },
   validations: {
     form: {
-      condicaoPagamento: {
+      condicao_pagamento: {
         required: validators.required,
         txtMinLen: validators.minLength(3),
       },
@@ -923,7 +923,7 @@ export default {
     createFormData(form,parcela){
       const formData = {
         id: form.id,
-        condicaoPagamento: form.condicaoPagamento,
+        condicao_pagamento: form.condicao_pagamento,
         juros: form.juros,
         multa: form.multa,
         desconto: form.desconto,

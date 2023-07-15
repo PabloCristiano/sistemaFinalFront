@@ -503,13 +503,13 @@
         >
       </b-container>
     </b-modal>
+    {{this.formulario}}
   </div>
 </template>
 <script>
 import * as validators from "vuelidate/lib/validators";
 import { validationMessage } from "vuelidate-messages";
 import Rules from "../../rules/rules";
-// import { ServiceFormaPagamento } from "../../services/serviceFormaPagamento.js";
 import HomeFormaPagamento from "../formaPagamento/HomeFormaPagamento.vue";
 import { formataDataTempo } from "../../rules/filters";
 import { Notyf } from "notyf";
@@ -589,6 +589,12 @@ export default {
       verificaSaveParcela: 0,
       buttonLock: false,
     };
+  },
+  created(){
+   console.log(this.form);
+   if(this.form.qtd_parcela){
+    console.log('oi')
+   }else{ console.log('tchau')}
   },
   filters: {
     formataDataTempo,

@@ -135,6 +135,7 @@ export default {
         desconto: "",
         totalPorcentagem: 0,
         qtd_parcela:0,
+        parcelas:[],
         data_create: "",
         data_alt: "",
         titulo: "",
@@ -157,6 +158,7 @@ export default {
         ServiceCondicaoPagamento.getAll()
           .then((obj) => {
             if (obj) {
+              console.log(obj);
               this.condicaoPagamentos = obj;
             }
             this.isLoading = false;
@@ -194,6 +196,8 @@ export default {
       this.form_CondicaoPagamento.multa = "";
       this.form_CondicaoPagamento.desconto = "";
       this.form_CondicaoPagamento.totalPorcentagem = "";
+      this.form_CondicaoPagamento.qtd_parcela = 0;
+      this.form_CondicaoPagamento.parcelas = [];
       this.form_CondicaoPagamento.data_create = "";
       this.form_CondicaoPagamento.data_alt = "";
       this.form_CondicaoPagamento.disabled = false;
@@ -202,14 +206,16 @@ export default {
       this.isLoading = true;
       ServiceCondicaoPagamento.getById(id)
         .then((obj) => {
-          console.log(titulo, btn, disabled, obj);
+          console.log('funcGetById', obj);
           this.form_CondicaoPagamento.id = obj.data[0].id;
           this.form_CondicaoPagamento.condicao_pagamento = obj.data[0].condicao_pagamento;
           this.form_CondicaoPagamento.juros = obj.data[0].juros;
           this.form_CondicaoPagamento.multa = obj.data[0].multa;
           this.form_CondicaoPagamento.desconto = obj.data[0].desconto;
-          // this.form_CondicaoPagamento.data_create = obj.data[0].data_create;
-          // this.form_CondicaoPagamento.data_alt = obj.data[0].data_alt;
+          this.form_CondicaoPagamento.qtd_parcela = obj.data[0].qtd_parcela;
+          this.form_CondicaoPagamento.parcelas = obj.data[0].parcelas;
+          this.form_CondicaoPagamento.data_create = obj.data[0].data_create;
+          this.form_CondicaoPagamento.data_alt = obj.data[0].data_alt;
           this.form_CondicaoPagamento.titulo = titulo;
           this.form_CondicaoPagamento.btn = btn;
           this.form_CondicaoPagamento.disabled = disabled;

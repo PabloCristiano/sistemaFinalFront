@@ -679,7 +679,7 @@ export default {
         this.$v.$touch();
       } else {
         if (this.form.btn === "Salvar") {
-          var formData = this.createFormData(this.form,this.parcelas);
+          var formData = this.createFormData(this.form, this.parcelas);
           console.log(formData);
           alert("Condição de Pagamento enviadooo");
           //   ServiceFormaPagamento.storeFormaPagamento(this.form)
@@ -920,7 +920,7 @@ export default {
       this.validationParcela.TotalValorPecent = this.total_porcentagem;
       return;
     },
-    createFormData(form,parcela){
+    createFormData(form, parcela) {
       const formData = {
         id: form.id,
         condicao_pagamento: form.condicao_pagamento,
@@ -930,11 +930,11 @@ export default {
         data_create: form.data_create,
         data_alt: form.data_alt,
         totalPorcentagem: form.totalPorcentagem,
-        qtd_parcelas : parcela.length,
-        parcelas: parcela
-      }
+        qtd_parcelas: parcela.length,
+        parcelas: parcela,
+      };
       return formData;
-    }
+    },
   },
 };
 </script>

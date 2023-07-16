@@ -133,14 +133,13 @@
                   <tbody>
                     <tr
                       class="tableTr text-center"
-                      :class="{ disabled: !parcelas[key].desativar }"
-                      v-for="(item, key) in parcelas"
+                      v-for="(item, key) in form.parcelas"
                       :key="key"
                     >
                       <td class="col-md-1">
                         <input
                           type="text"
-                          v-model="parcelas[key].numero"
+                          v-model="form.parcelas[key].parcela"
                           class="form-control text-center"
                           disabled="true"
                         />
@@ -148,37 +147,16 @@
                       <td class="col-md-2">
                         <input
                           type="number"
-                          v-model="parcelas[key].prazo"
+                          v-model="form.parcelas[key].prazo"
                           class="form-control text-center"
-                          :class="{ 'fail-error': parcelas[key].mgsPrazo }"
-                          :disabled="!parcelas[key].editing"
                         />
-                        <small
-                          style="font-size: 11px; color: rgb(228 96 96)"
-                          v-if="parcelas[key].mgsPrazo"
-                        >
-                          {{ validationMsg($v.validationParcela.prazo) }}
-                        </small>
                       </td>
                       <td class="col-md-2">
                         <input
                           type="number"
-                          v-model="parcelas[key].porcentagem"
+                          v-model="form.parcelas[key].porcentagem"
                           class="form-control text-center"
-                          :class="{
-                            'fail-error': parcelas[key].mgsPorcentagem,
-                          }"
-                          :disabled="!parcelas[key].editing"
                         />
-                        <small
-                          style="font-size: 11px; color: rgb(228 96 96)"
-                          v-if="parcelas[key].mgsPorcentagem"
-                        >
-                          {{ validationMsg($v.validationParcela.porcentagem) }}
-                          {{
-                            validationMsg($v.validationParcela.TotalValorPecent)
-                          }}
-                        </small>
                       </td>
                       <td>
                         <b-input-group>
@@ -186,7 +164,9 @@
                             class="text-center"
                             id="formapagemento"
                             type="text"
-                            v-model="parcelas[key].forma_pg"
+                            v-model="
+                              form.parcelas[key].formaPagamento[0].forma_pg
+                            "
                             placeholder="Pesquise uma forma de Pagamento"
                             disabled
                           >
@@ -197,7 +177,6 @@
                               text="Button"
                               variant="dark"
                               title="Pesquisar Forma de Pagamento"
-                              :disabled="!item.editing"
                               ><svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
@@ -214,7 +193,7 @@
                         </b-input-group>
                       </td>
                       <td>
-                        <div v-if="!parcelas[key].editing">
+                        <div v-if="true">
                           <button
                             @click="toggleEditingParcela(key)"
                             class="btn btn-sm me-1 mb-1 mt-1"
@@ -503,7 +482,7 @@
         >
       </b-container>
     </b-modal>
-    {{this.formulario}}
+    {{ form.parcelas }}
   </div>
 </template>
 <script>
@@ -590,7 +569,7 @@ export default {
       buttonLock: false,
     };
   },
-  created(){},
+  created() {},
   filters: {
     formataDataTempo,
   },
@@ -782,6 +761,10 @@ export default {
             mgsPorcentagem: false,
             desativar: true,
           });
+          
+          // console.log(this.form.parcelas);
+          // this.form.parcelas =  this.parcelas;
+          console.log(this.form.parcelas);
           this.numParcela++;
           this.$bvModal.hide(this.modal_form_parcela);
         } else {

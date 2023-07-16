@@ -135,7 +135,25 @@ export default {
         desconto: "",
         totalPorcentagem: 0,
         qtd_parcela: 0,
-        parcelas: [],
+        parcelas: [
+          {
+            numero: 0,
+            prazo: 0,
+            porcentagem: 0,
+            formaPagamento: [
+              {
+                id: 0,
+                forma_pg: "",
+                data_create: "",
+                data_alt: "",
+              },
+            ],
+            editing: false,
+            mgsPrazo: false,
+            mgsPorcentagem: false,
+            desativar: true,
+          },
+        ],
         data_create: "",
         data_alt: "",
         titulo: "",
@@ -204,7 +222,25 @@ export default {
       this.form_CondicaoPagamento.desconto = "";
       this.form_CondicaoPagamento.totalPorcentagem = "";
       this.form_CondicaoPagamento.qtd_parcela = 0;
-      this.form_CondicaoPagamento.parcelas = [];
+      this.form_CondicaoPagamento.parcelas = [
+        {
+          numero: 0,
+          prazo: 0,
+          porcentagem: 0,
+          formaPagamento: [
+            {
+              id: 0,
+              forma_pg: "",
+              data_create: "",
+              data_alt: "",
+            },
+          ],
+          editing: false,
+          mgsPrazo: false,
+          mgsPorcentagem: false,
+          desativar: true,
+        },
+      ];
       this.form_CondicaoPagamento.data_create = "";
       this.form_CondicaoPagamento.data_alt = "";
       this.form_CondicaoPagamento.disabled = false;
@@ -227,6 +263,15 @@ export default {
           this.form_CondicaoPagamento.titulo = titulo;
           this.form_CondicaoPagamento.btn = btn;
           this.form_CondicaoPagamento.disabled = disabled;
+          obj.data[0].parcelas = obj.data[0].parcelas.map((elemento) => {
+            return {
+              ...elemento,
+              editing: false,
+              mgsPrazo: false,
+              mgsPorcentagem: false,
+              desativar: true,
+            };
+          });
           this.isLoading = false;
           this.$bvModal.show(this.modal_form_condicaoPagamento);
           return;

@@ -245,7 +245,7 @@
                   class="btn btn-sm"
                   type="button"
                   variant="dark"
-                  :disabled="total_porcentagem >= 100 ? true : false"
+                  :disabled="form.totalPorcentagem >= 100 ? true : false"
                   @click.prevent="openModelParcela()"
                 >
                   Adicionar Parcela
@@ -254,7 +254,7 @@
             </div>
             <div class="row col-12 mb-3 text-end">
               <small class="mt-2" style="font-size: 10px"
-                ><b>Total Porcentagem: {{ total_porcentagem }}%</b></small
+                ><b>Total Porcentagem: {{ form.totalPorcentagem }}%</b></small
               >
             </div>
             <div class="row col-md-12 text-center mt-2">
@@ -482,7 +482,8 @@
         >
       </b-container>
     </b-modal>
-    {{ form.parcelas }}
+    <!-- {{ form.parcelas }} -->
+    {{ form.totalPorcentagem}}
   </div>
 </template>
 <script>
@@ -563,7 +564,7 @@ export default {
       },
       numParcela: 1,
       key_parcela: "",
-      total_porcentagem: 0,
+      total_porcentagem:0,
       totalVerifica: 0,
       verificaSaveParcela: 0,
       buttonLock: false,

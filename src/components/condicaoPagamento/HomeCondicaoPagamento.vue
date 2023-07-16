@@ -160,13 +160,6 @@ export default {
         btn: "",
         disabled: false,
       },
-      parcela: {
-        numero: 1,
-        prazo: 0,
-        porcentagem: 0,
-        idformapg: 0,
-        forma_pg: "",
-      },
     };
   },
   created() {
@@ -199,7 +192,6 @@ export default {
       this.$bvModal.show(this.modal_form_condicaoPagamento);
     },
     showModalAlterarCondicaoPagamento(id) {
-      console.log(id);
       this.onReset();
       var titulo = "Alterar Condição de Pagamento";
       var btn = "Alterar";
@@ -220,7 +212,7 @@ export default {
       this.form_CondicaoPagamento.juros = "";
       this.form_CondicaoPagamento.multa = "";
       this.form_CondicaoPagamento.desconto = "";
-      this.form_CondicaoPagamento.totalPorcentagem = "";
+      this.form_CondicaoPagamento.totalPorcentagem = 0;
       this.form_CondicaoPagamento.qtd_parcela = 0;
       this.form_CondicaoPagamento.parcelas = [
         {
@@ -272,6 +264,7 @@ export default {
               desativar: true,
             };
           });
+          this.form_CondicaoPagamento.totalPorcentagem = this.funcCalcPercent(obj.data[0].parcelas);
           this.isLoading = false;
           this.$bvModal.show(this.modal_form_condicaoPagamento);
           return;
@@ -280,6 +273,13 @@ export default {
           console.log(error);
         });
     },
+    funcCalcPercent(obj){
+      var total = 0;
+     obj.map((el)=>{
+      total = total + el.porcentagem
+     })
+     return  total; 
+    }
   },
 };
 </script>

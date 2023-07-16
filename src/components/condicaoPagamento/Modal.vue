@@ -590,12 +590,7 @@ export default {
       buttonLock: false,
     };
   },
-  created(){
-   console.log(this.form);
-   if(this.form.qtd_parcela){
-    console.log('oi')
-   }else{ console.log('tchau')}
-  },
+  created(){},
   filters: {
     formataDataTempo,
   },

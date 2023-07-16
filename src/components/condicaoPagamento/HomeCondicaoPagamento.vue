@@ -134,13 +134,20 @@ export default {
         multa: "",
         desconto: "",
         totalPorcentagem: 0,
-        qtd_parcela:0,
-        parcelas:[],
+        qtd_parcela: 0,
+        parcelas: [],
         data_create: "",
         data_alt: "",
         titulo: "",
         btn: "",
         disabled: false,
+      },
+      parcela: {
+        numero: 1,
+        prazo: 0,
+        porcentagem: 0,
+        idformapg: 0,
+        forma_pg: "",
       },
     };
   },
@@ -154,18 +161,18 @@ export default {
       }
     },
     getListCondicaoPagamento() {
-        this.isLoading = true;
-        ServiceCondicaoPagamento.getAll()
-          .then((obj) => {
-            if (obj) {
-              console.log(obj);
-              this.condicaoPagamentos = obj;
-            }
-            this.isLoading = false;
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+      this.isLoading = true;
+      ServiceCondicaoPagamento.getAll()
+        .then((obj) => {
+          if (obj) {
+            console.log(obj);
+            this.condicaoPagamentos = obj;
+          }
+          this.isLoading = false;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     ShowModalCondicaoPagamento() {
       this.onReset();
@@ -175,11 +182,11 @@ export default {
     },
     showModalAlterarCondicaoPagamento(id) {
       console.log(id);
-        this.onReset();
-        var titulo = "Alterar Condição de Pagamento";
-        var btn = "Alterar";
-        var disabled = false;
-        this.funcGetById(id, titulo, btn, disabled);
+      this.onReset();
+      var titulo = "Alterar Condição de Pagamento";
+      var btn = "Alterar";
+      var disabled = false;
+      this.funcGetById(id, titulo, btn, disabled);
     },
     showModalExcluirCondicaoPagamento(id) {
       console.log(id);
@@ -206,9 +213,10 @@ export default {
       this.isLoading = true;
       ServiceCondicaoPagamento.getById(id)
         .then((obj) => {
-          console.log('funcGetById', obj);
+          console.log("funcGetById", obj);
           this.form_CondicaoPagamento.id = obj.data[0].id;
-          this.form_CondicaoPagamento.condicao_pagamento = obj.data[0].condicao_pagamento;
+          this.form_CondicaoPagamento.condicao_pagamento =
+            obj.data[0].condicao_pagamento;
           this.form_CondicaoPagamento.juros = obj.data[0].juros;
           this.form_CondicaoPagamento.multa = obj.data[0].multa;
           this.form_CondicaoPagamento.desconto = obj.data[0].desconto;
@@ -230,5 +238,4 @@ export default {
   },
 };
 </script>
-<style>
-</style>
+<style></style>

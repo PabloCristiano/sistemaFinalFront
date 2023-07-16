@@ -183,6 +183,7 @@
                               text="Button"
                               variant="dark"
                               title="Pesquisar Forma de Pagamento"
+                              :disabled="!form.parcelas[key].editing"
                               ><svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
@@ -311,6 +312,7 @@
           </div>
         </slot>
       </b-card>
+      {{ form.parcelas }}
     </b-modal>
     <!-- Modal Parcela -->
     <b-modal
@@ -449,6 +451,7 @@
         </slot>
         <slot name="rodape"> </slot>
       </b-card>
+      {{ form.parcelas }}
     </b-modal>
     <!-- modal Forma de Pagamento -->
     <b-modal
@@ -818,15 +821,15 @@ export default {
       return;
     },
     toggleEditingParcela(index) {
-      this.parcelas[index].editing = !this.parcelas[index].editing;
+      this.form.parcelas[index].editing = !this.form.parcelas[index].editing;
       this.buttonLock = true;
       //desativar linhas na tabela
-      this.parcelas.forEach((row, rowIndex) => {
+      this.form.parcelas.forEach((row, rowIndex) => {
         row.desativar = rowIndex === index; // Ativa ou desativa a linha clicada
       });
     },
     cancelEditingParcela(index) {
-      this.parcelas[index].editing = false;
+      this.form.parcelas[index].editing = false;
     },
     saveChangesParcela(index) {
       this.$v.validationParcela.$reset();
@@ -875,24 +878,25 @@ export default {
           this.form.totalPorcentagem = this.total_porcentagem;
         }
         //desativar linhas Tabela
-        this.parcelas.forEach((row) => {
+        this.form.parcelas.forEach((row) => {
           row.desativar = true;
         });
         this.buttonLock = false;
       }
     },
     deleteItemParcela(index) {
-      this.parcelas.splice(index, 1);
+      this.form.parcelas.splice(index, 1);
       this.total_porcentagem = 0;
       this.numParcela = this.numParcela - 1;
 
-      for (var i = 0; i < this.parcelas.length; i++) {
-        this.parcelas[i].numero = i + 1;
+      for (var i = 0; i < this.form.parcelas.length; i++) {
+        this.form.parcelas[i].numero = i + 1;
         this.total_porcentagem =
-          this.total_porcentagem + parseFloat(this.parcelas[i].porcentagem);
+          this.total_porcentagem +
+          parseFloat(this.form.parcelas[i].porcentagem);
       }
       this.form.totalPorcentagem = this.total_porcentagem;
-      this.parcelas.forEach((row) => {
+      this.form.parcelas.forEach((row) => {
         row.desativar = true;
       });
       this.buttonLock = false;

@@ -223,7 +223,7 @@ export default {
       this.isLoading = true;
       ServiceCondicaoPagamento.getById(id)
         .then((obj) => {
-          console.log("funcGetById", obj);
+          // console.log("funcGetById", obj);
           this.form_CondicaoPagamento.id = obj.data[0].id;
           this.form_CondicaoPagamento.condicao_pagamento =
             obj.data[0].condicao_pagamento;
@@ -231,7 +231,6 @@ export default {
           this.form_CondicaoPagamento.multa = obj.data[0].multa;
           this.form_CondicaoPagamento.desconto = obj.data[0].desconto;
           this.form_CondicaoPagamento.qtd_parcela = obj.data[0].qtd_parcela;
-          this.form_CondicaoPagamento.parcelas = obj.data[0].parcelas;
           this.form_CondicaoPagamento.data_create = obj.data[0].data_create;
           this.form_CondicaoPagamento.data_alt = obj.data[0].data_alt;
           this.form_CondicaoPagamento.titulo = titulo;
@@ -246,6 +245,7 @@ export default {
               desativar: true,
             };
           });
+          this.form_CondicaoPagamento.parcelas = obj.data[0].parcelas;
           this.form_CondicaoPagamento.totalPorcentagem = this.funcCalcPercent(obj.data[0].parcelas);
           this.isLoading = false;
           this.$bvModal.show(this.modal_form_condicaoPagamento);

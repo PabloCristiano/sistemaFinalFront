@@ -133,6 +133,7 @@
                   <tbody>
                     <tr
                       class="tableTr text-center"
+                      :class="{ disabled: !form.parcelas[key].desativar }"
                       v-for="(item, key) in form.parcelas"
                       :key="key"
                     >
@@ -777,7 +778,7 @@ export default {
             mgsPorcentagem: false,
             desativar: true,
           });
-          this.form.parcelas = { ...this.parcelas };
+          this.form.parcelas = [ ...this.parcelas ];
           this.numParcela++;
           this.$bvModal.hide(this.modal_form_parcela);
         } else {
@@ -821,6 +822,7 @@ export default {
       return;
     },
     toggleEditingParcela(index) {
+      console.log(index);
       this.form.parcelas[index].editing = !this.form.parcelas[index].editing;
       this.buttonLock = true;
       //desativar linhas na tabela
@@ -832,37 +834,41 @@ export default {
       this.form.parcelas[index].editing = false;
     },
     saveChangesParcela(index) {
+      console.log(index);
+       console.log("passo 0");
       this.$v.validationParcela.$reset();
       this.setValidationParcela(index);
 
       if (this.$v.validationParcela.$invalid) {
-        this.parcelas[index].mgsPrazo =
+        console.log("passo 1");
+        this.form.parcelas[index].mgsPrazo =
           this.$v.validationParcela.prazo.$invalid;
-        this.parcelas[index].mgsPorcentagem =
+        this.form.parcelas[index].mgsPorcentagem =
           this.$v.validationParcela.porcentagem.$invalid;
         this.$v.validationParcela.$touch();
       } else {
         this.$v.validationParcela.$reset();
-        this.parcelas[index].mgsPrazo = false;
+        this.form.parcelas[index].mgsPrazo = false;
         this.$v.validationParcela.$touch();
-        this.parcelas[index].mgsPorcentagem = false;
+        this.form.parcelas[index].mgsPorcentagem = false;
         this.total_porcentagem = 0;
         this.verificaSaveParcela = parseFloat(this.parcelas[index].porcentagem);
-        for (var i = 0; i < this.parcelas.length; i++) {
+        for (var i = 0; i < this.form.parcelas.length; i++) {
           this.total_porcentagem =
-            this.total_porcentagem + parseFloat(this.parcelas[i].porcentagem);
+            this.total_porcentagem + parseFloat(this.form.parcelas[i].porcentagem);
         }
 
         if (this.total_porcentagem > 100) {
+          console.log("passo 2");
           this.setValidationParcela(index);
-          this.parcelas[index].mgsPorcentagem =
+          this.form.parcelas[index].mgsPorcentagem =
             this.$v.validationParcela.TotalValorPecent.$invalid;
 
-          this.parcelas[index].porcentagem = this.verificaSaveParcela;
+          this.form.parcelas[index].totalPorcentagem = this.verificaSaveParcela;
           this.total_porcentagem = 0;
-          for (var j = 0; j < this.parcelas.length; j++) {
+          for (var j = 0; j < this.form.parcelas.length; j++) {
             this.total_porcentagem =
-              this.total_porcentagem + parseFloat(this.parcelas[j].porcentagem);
+              this.total_porcentagem + parseFloat(this.form.parcelas[j].totalPorcentagem);
           }
           this.total_porcentagem =
             this.total_porcentagem - parseFloat(this.verificaSaveParcela);
@@ -870,11 +876,11 @@ export default {
           return;
         } else {
           this.total_porcentagem = 0;
-          for (var h = 0; h < this.parcelas.length; h++) {
+          for (var h = 0; h < this.form.parcelas.length; h++) {
             this.total_porcentagem =
-              this.total_porcentagem + parseFloat(this.parcelas[h].porcentagem);
+              this.total_porcentagem + parseFloat(this.form.parcelas[h].porcentagem);
           }
-          this.parcelas[index].editing = false;
+          this.form.parcelas[index].editing = false;
           this.form.totalPorcentagem = this.total_porcentagem;
         }
         //desativar linhas Tabela
@@ -885,6 +891,8 @@ export default {
       }
     },
     deleteItemParcela(index) {
+      console.log(index);
+      console.log(this.form.parcelas);
       this.form.parcelas.splice(index, 1);
       this.total_porcentagem = 0;
       this.numParcela = this.numParcela - 1;
@@ -913,8 +921,8 @@ export default {
       this.nextId++;
     },
     setValidationParcela(index) {
-      this.validationParcela.prazo = this.parcelas[index].prazo;
-      this.validationParcela.porcentagem = this.parcelas[index].porcentagem;
+      this.validationParcela.prazo = this.form.parcelas[index].prazo;
+      this.validationParcela.porcentagem = this.form.parcelas[index].porcentagem;
       this.validationParcela.TotalValorPecent = this.total_porcentagem;
       return;
     },

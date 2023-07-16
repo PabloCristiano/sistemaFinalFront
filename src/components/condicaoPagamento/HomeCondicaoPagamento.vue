@@ -137,12 +137,12 @@ export default {
         qtd_parcela: 0,
         parcelas: [
           {
-            numero: 0,
+            parcela: 1,
             prazo: 0,
             porcentagem: 0,
             formaPagamento: [
               {
-                id: 0,
+                id: "",
                 forma_pg: "",
                 data_create: "",
                 data_alt: "",
@@ -214,25 +214,7 @@ export default {
       this.form_CondicaoPagamento.desconto = "";
       this.form_CondicaoPagamento.totalPorcentagem = 0;
       this.form_CondicaoPagamento.qtd_parcela = 0;
-      this.form_CondicaoPagamento.parcelas = [
-        {
-          numero: 0,
-          prazo: 0,
-          porcentagem: 0,
-          formaPagamento: [
-            {
-              id: 0,
-              forma_pg: "",
-              data_create: "",
-              data_alt: "",
-            },
-          ],
-          editing: false,
-          mgsPrazo: false,
-          mgsPorcentagem: false,
-          desativar: true,
-        },
-      ];
+      this.form_CondicaoPagamento.parcelas = [];
       this.form_CondicaoPagamento.data_create = "";
       this.form_CondicaoPagamento.data_alt = "";
       this.form_CondicaoPagamento.disabled = false;

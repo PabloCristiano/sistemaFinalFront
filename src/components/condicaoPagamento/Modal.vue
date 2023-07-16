@@ -164,9 +164,7 @@
                             class="text-center"
                             id="formapagemento"
                             type="text"
-                            v-model="
-                              form.parcelas[key].formaPagamento[0].forma_pg
-                            "
+                            v-model="form.parcelas[key].formaPagamento[0].forma_pg"
                             placeholder="Pesquise uma forma de Pagamento"
                             disabled
                           >
@@ -239,6 +237,7 @@
                 </table>
               </div>
             </div>
+
             <div class="row col-12" style="margin-top: 15px">
               <div class="col-md-12 text-center">
                 <b-button
@@ -482,8 +481,7 @@
         >
       </b-container>
     </b-modal>
-    <!-- {{ form.parcelas }} -->
-    {{ form.totalPorcentagem}}
+    {{ form.parcelas }}
   </div>
 </template>
 <script>
@@ -564,7 +562,7 @@ export default {
       },
       numParcela: 1,
       key_parcela: "",
-      total_porcentagem:0,
+      total_porcentagem: 0,
       totalVerifica: 0,
       verificaSaveParcela: 0,
       buttonLock: false,
@@ -746,26 +744,29 @@ export default {
         if (this.totalVerifica <= 100) {
           this.total_porcentagem =
             this.total_porcentagem + parseFloat(this.parcela.porcentagem);
-          var numeroParcela = this.numParcela;
+          var parcela = this.numParcela;
           var prazoParcela = parseFloat(this.parcela.prazo);
           var porcentagemParcela = parseFloat(this.parcela.porcentagem);
           var formaPagamentoParcela = this.parcela.forma_pg;
           var idformaPagamentoParcela = this.parcela.idformapg;
           this.parcelas.push({
-            numero: numeroParcela,
+            parcela: parcela,
             prazo: prazoParcela,
             porcentagem: porcentagemParcela,
-            idformapagamento: idformaPagamentoParcela,
-            forma_pg: formaPagamentoParcela,
+            formaPagamento: [
+              {
+                id: idformaPagamentoParcela,
+                forma_pg: formaPagamentoParcela,
+                data_create: "",
+                data_alt: "",
+              },
+            ],
             editing: false,
             mgsPrazo: false,
             mgsPorcentagem: false,
             desativar: true,
           });
-          
-          // console.log(this.form.parcelas);
-          // this.form.parcelas =  this.parcelas;
-          console.log(this.form.parcelas);
+          this.form.parcelas = { ...this.parcelas };
           this.numParcela++;
           this.$bvModal.hide(this.modal_form_parcela);
         } else {

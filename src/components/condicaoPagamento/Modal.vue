@@ -149,6 +149,8 @@
                           type="number"
                           v-model="form.parcelas[key].prazo"
                           class="form-control text-center"
+                          :class="{ 'fail-error': form.parcelas[key].mgsPrazo }"
+                          :disabled="!form.parcelas[key].editing"
                         />
                       </td>
                       <td class="col-md-2">
@@ -156,6 +158,10 @@
                           type="number"
                           v-model="form.parcelas[key].porcentagem"
                           class="form-control text-center"
+                          :class="{
+                            'fail-error': form.parcelas[key].mgsPorcentagem,
+                          }"
+                          :disabled="!form.parcelas[key].editing"
                         />
                       </td>
                       <td>
@@ -164,7 +170,9 @@
                             class="text-center"
                             id="formapagemento"
                             type="text"
-                            v-model="form.parcelas[key].formaPagamento[0].forma_pg"
+                            v-model="
+                              form.parcelas[key].formaPagamento[0].forma_pg
+                            "
                             placeholder="Pesquise uma forma de Pagamento"
                             disabled
                           >
@@ -191,7 +199,7 @@
                         </b-input-group>
                       </td>
                       <td>
-                        <div v-if="true">
+                        <div v-if="!form.parcelas[key].editing">
                           <button
                             @click="toggleEditingParcela(key)"
                             class="btn btn-sm me-1 mb-1 mt-1"

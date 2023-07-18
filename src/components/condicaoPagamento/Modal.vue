@@ -816,8 +816,8 @@ export default {
     },
     onResetFormaPagamento() {
       this.$v.parcela.$reset();
-      this.parcela.prazo = "";
-      this.parcela.porcentagem = "";
+      this.parcela.prazo = 0;
+      this.parcela.porcentagem = 0;
       this.parcela.forma_pg = "";
       return;
     },
@@ -834,8 +834,6 @@ export default {
       this.form.parcelas[index].editing = false;
     },
     saveChangesParcela(index) {
-      console.log(index);
-      //  console.log("passo 0");
       this.$v.validationParcela.$reset();
       this.setValidationParcela(index);
 
@@ -855,26 +853,25 @@ export default {
         this.verificaSaveParcela = parseFloat(
           this.form.parcelas[index].porcentagem
         );
+
         for (var i = 0; i < this.form.parcelas.length; i++) {
           this.total_porcentagem =
             this.total_porcentagem +
             parseFloat(this.form.parcelas[i].porcentagem);
         }
+
         if (this.total_porcentagem > 100) {
-          console.log("passo 2");
           this.setValidationParcela(index);
           this.form.parcelas[index].mgsPorcentagem =
             this.$v.validationParcela.TotalValorPecent.$invalid;
           this.form.parcelas[index].totalPorcentagem = this.verificaSaveParcela;
           this.total_porcentagem = 0;
+
           for (var j = 0; j < this.form.parcelas.length; j++) {
-            this.total_porcentagem =
-              this.total_porcentagem +
-              parseFloat(this.form.parcelas[j].totalPorcentagem);
+            this.total_porcentagem = this.total_porcentagem + parseFloat(this.form.parcelas[j].porcentagem);
           }
-          this.total_porcentagem =
-            this.total_porcentagem - parseFloat(this.verificaSaveParcela);
-          this.form.totalPorcentagem = this.total_porcentagem;
+          this.total_porcentagem = this.total_porcentagem - parseFloat(this.verificaSaveParcela);
+          this.form.totalPorcentagem = parseFloat(this.total_porcentagem);
           return;
         } else {
           this.total_porcentagem = 0;
@@ -884,8 +881,9 @@ export default {
               parseFloat(this.form.parcelas[h].porcentagem);
           }
           this.form.parcelas[index].editing = false;
-          this.form.totalPorcentagem = this.total_porcentagem;
+          this.form.totalPorcentagem = parseFloat(this.total_porcentagem);
         }
+
         //desativar linhas Tabela
         this.form.parcelas.forEach((row) => {
           row.desativar = true;
@@ -922,10 +920,10 @@ export default {
       this.nextId++;
     },
     setValidationParcela(index) {
-      this.validationParcela.prazo = this.form.parcelas[index].prazo;
-      this.validationParcela.porcentagem =
-        this.form.parcelas[index].porcentagem;
-      this.validationParcela.TotalValorPecent = this.total_porcentagem;
+      this.validationParcela.prazo = parseFloat(this.form.parcelas[index].prazo);
+      this.validationParcela.porcentagem = parseFloat(this.form.parcelas[index].porcentagem);
+      this.validationParcela.TotalValorPecent = parseFloat(this.total_porcentagem);
+      console.log(this.validationParcela);
       return;
     },
     createFormData(form, parcela) {

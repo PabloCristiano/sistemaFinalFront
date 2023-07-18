@@ -778,7 +778,7 @@ export default {
             mgsPorcentagem: false,
             desativar: true,
           });
-          this.form.parcelas = [ ...this.parcelas ];
+          this.form.parcelas = [...this.parcelas];
           this.numParcela++;
           this.$bvModal.hide(this.modal_form_parcela);
         } else {
@@ -835,7 +835,7 @@ export default {
     },
     saveChangesParcela(index) {
       console.log(index);
-       console.log("passo 0");
+      //  console.log("passo 0");
       this.$v.validationParcela.$reset();
       this.setValidationParcela(index);
 
@@ -849,26 +849,28 @@ export default {
       } else {
         this.$v.validationParcela.$reset();
         this.form.parcelas[index].mgsPrazo = false;
-        this.$v.validationParcela.$touch();
         this.form.parcelas[index].mgsPorcentagem = false;
+        this.$v.validationParcela.$touch();
         this.total_porcentagem = 0;
-        this.verificaSaveParcela = parseFloat(this.parcelas[index].porcentagem);
+        this.verificaSaveParcela = parseFloat(
+          this.form.parcelas[index].porcentagem
+        );
         for (var i = 0; i < this.form.parcelas.length; i++) {
           this.total_porcentagem =
-            this.total_porcentagem + parseFloat(this.form.parcelas[i].porcentagem);
+            this.total_porcentagem +
+            parseFloat(this.form.parcelas[i].porcentagem);
         }
-
         if (this.total_porcentagem > 100) {
           console.log("passo 2");
           this.setValidationParcela(index);
           this.form.parcelas[index].mgsPorcentagem =
             this.$v.validationParcela.TotalValorPecent.$invalid;
-
           this.form.parcelas[index].totalPorcentagem = this.verificaSaveParcela;
           this.total_porcentagem = 0;
           for (var j = 0; j < this.form.parcelas.length; j++) {
             this.total_porcentagem =
-              this.total_porcentagem + parseFloat(this.form.parcelas[j].totalPorcentagem);
+              this.total_porcentagem +
+              parseFloat(this.form.parcelas[j].totalPorcentagem);
           }
           this.total_porcentagem =
             this.total_porcentagem - parseFloat(this.verificaSaveParcela);
@@ -878,7 +880,8 @@ export default {
           this.total_porcentagem = 0;
           for (var h = 0; h < this.form.parcelas.length; h++) {
             this.total_porcentagem =
-              this.total_porcentagem + parseFloat(this.form.parcelas[h].porcentagem);
+              this.total_porcentagem +
+              parseFloat(this.form.parcelas[h].porcentagem);
           }
           this.form.parcelas[index].editing = false;
           this.form.totalPorcentagem = this.total_porcentagem;
@@ -891,8 +894,6 @@ export default {
       }
     },
     deleteItemParcela(index) {
-      console.log(index);
-      console.log(this.form.parcelas);
       this.form.parcelas.splice(index, 1);
       this.total_porcentagem = 0;
       this.numParcela = this.numParcela - 1;
@@ -922,7 +923,8 @@ export default {
     },
     setValidationParcela(index) {
       this.validationParcela.prazo = this.form.parcelas[index].prazo;
-      this.validationParcela.porcentagem = this.form.parcelas[index].porcentagem;
+      this.validationParcela.porcentagem =
+        this.form.parcelas[index].porcentagem;
       this.validationParcela.TotalValorPecent = this.total_porcentagem;
       return;
     },

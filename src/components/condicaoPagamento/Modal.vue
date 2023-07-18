@@ -831,8 +831,8 @@ export default {
     },
     onResetFormaPagamento() {
       this.$v.parcela.$reset();
-      this.parcela.prazo = 0;
-      this.parcela.porcentagem = 0;
+      this.parcela.prazo = "";
+      this.parcela.porcentagem = "";
       this.parcela.forma_pg = "";
       return;
     },

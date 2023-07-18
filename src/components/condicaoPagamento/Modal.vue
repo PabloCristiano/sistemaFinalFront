@@ -153,6 +153,12 @@
                           :class="{ 'fail-error': form.parcelas[key].mgsPrazo }"
                           :disabled="!form.parcelas[key].editing"
                         />
+                        <small
+                          style="font-size: 11px; color: rgb(228 96 96)"
+                          v-if="form.parcelas[key].mgsPrazo"
+                        >
+                          {{ validationMsg($v.validationParcela.prazo) }}
+                        </small>
                       </td>
                       <td class="col-md-2">
                         <input
@@ -164,6 +170,15 @@
                           }"
                           :disabled="!form.parcelas[key].editing"
                         />
+                        <small
+                          style="font-size: 11px; color: rgb(228 96 96)"
+                          v-if="form.parcelas[key].mgsPorcentagem"
+                        >
+                          {{ validationMsg($v.validationParcela.porcentagem) }}
+                          {{
+                            validationMsg($v.validationParcela.TotalValorPecent)
+                          }}
+                        </small>
                       </td>
                       <td>
                         <b-input-group>
@@ -838,7 +853,6 @@ export default {
       this.setValidationParcela(index);
 
       if (this.$v.validationParcela.$invalid) {
-        console.log("passo 1");
         this.form.parcelas[index].mgsPrazo =
           this.$v.validationParcela.prazo.$invalid;
         this.form.parcelas[index].mgsPorcentagem =
@@ -868,9 +882,12 @@ export default {
           this.total_porcentagem = 0;
 
           for (var j = 0; j < this.form.parcelas.length; j++) {
-            this.total_porcentagem = this.total_porcentagem + parseFloat(this.form.parcelas[j].porcentagem);
+            this.total_porcentagem =
+              this.total_porcentagem +
+              parseFloat(this.form.parcelas[j].porcentagem);
           }
-          this.total_porcentagem = this.total_porcentagem - parseFloat(this.verificaSaveParcela);
+          this.total_porcentagem =
+            this.total_porcentagem - parseFloat(this.verificaSaveParcela);
           this.form.totalPorcentagem = parseFloat(this.total_porcentagem);
           return;
         } else {
@@ -920,10 +937,12 @@ export default {
       this.nextId++;
     },
     setValidationParcela(index) {
-      this.validationParcela.prazo = parseFloat(this.form.parcelas[index].prazo);
-      this.validationParcela.porcentagem = parseFloat(this.form.parcelas[index].porcentagem);
-      this.validationParcela.TotalValorPecent = parseFloat(this.total_porcentagem);
-      console.log(this.validationParcela);
+      this.validationParcela.prazo = this.form.parcelas[index].prazo;
+      this.validationParcela.porcentagem =
+        this.form.parcelas[index].porcentagem;
+      this.validationParcela.TotalValorPecent = parseFloat(
+        this.total_porcentagem
+      );
       return;
     },
     createFormData(form, parcela) {

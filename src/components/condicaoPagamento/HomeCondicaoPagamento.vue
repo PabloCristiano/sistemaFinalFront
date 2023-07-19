@@ -134,8 +134,8 @@ export default {
         multa: "",
         desconto: "",
         totalPorcentagem: 0,
-        qtd_parcela: 1,
-        parcelas: [
+        qtd_parcela: 0,
+       parcelas: [
           {
             parcela: 1,
             prazo: 0,
@@ -213,7 +213,7 @@ export default {
       this.form_CondicaoPagamento.multa = "";
       this.form_CondicaoPagamento.desconto = "";
       this.form_CondicaoPagamento.totalPorcentagem = 0;
-      this.form_CondicaoPagamento.qtd_parcela = 1;
+      this.form_CondicaoPagamento.qtd_parcela = 0;
       this.form_CondicaoPagamento.parcelas = [];
       this.form_CondicaoPagamento.data_create = "";
       this.form_CondicaoPagamento.data_alt = "";

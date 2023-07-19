@@ -766,12 +766,16 @@ export default {
         this.$v.parcela.$touch();
       } else {
         this.totalVerifica = 0;
-        this.totalVerifica =
-          this.total_porcentagem + parseFloat(this.parcela.porcentagem);
+        var msg = 0;
+        this.form.parcelas.map((e) => {
+          this.totalVerifica = this.totalVerifica + e.porcentagem;
+          msg = msg + e.porcentagem; 
+        });
+
+        this.totalVerifica = this.totalVerifica + parseFloat(this.parcela.porcentagem);
+         console.log('this.totalVerifica',this.totalVerifica)   
         if (this.totalVerifica <= 100) {
-          this.total_porcentagem =
-            this.total_porcentagem + parseFloat(this.parcela.porcentagem);
-          var parcela = this.numParcela;
+          var parcela = parseFloat(this.parcela.numero);
           var prazoParcela = parseFloat(this.parcela.prazo);
           var porcentagemParcela = parseFloat(this.parcela.porcentagem);
           var formaPagamentoParcela = this.parcela.forma_pg;
@@ -794,15 +798,17 @@ export default {
             desativar: true,
           });
           this.form.parcelas = [...this.parcelas];
-          this.numParcela++;
+          this.form.totalPorcentagem = 0;
+          this.form.parcelas.map((e) => {
+            this.form.totalPorcentagem = this.form.totalPorcentagem + e.porcentagem;
+          });
           this.$bvModal.hide(this.modal_form_parcela);
         } else {
-          var msg = 100 - this.total_porcentagem;
+           msg = 100 - msg;
           notyf_Parcela.error(
             "Excedeu 100% da(s) parcelas!  Disponivel: " + msg + "%"
           );
         }
-        this.form.totalPorcentagem = this.total_porcentagem;
       }
     },
     showSearchformaPagamento() {
@@ -908,14 +914,13 @@ export default {
       }
     },
     deleteItemParcela(index) {
-
       this.form.parcelas.splice(index, 1);
       this.total_porcentagem = 0;
       //this.numParcela = this.numParcela - 1;
-      this.form.qtd_parcela = this.form.qtd_parcela -1; 
+      this.form.qtd_parcela = this.form.qtd_parcela - 1;
 
       for (var i = 0; i < this.form.parcelas.length; i++) {
-        this.form.parcelas[i].numero = i + 1;
+        //this.form.parcelas[i].numero = i + 1;
         this.form.parcelas[i].parcela = i + 1;
         this.total_porcentagem =
           this.total_porcentagem +

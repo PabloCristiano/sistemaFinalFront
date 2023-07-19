@@ -754,7 +754,7 @@ export default {
     },
     openModelParcela() {
       this.onResetFormaPagamento();
-      this.parcela.numero = this.numParcela;
+      this.parcela.numero = this.form.parcelas.length + 1;
       this.$bvModal.show(this.modal_form_parcela);
     },
     closePacela() {
@@ -837,7 +837,6 @@ export default {
       return;
     },
     toggleEditingParcela(index) {
-      console.log(index);
       this.form.parcelas[index].editing = !this.form.parcelas[index].editing;
       this.buttonLock = true;
       //desativar linhas na tabela
@@ -909,12 +908,15 @@ export default {
       }
     },
     deleteItemParcela(index) {
+
       this.form.parcelas.splice(index, 1);
       this.total_porcentagem = 0;
-      this.numParcela = this.numParcela - 1;
+      //this.numParcela = this.numParcela - 1;
+      this.form.qtd_parcela = this.form.qtd_parcela -1; 
 
       for (var i = 0; i < this.form.parcelas.length; i++) {
         this.form.parcelas[i].numero = i + 1;
+        this.form.parcelas[i].parcela = i + 1;
         this.total_porcentagem =
           this.total_porcentagem +
           parseFloat(this.form.parcelas[i].porcentagem);

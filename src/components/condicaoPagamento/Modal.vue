@@ -858,7 +858,7 @@ export default {
     saveChangesParcela(index) {
       this.$v.validationParcela.$reset();
       this.setValidationParcela(index);
-
+      console.log(index);
       if (this.$v.validationParcela.$invalid) {
         this.form.parcelas[index].mgsPrazo =
           this.$v.validationParcela.prazo.$invalid;
@@ -914,7 +914,8 @@ export default {
         });
         this.buttonLock = false;
       }
-      console.log('Form Parcelas',this.form.parcelas);
+      this.form.parcelas[index].prazo = parseFloat(this.form.parcelas[index].prazo);
+      this.form.parcelas[index].porcentagem = parseFloat(this.form.parcelas[index].porcentagem);
     },
     deleteItemParcela(index) {
       this.form.parcelas.splice(index, 1);

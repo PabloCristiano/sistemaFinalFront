@@ -782,7 +782,7 @@ export default {
           console.log(porcentagemParcela);
           var formaPagamentoParcela = this.parcela.forma_pg;
           var idformaPagamentoParcela = this.parcela.idformapg;
-          // this.parcelas =[];
+          this.parcelas = this.form.parcelas;
           this.parcelas.push({
             parcela: parcela,
             prazo: prazoParcela,
@@ -801,7 +801,6 @@ export default {
             desativar: true,
           });
           this.form.parcelas = [...this.parcelas];
-          // this.form.parcelas.push(this.parcelas);
           this.form.totalPorcentagem = 0;
           this.form.parcelas.map((e) => {
             this.form.totalPorcentagem =
@@ -824,6 +823,7 @@ export default {
     },
     showSearchformaPagamento_parcela(key) {
       this.key_parcela = key;
+
       this.$bvModal.show(this.modal_search_FormaPagamento);
     },
     fecharModalSearchFormaPagamento() {
@@ -835,12 +835,18 @@ export default {
       }
       this.parcela.idformapg = obj.row.id;
       this.parcela.forma_pg = obj.row.forma_pg;
-      this.$bvModal.hide(this.modal_search_FormaPagamento);
+
       if (this.parcelas[this.key_parcela]) {
         this.parcelas[this.key_parcela].idformapagamento = obj.row.id;
         this.parcelas[this.key_parcela].forma_pg = obj.row.forma_pg;
-        return;
       }
+
+      if ( this.form.parcelas[this.key_parcela]) {
+        this.form.parcelas[this.key_parcela].formaPagamento[0].id = obj.row.id;
+        this.form.parcelas[this.key_parcela].formaPagamento[0].forma_pg =  obj.row.forma_pg;
+        this.$bvModal.hide(this.modal_search_FormaPagamento);
+      }
+      this.$bvModal.hide(this.modal_search_FormaPagamento);
       return;
     },
     onResetFormaPagamento() {
@@ -863,12 +869,6 @@ export default {
     },
     saveChangesParcela(index) {
       this.$v.validationParcela.$reset();
-      this.form.parcelas[index].prazo = parseFloat(
-        this.form.parcelas[index].prazo
-      );
-      this.form.parcelas[index].porcentagem = parseFloat(
-        this.form.parcelas[index].porcentagem
-      );
       this.setValidationParcela(index);
       console.log(index);
       if (this.$v.validationParcela.$invalid) {
@@ -925,6 +925,12 @@ export default {
           row.desativar = true;
         });
         this.buttonLock = false;
+        this.form.parcelas[index].prazo = parseFloat(
+          this.form.parcelas[index].prazo
+        );
+        this.form.parcelas[index].porcentagem = parseFloat(
+          this.form.parcelas[index].porcentagem
+        );
       }
     },
     deleteItemParcela(index) {

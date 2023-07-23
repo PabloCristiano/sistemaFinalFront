@@ -769,11 +769,12 @@ export default {
         var msg = 0;
         this.form.parcelas.map((e) => {
           this.totalVerifica = this.totalVerifica + e.porcentagem;
-          msg = msg + e.porcentagem; 
+          msg = msg + e.porcentagem;
         });
 
-        this.totalVerifica = this.totalVerifica + parseFloat(this.parcela.porcentagem);
-         console.log('this.totalVerifica',this.totalVerifica)   
+        this.totalVerifica =
+          this.totalVerifica + parseFloat(this.parcela.porcentagem);
+        console.log("this.totalVerifica", this.totalVerifica);
         if (this.totalVerifica <= 100) {
           var parcela = parseFloat(this.parcela.numero);
           var prazoParcela = parseFloat(this.parcela.prazo);
@@ -781,6 +782,7 @@ export default {
           console.log(porcentagemParcela);
           var formaPagamentoParcela = this.parcela.forma_pg;
           var idformaPagamentoParcela = this.parcela.idformapg;
+          this.parcelas =[];
           this.parcelas.push({
             parcela: parcela,
             prazo: prazoParcela,
@@ -798,20 +800,24 @@ export default {
             mgsPorcentagem: false,
             desativar: true,
           });
-          this.form.parcelas = [...this.parcelas];
+          // this.form.parcelas = [...this.parcelas];
+          this.form.parcelas.push(this.parcelas);
           this.form.totalPorcentagem = 0;
           this.form.parcelas.map((e) => {
-            this.form.totalPorcentagem = this.form.totalPorcentagem + e.porcentagem;
+            this.form.totalPorcentagem =
+              this.form.totalPorcentagem + e.porcentagem;
           });
+          console.log("this.form.parcelas", this.form.parcelas);
+          console.log("parcelas", this.parcelas);
           this.$bvModal.hide(this.modal_form_parcela);
         } else {
-           msg = 100 - msg;
+          msg = 100 - msg;
+          msg = msg.toFixed(2);
           notyf_Parcela.error(
             "Excedeu 100% da(s) parcelas!  Disponivel: " + msg + "%"
           );
         }
       }
-
     },
     showSearchformaPagamento() {
       this.$bvModal.show(this.modal_search_FormaPagamento);
@@ -857,6 +863,12 @@ export default {
     },
     saveChangesParcela(index) {
       this.$v.validationParcela.$reset();
+      this.form.parcelas[index].prazo = parseFloat(
+        this.form.parcelas[index].prazo
+      );
+      this.form.parcelas[index].porcentagem = parseFloat(
+        this.form.parcelas[index].porcentagem
+      );
       this.setValidationParcela(index);
       console.log(index);
       if (this.$v.validationParcela.$invalid) {
@@ -914,8 +926,6 @@ export default {
         });
         this.buttonLock = false;
       }
-      this.form.parcelas[index].prazo = parseFloat(this.form.parcelas[index].prazo);
-      this.form.parcelas[index].porcentagem = parseFloat(this.form.parcelas[index].porcentagem);
     },
     deleteItemParcela(index) {
       this.form.parcelas.splice(index, 1);
@@ -935,6 +945,7 @@ export default {
         row.desativar = true;
       });
       this.buttonLock = false;
+      console.log(this.form.parcelas);
       return;
     },
     addItem() {

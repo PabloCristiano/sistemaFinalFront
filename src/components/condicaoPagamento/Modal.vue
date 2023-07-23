@@ -241,7 +241,7 @@
                             @click="saveChangesParcela(key)"
                             class="btn btn-sm me-1 mb-1 mt-1"
                             type="button"
-                            title="Salvar"
+                            title="SALVAR"
                             style="background-color: #28a74563"
                           >
                             <i class="bx bx-check"></i>
@@ -467,7 +467,7 @@
         </slot>
         <slot name="rodape"> </slot>
       </b-card>
-      {{ form.parcelas }}
+      {{ form.parcelas }} -- {{ parcela }}
     </b-modal>
     <!-- modal Forma de Pagamento -->
     <b-modal
@@ -778,6 +778,7 @@ export default {
           var parcela = parseFloat(this.parcela.numero);
           var prazoParcela = parseFloat(this.parcela.prazo);
           var porcentagemParcela = parseFloat(this.parcela.porcentagem);
+          console.log(porcentagemParcela);
           var formaPagamentoParcela = this.parcela.forma_pg;
           var idformaPagamentoParcela = this.parcela.idformapg;
           this.parcelas.push({
@@ -810,6 +811,7 @@ export default {
           );
         }
       }
+
     },
     showSearchformaPagamento() {
       this.$bvModal.show(this.modal_search_FormaPagamento);
@@ -912,6 +914,7 @@ export default {
         });
         this.buttonLock = false;
       }
+      console.log('Form Parcelas',this.form.parcelas);
     },
     deleteItemParcela(index) {
       this.form.parcelas.splice(index, 1);

@@ -328,7 +328,6 @@
           </div>
         </slot>
       </b-card>
-      {{ form.parcelas }}
     </b-modal>
     <!-- Modal Parcela -->
     <b-modal
@@ -467,7 +466,6 @@
         </slot>
         <slot name="rodape"> </slot>
       </b-card>
-      {{ form.parcelas }} -- {{ parcela }}
     </b-modal>
     <!-- modal Forma de Pagamento -->
     <b-modal
@@ -508,7 +506,6 @@
         >
       </b-container>
     </b-modal>
-    {{ form.parcelas }}
   </div>
 </template>
 <script>
@@ -774,12 +771,10 @@ export default {
 
         this.totalVerifica =
           this.totalVerifica + parseFloat(this.parcela.porcentagem);
-        console.log("this.totalVerifica", this.totalVerifica);
         if (this.totalVerifica <= 100) {
           var parcela = parseFloat(this.parcela.numero);
           var prazoParcela = parseFloat(this.parcela.prazo);
           var porcentagemParcela = parseFloat(this.parcela.porcentagem);
-          console.log(porcentagemParcela);
           var formaPagamentoParcela = this.parcela.forma_pg;
           var idformaPagamentoParcela = this.parcela.idformapg;
           this.parcelas = this.form.parcelas;
@@ -806,8 +801,6 @@ export default {
             this.form.totalPorcentagem =
               this.form.totalPorcentagem + e.porcentagem;
           });
-          console.log("this.form.parcelas", this.form.parcelas);
-          console.log("parcelas", this.parcelas);
           this.$bvModal.hide(this.modal_form_parcela);
         } else {
           msg = 100 - msg;
@@ -870,7 +863,6 @@ export default {
     saveChangesParcela(index) {
       this.$v.validationParcela.$reset();
       this.setValidationParcela(index);
-      console.log(index);
       if (this.$v.validationParcela.$invalid) {
         this.form.parcelas[index].mgsPrazo =
           this.$v.validationParcela.prazo.$invalid;
@@ -951,7 +943,6 @@ export default {
         row.desativar = true;
       });
       this.buttonLock = false;
-      console.log(this.form.parcelas);
       return;
     },
     addItem() {

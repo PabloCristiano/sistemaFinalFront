@@ -782,7 +782,7 @@ export default {
           console.log(porcentagemParcela);
           var formaPagamentoParcela = this.parcela.forma_pg;
           var idformaPagamentoParcela = this.parcela.idformapg;
-          this.parcelas =[];
+          // this.parcelas =[];
           this.parcelas.push({
             parcela: parcela,
             prazo: prazoParcela,
@@ -800,8 +800,8 @@ export default {
             mgsPorcentagem: false,
             desativar: true,
           });
-          // this.form.parcelas = [...this.parcelas];
-          this.form.parcelas.push(this.parcelas);
+          this.form.parcelas = [...this.parcelas];
+          // this.form.parcelas.push(this.parcelas);
           this.form.totalPorcentagem = 0;
           this.form.parcelas.map((e) => {
             this.form.totalPorcentagem =

@@ -513,6 +513,7 @@ import * as validators from "vuelidate/lib/validators";
 import { validationMessage } from "vuelidate-messages";
 import Rules from "../../rules/rules";
 import HomeFormaPagamento from "../formaPagamento/HomeFormaPagamento.vue";
+import { ServiceCondicaoPagamento } from "../../services/serviceCondicaoPagamento";
 import { formataDataTempo } from "../../rules/filters";
 import { Notyf } from "notyf";
 const formMessages = {
@@ -531,6 +532,29 @@ const formMessages = {
   maxValuePercent: () => "Excedeu 100% da(s) parcelas",
 };
 const notyf_Parcela = new Notyf({
+  position: {
+    x: "center",
+    y: "top",
+  },
+  types: [
+    {
+      type: "warning",
+      background: "orange",
+      icon: {
+        className: "material-icons",
+        tagName: "i",
+        text: "warning",
+      },
+    },
+    {
+      type: "error",
+      background: "indianred",
+      duration: 5000,
+      dismissible: true,
+    },
+  ],
+});
+const notyf = new Notyf({
   position: {
     x: "center",
     y: "top",
@@ -676,35 +700,33 @@ export default {
       this.$bvModal.hide(this.modal_form_condicaoPagamento);
     },
     onSubmit() {
-      //const vm = this;
+      const vm = this;
       if (this.$v.form.$invalid) {
         this.$v.form.$touch();
         this.$v.$touch();
       } else {
         if (this.form.btn === "Salvar") {
           var formData = this.createFormData(this.form, this.parcelas);
-          console.log(formData);
-          alert("Condição de Pagamento enviadooo");
-          //   ServiceFormaPagamento.storeFormaPagamento(this.form)
-          //     .then((response) => {
-          //       if (response.status === 200) {
-          //         notyf.success(response.data.success);
-          //         vm.onReset();
-          //         vm.$bvModal.hide(vm.modal_form_formaPagamento);
-          //         this.function_getListFormaPagamento();
-          //       } else {
-          //         if (response.response.data.errors != null) {
-          //           Object.keys(response.response.data.errors).forEach(function (
-          //             key
-          //           ) {
-          //             notyf.error(response.response.data.errors[key][0]);
-          //           });
-          //         }
-          //       }
-          //     })
-          //     .catch((error) => {
-          //       console.log(error);
-          //     });
+          ServiceCondicaoPagamento.storeCondicaoPagemento(formData)
+            .then((response) => {
+              if (response.status === 200) {
+                notyf.success(response.data.Message);
+                vm.onReset();
+                vm.$bvModal.hide(vm.modal_form_condicaoPagamento);
+                this.function_getListFormaPagamento();
+              } else {
+                if (response.response.data.errors != null) {
+                  Object.keys(response.response.data.errors).forEach(function (
+                    key
+                  ) {
+                    notyf.error(response.response.data.errors[key][0]);
+                  });
+                }
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
         if (this.form.btn === "Alterar") {
           console.log(this.form);
@@ -834,9 +856,10 @@ export default {
         this.parcelas[this.key_parcela].forma_pg = obj.row.forma_pg;
       }
 
-      if ( this.form.parcelas[this.key_parcela]) {
+      if (this.form.parcelas[this.key_parcela]) {
         this.form.parcelas[this.key_parcela].formaPagamento[0].id = obj.row.id;
-        this.form.parcelas[this.key_parcela].formaPagamento[0].forma_pg =  obj.row.forma_pg;
+        this.form.parcelas[this.key_parcela].formaPagamento[0].forma_pg =
+          obj.row.forma_pg;
         this.$bvModal.hide(this.modal_search_FormaPagamento);
       }
       this.$bvModal.hide(this.modal_search_FormaPagamento);
@@ -974,7 +997,7 @@ export default {
         data_create: form.data_create,
         data_alt: form.data_alt,
         totalPorcentagem: form.totalPorcentagem,
-        qtd_parcelas: parcela.length,
+        qtd_parcela: parcela.length,
         parcelas: parcela,
       };
       return formData;

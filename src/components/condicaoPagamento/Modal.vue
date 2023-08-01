@@ -684,7 +684,7 @@ export default {
   },
   methods: {
     validationMsg: validationMessage(formMessages),
-    function_getListFormaPagamento() {
+    function_getListCondicaoPagamento() {
       this.funcgetListCondicaoPagamento();
     },
     onReset() {
@@ -713,7 +713,7 @@ export default {
                 notyf.success(response.data.Message);
                 vm.onReset();
                 vm.$bvModal.hide(vm.modal_form_condicaoPagamento);
-                this.function_getListFormaPagamento();
+                this.function_getListCondicaoPagamento();
               } else {
                 if (response.response.data.errors != null) {
                   Object.keys(response.response.data.errors).forEach(function (
@@ -752,22 +752,26 @@ export default {
           //     });
         }
         if (this.form.btn === "Excluir") {
-          //   ServiceFormaPagamento.excluirFormaPagamento(this.form.id)
-          //     .then((obj) => {
-          //       if (obj.status === 200) {
-          //         notyf.success(obj.data.success);
-          //         this.onReset();
-          //         this.$bvModal.hide(this.modal_form_formaPagamento);
-          //         this.function_getListFormaPagamento();
-          //       } else {
-          //         if (obj.response.data.erro.length > 0) {
-          //           notyf.error(obj.response.data.erro[0]);
-          //         }
-          //       }
-          //     })
-          //     .catch((error) => {
-          //       console.log(error);
-          //     });
+          ServiceCondicaoPagamento.excluirCondicaoPagemento(this.form.id)
+            .then((obj) => {
+              if (obj.status === 200) {
+                if (obj.data.success === true) {
+                  notyf.success(obj.data.Message);
+                  this.onReset();
+                  this.$bvModal.hide(this.modal_form_condicaoPagamento);
+                  this.function_getListCondicaoPagamento();
+                } else {
+                  notyf.error(obj.data[0]);
+                }
+              } else {
+                if (obj.response.data.erro.length > 0) {
+                  notyf.error(obj.response.data.erro[0]);
+                }
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         }
       }
     },

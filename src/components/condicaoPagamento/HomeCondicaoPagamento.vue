@@ -199,7 +199,6 @@ export default {
       this.funcGetById(id, titulo, btn, disabled);
     },
     showModalExcluirCondicaoPagamento(id) {
-      console.log(id);
       this.onReset();
       var titulo = "Excluir Condição de Pagamento";
       var btn = "Excluir";
@@ -249,6 +248,11 @@ export default {
           this.form_CondicaoPagamento.totalPorcentagem = this.funcCalcPercent(obj.data[0].parcelas);
           this.isLoading = false;
           this.$bvModal.show(this.modal_form_condicaoPagamento);
+          if(btn === "Excluir" ){
+            this.form_CondicaoPagamento.parcelas.map((e)=>{
+              e.desativar = false;
+            })
+          }
           return;
         })
         .catch((error) => {

@@ -23,7 +23,7 @@
                                     :class="{ 'fail-error': $v.form.categoria.$error }" v-model="form.categoria"
                                     :disabled="form.disabled">
                                 </b-form-input>
-                                <small style="font-size: 11px; color: red">
+                                <small style="font-size: 11px; color: rgb(228 96 96)">
                                     {{ validationMsg($v.form.categoria) }}
                                 </small>
                             </div>
@@ -199,6 +199,6 @@ export default {
 </script>
 <style>
 .fail-error {
-    border: 1px solid red;
+    border: 2px solid #e46060bb;
 }
 </style>

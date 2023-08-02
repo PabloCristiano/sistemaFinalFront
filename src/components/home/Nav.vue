@@ -55,7 +55,7 @@
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Financeiro</a></li>
           <li><router-link :to="{path:'/formapagamento'}">Forma de Pagamento</router-link></li>
-          <li><a href="#" style="white-space: pre-line;">Condição de Pagamento</a></li>
+          <li><router-link :to="{path:'/condicaopagamento'}">Condição de Pagamento</router-link></li>
         </ul>
       </li>
       <!--<li>

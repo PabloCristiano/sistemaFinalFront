@@ -79,6 +79,20 @@ const Rules = {
       
         // Se passou pelas duas condições, o valor é positivo e maior que zero
         return true;
+      },
+    isNumber(value) {
+        // Verifica se o valor é numérico
+        if (isNaN(value)) {
+          return false;
+        }
+      
+        // Verifica se o valor é maior que zero
+        if (parseFloat(value) < 0) {
+          return false;
+        }
+      
+        // Se passou pelas duas condições, o valor é positivo e maior que zero
+        return true;
       }
 };
 export default Rules;

@@ -729,7 +729,7 @@ export default {
             });
         }
         if (this.form.btn === "Alterar") {
-          console.log(this.form);
+          vm.$bvModal.hide(vm.modal_form_condicaoPagamento);
           //   ServiceFormaPagamento.alterarFormaPagamento(this.form)
           //     .then((response) => {
           //       if (response.status === 200) {

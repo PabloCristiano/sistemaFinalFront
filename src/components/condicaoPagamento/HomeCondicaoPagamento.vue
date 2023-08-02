@@ -135,7 +135,7 @@ export default {
         desconto: "",
         totalPorcentagem: 0,
         qtd_parcela: 0,
-       parcelas: [
+        parcelas: [
           {
             parcela: 1,
             prazo: 0,
@@ -176,7 +176,6 @@ export default {
       ServiceCondicaoPagamento.getAll()
         .then((obj) => {
           if (obj) {
-            console.log(obj);
             this.condicaoPagamentos = obj;
           }
           this.isLoading = false;
@@ -195,7 +194,7 @@ export default {
       this.onReset();
       var titulo = "Alterar Condição de Pagamento";
       var btn = "Alterar";
-      var disabled = false;
+      var disabled = true;
       this.funcGetById(id, titulo, btn, disabled);
     },
     showModalExcluirCondicaoPagamento(id) {
@@ -245,13 +244,20 @@ export default {
             };
           });
           this.form_CondicaoPagamento.parcelas = obj.data[0].parcelas;
-          this.form_CondicaoPagamento.totalPorcentagem = this.funcCalcPercent(obj.data[0].parcelas);
+          this.form_CondicaoPagamento.totalPorcentagem = this.funcCalcPercent(
+            obj.data[0].parcelas
+          );
           this.isLoading = false;
           this.$bvModal.show(this.modal_form_condicaoPagamento);
-          if(btn === "Excluir" ){
-            this.form_CondicaoPagamento.parcelas.map((e)=>{
+          if (btn === "Excluir") {
+            this.form_CondicaoPagamento.parcelas.map((e) => {
               e.desativar = false;
-            })
+            });
+          }
+          if (btn === "Alterar") {
+            this.form_CondicaoPagamento.parcelas.map((e) => {
+              e.desativar = false;
+            });
           }
           return;
         })
@@ -259,13 +265,13 @@ export default {
           console.log(error);
         });
     },
-    funcCalcPercent(obj){
+    funcCalcPercent(obj) {
       var total = 0;
-     obj.map((el)=>{
-      total = total + el.porcentagem
-     })
-     return  total; 
-    }
+      obj.map((el) => {
+        total = total + el.porcentagem;
+      });
+      return total;
+    },
   },
 };
 </script>

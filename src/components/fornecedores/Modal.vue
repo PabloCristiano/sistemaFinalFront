@@ -846,7 +846,6 @@ export default {
           ServiceFornecedor.alterarFornecedor(this.form)
             .then((response) => {
               if (response.status === 200) {
-                console.log(response.data.success);
                 notyf.success(response.data.success);
                 vm.onReset();
                 vm.$bvModal.hide(vm.modal_form_fornecedor);

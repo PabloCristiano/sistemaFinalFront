@@ -192,8 +192,8 @@ export default {
             this.form_cliente.cep = '';
             this.form_cliente.id_cidade = '';
             this.form_cliente.cidade = '';
-            this.form_cliente.id_condicaopg = '487';
-            this.form_cliente.condicaopg = '30/60/90';
+            this.form_cliente.id_condicaopg = '';
+            this.form_cliente.condicaopg = '';
             this.form_cliente.whatsapp = '';
             this.form_cliente.telefone = '';
             this.form_cliente.email = '';
@@ -208,6 +208,7 @@ export default {
             this.isLoading = true;
             ServiceCliente.getById(id)
                 .then(obj => {
+                    console.log(obj.data[0].condicao_pagemento.condicao_pagamento);
                     this.form_cliente.id = obj.data[0].id;
                     this.form_cliente.cliente = obj.data[0].cliente;
                     this.form_cliente.apelido = obj.data[0].apelido;
@@ -222,8 +223,8 @@ export default {
                     this.form_cliente.cep = obj.data[0].cep;
                     this.form_cliente.id_cidade = obj.data[0].cidade.id;
                     this.form_cliente.cidade = obj.data[0].cidade.cidade;
-                    this.form_cliente.id_condicaopg = '487';
-                    this.form_cliente.condicaopg = '30/60/90';
+                    this.form_cliente.id_condicaopg = obj.data[0].condicao_pagemento.id;
+                    this.form_cliente.condicaopg = obj.data[0].condicao_pagemento.condicao_pagamento;
                     this.form_cliente.whatsapp = obj.data[0].whatsapp;
                     this.form_cliente.telefone = obj.data[0].telefone;
                     this.form_cliente.email = obj.data[0].email;

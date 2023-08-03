@@ -368,18 +368,18 @@
               <div class="col-md-4">
                 <label>Código:</label>
                 <b-form-input
-                  id="id_condicaopg"
+                  id="id_condicao"
                   type="number"
-                  v-model="form.id_condicaopg"
+                  v-model="form.id_condicao"
                   value="487"
-                  :class="{ 'fail-error': $v.form.id_condicaopg.$error }"
+                  :class="{ 'fail-error': $v.form.id_condicao.$error }"
                   placeholder="Código"
-                  :title="form.id_condicaopg"
+                  :title="form.id_condicao"
                   :disabled="form.disabled"
                 >
                 </b-form-input>
                 <small style="font-size: 11px; color: red">
-                  {{ validationMsg($v.form.id_condicaopg) }}
+                  {{ validationMsg($v.form.id_condicao) }}
                 </small>
               </div>
               <div class="col-md-8">
@@ -629,7 +629,7 @@ export default {
         cidade: {
           required: validators.required,
         },
-        id_condicaopg: {
+        id_condicao: {
           required: validators.required,
           integer: validators.integer,
         },
@@ -728,8 +728,10 @@ export default {
             });
         }
         if (this.form.btn === "Alterar") {
+          console.log(this.form);
           ServiceCliente.alterarCliente(this.form)
             .then((response) => {
+              console.log(response);
               if (response.status === 200) {
                 console.log(response.data.success);
                 notyf.success(response.data.success);

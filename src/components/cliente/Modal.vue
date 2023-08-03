@@ -405,6 +405,7 @@
                       <b-button
                         text="Button"
                         variant="dark"
+                        @click="showSearchCondicao()"
                         :disabled="form.disabled"
                         title="Pesquisar Condição de Pagamento"
                         ><svg
@@ -517,12 +518,51 @@
         >
       </b-container>
     </b-modal>
+    <!-- Modal Condição -->
+    <b-modal
+      :id="modal_search_condicao"
+      size="xl"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+    >
+      <template v-slot:modal-header>
+        <h5>Pesquisar Condição de Pagamento</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="fecharModalSearchCondicao()"
+        >
+          X
+        </b-button>
+      </template>
+      <b-container fluid>
+        <HomeCondicaoPagamento :functionCondicao="changeSearchCondicao"></HomeCondicaoPagamento>
+      </b-container>
+      <b-container
+        class="col-sm-12 col-md-12 mt-3"
+        style="text-align: center"
+        footer
+      >
+        <b-button
+          @click="fecharModalSearchCondicao()"
+          type="button"
+          id=""
+          class="btn btn-dark btn-sm"
+          >Fechar Pesquisa Condição de Pagamento</b-button
+        >
+      </b-container>
+    </b-modal>
+
   </div>
 </template>
 <script>
 import * as validators from "vuelidate/lib/validators";
 import { validationMessage } from "vuelidate-messages";
 import HomeCidade from "../cidade/HomeCidade.vue";
+import HomeCondicaoPagamento from "../condicaoPagamento/HomeCondicaoPagamento.vue";
 import { Notyf } from "notyf";
 import axios from "axios";
 import { ServiceCidade } from "../../services/serviceCidade";
@@ -572,7 +612,7 @@ export default {
     funcOnReset: { type: Function },
     functionGetListCliente: { type: Function },
   },
-  components: { HomeCidade },
+  components: { HomeCidade,HomeCondicaoPagamento },
   data() {
     return {
       form: this.formulario,
@@ -580,6 +620,7 @@ export default {
       headerTextVariant: "light",
       modal_form_cliente: "modal_form_cliente",
       modal_search_cidade: "modal_search_cidade",
+      modal_search_condicao: "modal_search_condicao",
       isLoadingCidade: false,
     };
   },
@@ -675,8 +716,16 @@ export default {
       // this.form.cidade = "";
       this.$bvModal.show(this.modal_search_cidade);
     },
+    showSearchCondicao() {
+      // this.form.id_cidade = "";
+      // this.form.cidade = "";
+      this.$bvModal.show(this.modal_search_condicao);
+    },
     fecharModalSearchCidade() {
       this.$bvModal.hide(this.modal_search_cidade);
+    },
+    fecharModalSearchCondicao() {
+      this.$bvModal.hide(this.modal_search_condicao);
     },
     changeSearchCidade(obj) {
       if (obj.column.field === "btn") {
@@ -685,6 +734,14 @@ export default {
       this.form.id_cidade = obj.row.id;
       this.form.cidade = obj.row.cidade;
       this.$bvModal.hide(this.modal_search_cidade);
+    },
+    changeSearchCondicao(obj) {
+      if (obj.column.field === "btn") {
+        return;
+      }
+      this.form.id_condicao = obj.row.id;
+      this.form.condicaopg = obj.row.condicao_pagamento;
+      this.$bvModal.hide(this.modal_search_condicao);
     },
     closeCliente() {
       this.onReset();

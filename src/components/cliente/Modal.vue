@@ -770,7 +770,6 @@ export default {
                   notyf.error(response.data[1]);
                 }
               } else {
-                console.log(response.response.data.errors);
                 if (response.response.data.errors != null) {
                   Object.keys(response.response.data.errors).forEach(function (
                     key
@@ -785,12 +784,9 @@ export default {
             });
         }
         if (this.form.btn === "Alterar") {
-          console.log(this.form);
           ServiceCliente.alterarCliente(this.form)
             .then((response) => {
-              console.log(response);
               if (response.status === 200) {
-                console.log(response.data.success);
                 notyf.success(response.data.success);
                 vm.onReset();
                 vm.$bvModal.hide(vm.modal_form_cliente);

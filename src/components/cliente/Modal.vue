@@ -371,6 +371,7 @@
                   id="id_condicao"
                   type="number"
                   v-model="form.id_condicao"
+                  v-debounce:1000ms="condicaoDebounce"
                   value="487"
                   :class="{ 'fail-error': $v.form.id_condicao.$error }"
                   placeholder="Código"
@@ -388,13 +389,12 @@
                     *</b
                   ></label
                 >
-                <b-overlay :show="false" rounded="sm">
+                <b-overlay :show="isLoadingCondicao" rounded="sm">
                   <b-input-group>
                     <b-form-input
                       id="condicaopg"
                       type="text"
                       v-model="form.condicaopg"
-                      :value="30 / 60 / 90"
                       :class="{ 'fail-error': $v.form.condicaopg.$error }"
                       placeholder="Condição Pagamento"
                       disabled
@@ -567,6 +567,7 @@ import { Notyf } from "notyf";
 import axios from "axios";
 import { ServiceCidade } from "../../services/serviceCidade";
 import { ServiceCliente } from "../../services/serviceCliente";
+import { ServiceCondicaoPagamento } from "../../services/serviceCondicaoPagamento";
 import Rules from "../../rules/rules";
 import { formataDataTempo } from "../../rules/filters";
 const notyf = new Notyf({
@@ -622,6 +623,7 @@ export default {
       modal_search_cidade: "modal_search_cidade",
       modal_search_condicao: "modal_search_condicao",
       isLoadingCidade: false,
+      isLoadingCondicao:false
     };
   },
   filters: {
@@ -850,6 +852,21 @@ export default {
           vm.form.id_cidade = "";
           this.isLoadingCidade = false;
           notyf.error("Cidade não encontrado");
+        }
+      });
+    },
+    condicaoDebounce(id) {
+      this.isLoadingCondicao = true;
+      let vm = this;
+      ServiceCondicaoPagamento.getById(id).then((response) => {
+        if (response.status === 200) {
+          vm.form.condicaopg = response.data[0].condicao_pagamento;
+          this.isLoadingCondicao = false;
+        } else {
+          vm.form.condicaopg = "";
+          vm.form.id_condicao = "";
+          this.isLoadingCondicao = false;
+          notyf.error("Condicão de Pagamento não encontrada");
         }
       });
     },

@@ -47,7 +47,7 @@
       <li v-if="data.isUser !== 'false' ? false : true">
         <div class="iocn-link">
           <a href="#">
-            <i class="bx bx-book-alt"></i>
+            <i class='bx bx-spreadsheet' ></i>
             <span class="link_name">Financeiro</span>
           </a>
           <i class="bx bxs-chevron-down arrow"></i>
@@ -58,7 +58,21 @@
           <li><router-link :to="{path:'/condicaopagamento'}">Condição de Pagamento</router-link></li>
         </ul>
       </li>
-      <!--<li>
+      <li v-if="data.isUser !== 'false' ? false : true">
+        <div class="iocn-link">
+          <a href="#">
+            <i class='bx bx-spreadsheet' ></i>
+            <span class="link_name">Comercial</span>
+          </a>
+          <i class="bx bxs-chevron-down arrow"></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">Comercial</a></li>
+          <li><a class="link_name" href="#">Compra</a></li>
+          <li><a class="link_name" href="#">Venda</a></li>
+        </ul>
+      </li>
+      <!-- <li>
         <a href="#">
           <i class="bx bx-pie-chart-alt-2"></i>
           <span class="link_name">Analytics</span>
@@ -66,8 +80,8 @@
         <ul class="sub-menu blank">
           <li><a class="link_name" href="#">Analytics</a></li>
         </ul>
-      </li>
-      <li>
+      </li> -->
+      <!-- <li>
         <a href="#">
           <i class="bx bx-line-chart"></i>
           <span class="link_name">Chart</span>
@@ -75,8 +89,8 @@
         <ul class="sub-menu blank">
           <li><a class="link_name" href="#">Chart</a></li>
         </ul>
-      </li>
-      <li>
+      </li> -->
+      <!-- <li>
         <div class="iocn-link">
           <a href="#">
             <i class="bx bx-plug"></i>
@@ -99,8 +113,8 @@
         <ul class="sub-menu blank">
           <li><a class="link_name" href="#">Explore</a></li>
         </ul>
-      </li>
-      <li>
+      </li> -->
+      <!-- <li>
         <a href="#">
           <i class="bx bx-history"></i>
           <span class="link_name">History</span>
@@ -108,16 +122,16 @@
         <ul class="sub-menu blank">
           <li><a class="link_name" href="#">History</a></li>
         </ul>
-      </li>
+      </li> -->
       <li>
         <a href="#">
           <i class="bx bx-cog"></i>
-          <span class="link_name">Setting</span>
+          <span class="link_name">Configuração</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">Setting</a></li>
+          <li><a class="link_name" href="#">Configuração</a></li>
         </ul>
-      </li> -->
+      </li>
       <li>
         <div class="profile-details">
           <div class="profile-content">

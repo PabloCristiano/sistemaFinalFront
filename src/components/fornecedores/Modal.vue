@@ -437,7 +437,7 @@
                   id="id_condicaopg"
                   type="number"
                   v-model="form.id_condicaopg"
-                  value="487"
+                  v-debounce:1000ms="condicaoDebounce"
                   :class="{ 'fail-error': $v.form.id_condicaopg.$error }"
                   placeholder="Código"
                   :title="form.id_condicaopg"
@@ -454,13 +454,12 @@
                     *</b
                   ></label
                 >
-                <b-overlay :show="false" rounded="sm">
+                <b-overlay :show="isLoadingCondicao" rounded="sm">
                   <b-input-group>
                     <b-form-input
                       id="condicaopg"
                       type="text"
                       v-model="form.condicaopg"
-                      :value="30 / 60 / 90"
                       :class="{ 'fail-error': $v.form.condicaopg.$error }"
                       placeholder="Condição Pagamento"
                       disabled
@@ -469,6 +468,7 @@
                     </b-form-input>
                     <b-input-group-append>
                       <b-button
+                      @click="showSearchCondicao()"
                         text="Button"
                         variant="dark"
                         :disabled="form.disabled"
@@ -547,6 +547,7 @@
         </slot>
       </b-card>
     </b-modal>
+    <!-- Modal cidade  -->
     <b-modal
       :id="modal_search_cidade"
       size="xl"
@@ -583,16 +584,57 @@
         >
       </b-container>
     </b-modal>
+    <!-- Modal Condição Pagamento -->
+    <b-modal
+      :id="modal_search_condicao"
+      size="xl"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+    >
+      <template v-slot:modal-header>
+        <h5>Pesquisar Condição Pagamento</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="fecharModalSearchCondicao()"
+        >
+          X
+        </b-button>
+      </template>
+      <b-container fluid>
+        <HomeCondicaoPagamento
+          :functionCondicao="changeSearchCondicao"
+        ></HomeCondicaoPagamento>
+      </b-container>
+      <b-container
+        class="col-sm-12 col-md-12 mt-3"
+        style="text-align: center"
+        footer
+      >
+        <b-button
+          @click="fecharModalSearchCondicao()"
+          type="button"
+          id=""
+          class="btn btn-dark btn-sm"
+          >Fechar Pesquisa Condição de Pagamento</b-button
+        >
+      </b-container>
+    </b-modal>
   </div>
 </template>
 <script>
 import * as validators from "vuelidate/lib/validators";
 import { validationMessage } from "vuelidate-messages";
 import HomeCidade from "../cidade/HomeCidade.vue";
+import HomeCondicaoPagamento from "../condicaoPagamento/HomeCondicaoPagamento.vue";
 import { Notyf } from "notyf";
 import axios from "axios";
 import { ServiceCidade } from "../../services/serviceCidade";
 import { ServiceFornecedor } from "../../services/serviceFornecedor";
+import { ServiceCondicaoPagamento } from "../../services/serviceCondicaoPagamento";
 import Rules from "../../rules/rules";
 import { formataDataTempo } from "../../rules/filters";
 const notyf = new Notyf({
@@ -636,7 +678,7 @@ export default {
     funcOnReset: { type: Function },
     functionGetListFornecedor: { type: Function },
   },
-  components: { HomeCidade },
+  components: { HomeCidade, HomeCondicaoPagamento },
   data() {
     return {
       form: this.formulario,
@@ -644,6 +686,7 @@ export default {
       headerTextVariant: "light",
       modal_form_fornecedor: "modal_form_fornecedor",
       modal_search_cidade: "modal_search_cidade",
+      modal_search_condicao: "modal_search_condicao",
       selectedPeople: "JURIDICA",
       options: [
         { text: "Pessoa Juridica", value: "JURIDICA" },
@@ -654,6 +697,7 @@ export default {
       placeholder: "Digite nome Razão Social",
       isValidadCnpj: true,
       isLoadingCidade: false,
+      isLoadingCondicao:false
     };
   },
   filters: {
@@ -777,8 +821,16 @@ export default {
       // this.form.cidade = "";
       this.$bvModal.show(this.modal_search_cidade);
     },
+    showSearchCondicao() {
+      // this.form.id_cidade = "";
+      // this.form.cidade = "";
+      this.$bvModal.show(this.modal_search_condicao);
+    },
     fecharModalSearchCidade() {
       this.$bvModal.hide(this.modal_search_cidade);
+    },
+    fecharModalSearchCondicao() {
+      this.$bvModal.hide(this.modal_search_condicao);
     },
     changeSearchCidade(obj) {
       if (obj.column.field === "btn") {
@@ -787,6 +839,14 @@ export default {
       this.form.id_cidade = obj.row.id;
       this.form.cidade = obj.row.cidade;
       this.$bvModal.hide(this.modal_search_cidade);
+    },
+    changeSearchCondicao(obj) {
+      if (obj.column.field === "btn") {
+        return;
+      }
+      this.form.id_condicaopg = obj.row.id;
+      this.form.condicaopg = obj.row.condicao_pagamento;
+      this.$bvModal.hide(this.modal_search_condicao);
     },
     closeFornecedor() {
       this.onReset();
@@ -846,7 +906,6 @@ export default {
           ServiceFornecedor.alterarFornecedor(this.form)
             .then((response) => {
               if (response.status === 200) {
-                console.log(response.data.success);
                 notyf.success(response.data.success);
                 vm.onReset();
                 vm.$bvModal.hide(vm.modal_form_fornecedor);
@@ -912,6 +971,22 @@ export default {
           vm.form.id_cidade = "";
           this.isLoadingCidade = false;
           notyf.error("Cidade não encontrado");
+        }
+      });
+    },
+    condicaoDebounce(id) {
+      this.isLoadingCondicao = true;
+      let vm = this;
+      ServiceCondicaoPagamento.getById(id).then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          vm.form.condicaopg = response.data[0].condicao_pagamento;
+          this.isLoadingCondicao = false;
+        } else {
+          vm.form.condicaopg = "";
+          vm.form.id_condicaopg = "";
+          this.isLoadingCondicao = false;
+          notyf.error("Condicão de Pagamento não encontrada");
         }
       });
     },

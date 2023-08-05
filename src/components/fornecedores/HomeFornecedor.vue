@@ -138,8 +138,8 @@ export default {
                 ie: "",
                 cpf: "",
                 rg: "",
-                id_condicaopg: '487',
-                condicaopg: '30/60/90',
+                id_condicaopg: "",
+                condicaopg: "",
                 limiteCredito: "",
                 obs: "",
                 data_create: "",
@@ -198,8 +198,6 @@ export default {
         ShowModalFormFonecedor() {
             this.onReset();
             this.form_fornecedor.radio = false;
-            this.form_fornecedor.id_condicaopg = '487';
-            this.form_fornecedor.condicaopg = '30/60/90';
             this.form_fornecedor.titulo = "Cadastrar Fornecedor";
             this.form_fornecedor.btn = "Salvar";
             this.$bvModal.show(this.modal_form_fornecedor);
@@ -260,8 +258,8 @@ export default {
                     this.form_fornecedor.pagSite = obj.data[0].pagSite;
                     this.form_fornecedor.contato = obj.data[0].contato;
                     this.form_fornecedor.limiteCredito = obj.data[0].limiteCredito;
-                    this.form_fornecedor.id_condicaopg = '487';
-                    this.form_fornecedor.condicaopg = '30/60/90';
+                    this.form_fornecedor.id_condicaopg = obj.data[0].condicao_pagemento.id;
+                    this.form_fornecedor.condicaopg = obj.data[0].condicao_pagemento.condicao_pagamento;
                     this.form_fornecedor.obs = obj.data[0].obs;
                     this.form_fornecedor.data_create = obj.data[0].data_create;
                     this.form_fornecedor.data_alt = obj.data[0].data_alt;

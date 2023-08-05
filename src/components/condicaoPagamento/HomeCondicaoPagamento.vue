@@ -82,6 +82,11 @@ import { VueGoodTable } from "vue-good-table";
 import { ServiceCondicaoPagamento } from "@/services/serviceCondicaoPagamento";
 export default {
   components: { VueGoodTable, Modal },
+  props: {
+    functionCondicao: {
+      type: Function,
+    },
+  },
   data() {
     return {
       modal_form_condicaoPagamento: "modal_form_condicaoPagamento",
@@ -167,8 +172,8 @@ export default {
   },
   methods: {
     selectCellCondidaoPagamento(params) {
-      if (this.functionEstado) {
-        this.functionEstado(params);
+      if (this.functionCondicao) {
+        this.functionCondicao(params);
       }
     },
     getListCondicaoPagamento() {

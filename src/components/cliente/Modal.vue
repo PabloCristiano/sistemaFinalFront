@@ -368,18 +368,19 @@
               <div class="col-md-4">
                 <label>Código:</label>
                 <b-form-input
-                  id="id_condicaopg"
+                  id="id_condicao"
                   type="number"
-                  v-model="form.id_condicaopg"
+                  v-model="form.id_condicao"
+                  v-debounce:1000ms="condicaoDebounce"
                   value="487"
-                  :class="{ 'fail-error': $v.form.id_condicaopg.$error }"
+                  :class="{ 'fail-error': $v.form.id_condicao.$error }"
                   placeholder="Código"
-                  :title="form.id_condicaopg"
+                  :title="form.id_condicao"
                   :disabled="form.disabled"
                 >
                 </b-form-input>
                 <small style="font-size: 11px; color: red">
-                  {{ validationMsg($v.form.id_condicaopg) }}
+                  {{ validationMsg($v.form.id_condicao) }}
                 </small>
               </div>
               <div class="col-md-8">
@@ -388,13 +389,12 @@
                     *</b
                   ></label
                 >
-                <b-overlay :show="false" rounded="sm">
+                <b-overlay :show="isLoadingCondicao" rounded="sm">
                   <b-input-group>
                     <b-form-input
                       id="condicaopg"
                       type="text"
                       v-model="form.condicaopg"
-                      :value="30 / 60 / 90"
                       :class="{ 'fail-error': $v.form.condicaopg.$error }"
                       placeholder="Condição Pagamento"
                       disabled
@@ -405,6 +405,7 @@
                       <b-button
                         text="Button"
                         variant="dark"
+                        @click="showSearchCondicao()"
                         :disabled="form.disabled"
                         title="Pesquisar Condição de Pagamento"
                         ><svg
@@ -517,16 +518,56 @@
         >
       </b-container>
     </b-modal>
+    <!-- Modal Condição -->
+    <b-modal
+      :id="modal_search_condicao"
+      size="xl"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+    >
+      <template v-slot:modal-header>
+        <h5>Pesquisar Condição de Pagamento</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="fecharModalSearchCondicao()"
+        >
+          X
+        </b-button>
+      </template>
+      <b-container fluid>
+        <HomeCondicaoPagamento :functionCondicao="changeSearchCondicao"></HomeCondicaoPagamento>
+      </b-container>
+      <b-container
+        class="col-sm-12 col-md-12 mt-3"
+        style="text-align: center"
+        footer
+      >
+        <b-button
+          @click="fecharModalSearchCondicao()"
+          type="button"
+          id=""
+          class="btn btn-dark btn-sm"
+          >Fechar Pesquisa Condição de Pagamento</b-button
+        >
+      </b-container>
+    </b-modal>
+
   </div>
 </template>
 <script>
 import * as validators from "vuelidate/lib/validators";
 import { validationMessage } from "vuelidate-messages";
 import HomeCidade from "../cidade/HomeCidade.vue";
+import HomeCondicaoPagamento from "../condicaoPagamento/HomeCondicaoPagamento.vue";
 import { Notyf } from "notyf";
 import axios from "axios";
 import { ServiceCidade } from "../../services/serviceCidade";
 import { ServiceCliente } from "../../services/serviceCliente";
+import { ServiceCondicaoPagamento } from "../../services/serviceCondicaoPagamento";
 import Rules from "../../rules/rules";
 import { formataDataTempo } from "../../rules/filters";
 const notyf = new Notyf({
@@ -572,7 +613,7 @@ export default {
     funcOnReset: { type: Function },
     functionGetListCliente: { type: Function },
   },
-  components: { HomeCidade },
+  components: { HomeCidade,HomeCondicaoPagamento },
   data() {
     return {
       form: this.formulario,
@@ -580,7 +621,9 @@ export default {
       headerTextVariant: "light",
       modal_form_cliente: "modal_form_cliente",
       modal_search_cidade: "modal_search_cidade",
+      modal_search_condicao: "modal_search_condicao",
       isLoadingCidade: false,
+      isLoadingCondicao:false
     };
   },
   filters: {
@@ -629,7 +672,7 @@ export default {
         cidade: {
           required: validators.required,
         },
-        id_condicaopg: {
+        id_condicao: {
           required: validators.required,
           integer: validators.integer,
         },
@@ -675,8 +718,16 @@ export default {
       // this.form.cidade = "";
       this.$bvModal.show(this.modal_search_cidade);
     },
+    showSearchCondicao() {
+      // this.form.id_cidade = "";
+      // this.form.cidade = "";
+      this.$bvModal.show(this.modal_search_condicao);
+    },
     fecharModalSearchCidade() {
       this.$bvModal.hide(this.modal_search_cidade);
+    },
+    fecharModalSearchCondicao() {
+      this.$bvModal.hide(this.modal_search_condicao);
     },
     changeSearchCidade(obj) {
       if (obj.column.field === "btn") {
@@ -685,6 +736,14 @@ export default {
       this.form.id_cidade = obj.row.id;
       this.form.cidade = obj.row.cidade;
       this.$bvModal.hide(this.modal_search_cidade);
+    },
+    changeSearchCondicao(obj) {
+      if (obj.column.field === "btn") {
+        return;
+      }
+      this.form.id_condicao = obj.row.id;
+      this.form.condicaopg = obj.row.condicao_pagamento;
+      this.$bvModal.hide(this.modal_search_condicao);
     },
     closeCliente() {
       this.onReset();
@@ -713,7 +772,6 @@ export default {
                   notyf.error(response.data[1]);
                 }
               } else {
-                console.log(response.response.data.errors);
                 if (response.response.data.errors != null) {
                   Object.keys(response.response.data.errors).forEach(function (
                     key
@@ -731,7 +789,6 @@ export default {
           ServiceCliente.alterarCliente(this.form)
             .then((response) => {
               if (response.status === 200) {
-                console.log(response.data.success);
                 notyf.success(response.data.success);
                 vm.onReset();
                 vm.$bvModal.hide(vm.modal_form_cliente);
@@ -795,6 +852,21 @@ export default {
           vm.form.id_cidade = "";
           this.isLoadingCidade = false;
           notyf.error("Cidade não encontrado");
+        }
+      });
+    },
+    condicaoDebounce(id) {
+      this.isLoadingCondicao = true;
+      let vm = this;
+      ServiceCondicaoPagamento.getById(id).then((response) => {
+        if (response.status === 200) {
+          vm.form.condicaopg = response.data[0].condicao_pagamento;
+          this.isLoadingCondicao = false;
+        } else {
+          vm.form.condicaopg = "";
+          vm.form.id_condicao = "";
+          this.isLoadingCondicao = false;
+          notyf.error("Condicão de Pagamento não encontrada");
         }
       });
     },

@@ -201,16 +201,19 @@
                     *</b
                   ></label
                 >
-                <b-form-input
-                  id="precoCusto"
-                  type="number"
-                  v-model="form.precoCusto"
-                  placeholder="Preço de Custo"
-                  :class="{ 'fail-error': $v.form.precoCusto.$error }"
-                  :title="form.precoCusto"
-                  :disabled="form.disabled"
-                >
-                </b-form-input>
+                <b-input-group prepend="R$">
+                  <b-form-input
+                    id="precoCusto"
+                    type="number"
+                    v-model="form.precoCusto"
+                    placeholder="Preço de Custo"
+                    :class="{ 'fail-error': $v.form.precoCusto.$error }"
+                    :title="form.precoCusto"
+                    :disabled="form.disabled"
+                  >
+                  </b-form-input>
+                </b-input-group>
+
                 <small style="font-size: 11px; color: red">
                   {{ validationMsg($v.form.precoCusto) }}
                 </small>
@@ -221,16 +224,19 @@
                     *</b
                   ></label
                 >
-                <b-form-input
-                  id="precoVenda"
-                  type="number"
-                  v-model="form.precoVenda"
-                  placeholder="Preço de Venda"
-                  :class="{ 'fail-error': $v.form.precoVenda.$error }"
-                  :title="form.precoVenda"
-                  :disabled="form.disabled"
-                >
-                </b-form-input>
+                <b-input-group prepend="R$">
+                  <b-form-input
+                    id="precoVenda"
+                    type="number"
+                    v-model="form.precoVenda"
+                    placeholder="Preço de Venda"
+                    :class="{ 'fail-error': $v.form.precoVenda.$error }"
+                    :title="form.precoVenda"
+                    :disabled="form.disabled"
+                  >
+                  </b-form-input>
+                </b-input-group>
+
                 <small style="font-size: 11px; color: red">
                   {{ validationMsg($v.form.precoVenda) }}
                 </small>
@@ -241,16 +247,18 @@
                     *</b
                   ></label
                 >
-                <b-form-input
-                  id="custoUltCompra"
-                  type="number"
-                  v-model="form.custoUltCompra"
-                  placeholder="Custo Ultima Compra"
-                  :class="{ 'fail-error': $v.form.custoUltCompra.$error }"
-                  :title="form.custoUltCompra"
-                  :disabled="form.disabled"
-                >
-                </b-form-input>
+                <b-input-group prepend="R$">
+                  <b-form-input
+                    id="custoUltCompra"
+                    type="number"
+                    v-model="form.custoUltCompra"
+                    placeholder="Custo Ultima Compra"
+                    :class="{ 'fail-error': $v.form.custoUltCompra.$error }"
+                    :title="form.custoUltCompra"
+                    :disabled="form.disabled"
+                  >
+                  </b-form-input>
+                </b-input-group>
                 <small style="font-size: 11px; color: red">
                   {{ validationMsg($v.form.custoUltCompra) }}
                 </small>
@@ -260,15 +268,18 @@
               <div class="col-md-4"></div>
               <div class="col-md-4">
                 <label>Data Última Compra:</label>
-                <b-form-input
-                  id="dataUltCompra"
-                  type="date"
-                  v-model="form.dataUltCompra"
-                  placeholder="Data última Compra"
-                  :title="form.dataUltCompra"
-                  :disabled="true"
-                >
-                </b-form-input>
+                <b-input-group>
+                  <b-form-input
+                    id="dataUltCompra"
+                    type="date"
+                    v-model="form.dataUltCompra"
+                    placeholder="Data última Compra"
+                    :title="form.dataUltCompra"
+                    :disabled="true"
+                    prepend="<i class='bx bx-calendar'></i>"
+                  >
+                  </b-form-input>
+                </b-input-group>
               </div>
               <div class="col-md-4">
                 <label>Data Última Venda:</label>
@@ -453,6 +464,7 @@ export default {
   components: { HomeCategoria, HomeFornecedor },
   data() {
     return {
+      teste:"<i class='bx bx-calendar'></i>",
       form: this.formulario,
       headerBgVariant: "dark",
       headerTextVariant: "light",

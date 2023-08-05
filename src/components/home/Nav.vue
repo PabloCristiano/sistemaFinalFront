@@ -13,7 +13,7 @@
       <li>
         <div class="iocn-link">
           <a href="#">
-            <i class='bx bx-spreadsheet' ></i>
+            <i class='bx bx-calendar'></i>
             <span class="link_name">Agenda</span>
           </a>
           <i class="bx bxs-chevron-down arrow"></i>
@@ -47,7 +47,7 @@
       <li v-if="data.isUser !== 'false' ? false : true">
         <div class="iocn-link">
           <a href="#">
-            <i class='bx bx-spreadsheet' ></i>
+            <i class='bx bx-wallet'></i>
             <span class="link_name">Financeiro</span>
           </a>
           <i class="bx bxs-chevron-down arrow"></i>
@@ -61,15 +61,15 @@
       <li v-if="data.isUser !== 'false' ? false : true">
         <div class="iocn-link">
           <a href="#">
-            <i class='bx bx-spreadsheet' ></i>
+            <i class='bx bx-cart-alt'></i>
             <span class="link_name">Comercial</span>
           </a>
           <i class="bx bxs-chevron-down arrow"></i>
         </div>
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Comercial</a></li>
-          <li><a class="link_name" href="#">Compra</a></li>
-          <li><a class="link_name" href="#">Venda</a></li>
+          <li><router-link :to="{path:'/compra'}">Compra</router-link></li>
+          <li><a class="" href="#">Venda</a></li>
         </ul>
       </li>
       <!-- <li>

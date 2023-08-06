@@ -7,6 +7,7 @@
       :header-text-variant="headerTextVariant"
       no-close-on-backdrop
       hide-footer
+      :dialog-class="customDialogClass"
     >
       <template v-slot:modal-header>
         <h5>{{ form.titulo }}</h5>
@@ -23,78 +24,96 @@
         <slot name="conteudo">
           <b-form>
             <div class="row mt-2">
-              <div class="col-md-4">
-                <label
-                  >Modelo:<b style="color: rgb(245, 153, 153)"> *</b>
-                </label>
-                <b-form-input id="modelo" type="number" placeholder="Modelo">
-                </b-form-input>
-              </div>
-              <div class="col-md-4">
-                <label
-                  >Série:<b style="color: rgb(245, 153, 153)"> *</b>
-                </label>
-                <b-form-input id="serie" type="number" placeholder="Série">
-                </b-form-input>
-              </div>
-              <div class="col-md-4">
-                <label
-                  >Numero:<b style="color: rgb(245, 153, 153)"> *</b></label
-                >
-                <b-form-input id="numero" type="number" placeholder="Número">
-                </b-form-input>
-                <small style="font-size: 11px; color: red"> </small>
-              </div>
-            </div>
-            <div class="row mt-02">
-              <div class="col-md-2 mt-2">
-                <label>Código:</label>
-                <b-form-input
-                  id="id_fornecedor"
-                  type="number"
-                  placeholder="Código"
-                >
-                </b-form-input>
-                <small style="font-size: 11px; color: red"> </small>
-              </div>
-              <div class="col-md-6 mt-2">
-                <label
-                  >Fornecedor:<b style="color: rgb(245, 153, 153)"> *</b></label
-                >
-                <b-overlay :show="false" rounded="sm">
-                  <b-input-group>
-                    <b-form-input
-                      id="fornecedor"
-                      type="text"
-                      placeholder="Fornecedor"
-                      disabled
+              <div class="col-md-6">
+                <div class="row col-md-12 col-sm-12">
+                  <div class="col-md-4 col-sm-4">
+                    <label
+                      >Modelo:<b style="color: rgb(245, 153, 153)"> *</b></label
                     >
-                    </b-form-input>
-                    <b-input-group-append>
-                      <b-button
-                        text="Button"
-                        variant="dark"
-                        :disabled="form.disabled"
-                        title="Pesquisar Fornecedor"
-                        ><i class="bx bx-search"></i
-                      ></b-button>
-                    </b-input-group-append>
-                  </b-input-group>
-                  <small style="font-size: 11px; color: red"> </small>
-                </b-overlay>
+                    <b-form-input
+                      id="modelo"
+                      type="number"
+                      placeholder="Modelo"
+                    ></b-form-input>
+                  </div>
+                  <div class="col-md-4 col-sm-4">
+                    <label
+                      >Série:<b style="color: rgb(245, 153, 153)"> *</b></label
+                    >
+                    <b-form-input
+                      id="serie"
+                      type="number"
+                      placeholder="Série"
+                    ></b-form-input>
+                  </div>
+                  <div class="col-md-4 col-sm-4">
+                    <label
+                      >Numero:<b style="color: rgb(245, 153, 153)"> *</b></label
+                    >
+                    <b-form-input
+                      id="numero"
+                      type="number"
+                      placeholder="Número"
+                    ></b-form-input>
+                    <small style="font-size: 11px; color: red"></small>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <label>Data Emissão:</label>
+                    <b-form-input id="data_emissão" type="date"></b-form-input>
+                    <small style="font-size: 11px; color: red"></small>
+                  </div>
+                  <div class="col-md-4">
+                    <label>Data Chegada:</label>
+                    <b-form-input id="data_chegada" type="date"></b-form-input>
+                    <small style="font-size: 11px; color: red"></small>
+                  </div>
+                </div>
               </div>
-              <div class="col-md-2 mt-2">
-                <label>Data Emissão:</label>
-                <b-form-input id="data_emissão" type="date"></b-form-input>
-                <small style="font-size: 11px; color: red"> </small>
-              </div>
-              <div class="col-md-2 mt-2">
-                <label>Data Chegada:</label>
-                <b-form-input id="data_chegada" type="date"></b-form-input>
-                <small style="font-size: 11px; color: red"> </small>
+              <!-- d-flex align-items-center -->
+              <div class="col-md-6">
+                <div class="row col-md-12 col-sm-12">
+                  <div class="col-md-3 col-sm-4">
+                    <label>Código:</label>
+                    <b-form-input
+                      id="id_fornecedor"
+                      type="number"
+                      placeholder="Código"
+                    ></b-form-input>
+                    <small style="font-size: 11px; color: red"></small>
+                  </div>
+                  <div class="col-md-9 col-sm-8">
+                    <label
+                      >Fornecedor:<b style="color: rgb(245, 153, 153)">
+                        *</b
+                      ></label
+                    >
+                    <b-overlay :show="false" rounded="sm">
+                      <b-input-group>
+                        <b-form-input
+                          id="fornecedor"
+                          type="text"
+                          placeholder="Fornecedor"
+                          disabled
+                        ></b-form-input>
+                        <b-input-group-append>
+                          <b-button
+                            text="Button"
+                            variant="dark"
+                            :disabled="form.disabled"
+                            title="Pesquisar Fornecedor"
+                          >
+                            <i class="bx bx-search"></i>
+                          </b-button>
+                        </b-input-group-append>
+                      </b-input-group>
+                      <small style="font-size: 11px; color: red"></small>
+                    </b-overlay>
+                  </div>
+                </div>
               </div>
             </div>
-
             <!-- card Produto -->
             <div class="mt-4" :class="{ card_produto_disabled: false }">
               <b-card :header-html="textCard_Produto" class="text-start">
@@ -202,12 +221,8 @@
                       ></b-form-input>
                     </b-input-group>
                   </div>
-                  <div class="col-md-3" style="line-height:85px">
-                    <b-button
-                      class="btn btn-sm"
-                      type="button"
-                      variant="dark"
-                    >
+                  <div class="col-md-3" style="line-height: 85px">
+                    <b-button class="btn btn-sm" type="button" variant="dark">
                       Adicionar Produto
                     </b-button>
                   </div>
@@ -230,7 +245,7 @@
                           <th scope="col" class="tableTr">Ações</th>
                         </tr>
                       </thead>
-                      <!-- <tbody>
+                      <tbody>
                         <tr
                           class="tableTr text-center"
                           :class="{ disabled: !form.parcelas[key].desativar }"
@@ -364,7 +379,7 @@
                             </div>
                           </td>
                         </tr>
-                      </tbody> -->
+                      </tbody>
                     </table>
                   </div>
                 </div>
@@ -457,6 +472,7 @@ export default {
       form: this.formulario,
       headerBgVariant: "dark",
       headerTextVariant: "light",
+      customDialogClass: "my-custom-modal-dialog",
       modal_form_compra: "modal_form_compra",
     };
   },
@@ -495,5 +511,9 @@ export default {
 .card_condicao_disabled {
   pointer-events: none; /* Impede interações com elementos filhos */
   opacity: 0.5; /* Opacidade reduzida para indicar desabilitação */
+}
+.my-custom-modal-dialog.modal-dialog {
+  max-width: 1400px; /* Defina o tamanho máximo horizontal desejado */
+  margin: 30px auto; /* Para centralizar verticalmente o modal na tela */
 }
 </style>

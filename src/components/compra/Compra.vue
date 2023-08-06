@@ -14,6 +14,7 @@
                     id="modelo"
                     type="number"
                     placeholder="Modelo"
+                    v-model="modelo"
                   ></b-form-input>
                 </div>
                 <div class="col-md-4 col-sm-4">
@@ -24,6 +25,7 @@
                     id="serie"
                     type="number"
                     placeholder="Série"
+                    v-model="serie"
                   ></b-form-input>
                 </div>
                 <div class="col-md-4 col-sm-4">
@@ -34,6 +36,7 @@
                     id="numero"
                     type="number"
                     placeholder="Número"
+                    v-model="numero"
                   ></b-form-input>
                   <small style="font-size: 11px; color: red"></small>
                 </div>
@@ -48,6 +51,8 @@
                     id="id_fornecedor"
                     type="number"
                     placeholder="Código"
+                    v-model="id_fornecedor"
+                    :title="id_fornecedor"
                   ></b-form-input>
                   <small style="font-size: 11px; color: red"></small>
                 </div>
@@ -63,6 +68,8 @@
                         id="fornecedor"
                         type="text"
                         placeholder="Fornecedor"
+                        v-model="fornecedor"
+                        :title="fornecedor"
                         disabled
                       ></b-form-input>
                       <b-input-group-append>
@@ -70,6 +77,7 @@
                           text="Button"
                           variant="dark"
                           :disabled="form.disabled"
+                          @click="showSearchFornecedor()"
                           title="Pesquisar Fornecedor"
                         >
                           <i class="bx bx-search"></i>
@@ -83,19 +91,27 @@
               <div class="row col-md-12 col-sm-12 justify-content-end">
                 <div class="col-md-6 col-sm-6">
                   <label>Data Emissão:</label>
-                  <b-form-input id="data_emissão" type="date"></b-form-input>
+                  <b-form-input
+                    id="data_emissão"
+                    type="date"
+                    v-model="data_emissao"
+                  ></b-form-input>
                   <small style="font-size: 11px; color: red"></small>
                 </div>
                 <div class="col-md-6 col-sm-6">
                   <label>Data Chegada:</label>
-                  <b-form-input id="data_chegada" type="date"></b-form-input>
+                  <b-form-input
+                    id="data_chegada"
+                    type="date"
+                    v-model="data_chegada"
+                  ></b-form-input>
                   <small style="font-size: 11px; color: red"></small>
                 </div>
               </div>
             </div>
           </div>
           <!-- card Produto -->
-          <div class="mt-4" :class="{ card_produto_disabled: false }">
+          <div class="mt-4" :class="{ card_produto_disabled: !resultado_Produdo }">
             <b-card :header-html="textCard_Produto" class="text-start">
               <div class="row mt-02">
                 <div class="col-md-2">
@@ -358,7 +374,7 @@
             </b-card>
           </div>
           <!-- card Condição Pagamento -->
-          <div class="mt-4" :class="{ card_condicao_disabled: false }">
+          <div class="mt-4" :class="{ card_condicao_disabled: true }">
             <b-card
               :header-html="textCard_CondicaoPagamento"
               class="text-start"
@@ -517,16 +533,57 @@
         </div>
       </slot>
     </b-card>
+    <b-modal
+      :id="modal_search_fornecedor"
+      size="xl"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+    >
+      <template v-slot:modal-header>
+        <h5>Pesquisar Fornecedor</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="fecharModalSearchFornecedor()"
+        >
+          X
+        </b-button>
+      </template>
+      <b-container fluid>
+        <HomeFornecedor
+          :functionFornecedor="changeSearchFornecedor"
+        ></HomeFornecedor>
+      </b-container>
+      <b-container
+        class="col-sm-12 col-md-12 mt-3"
+        style="text-align: center"
+        footer
+      >
+        <b-button
+          @click="fecharModalSearchFornecedor()"
+          type="button"
+          id=""
+          class="btn btn-dark btn-sm"
+          >Fechar Pesquisa Fornecedor</b-button
+        >
+      </b-container>
+    </b-modal>
     <br /><br />
   </div>
 </template>
 <script>
+import HomeFornecedor from "../fornecedores/HomeFornecedor.vue";
 export default {
   props: {
     formulario: { type: Object },
   },
+  components: { HomeFornecedor },
   data() {
     return {
+      modal_search_fornecedor: "modal_search_fornecedor",
       textCard_Produto:
         "<span class='Text-Card-0'><i class='bx bx-cart'></i> Produto</span>",
       textCard_CondicaoPagamento:
@@ -536,6 +593,13 @@ export default {
       headerTextVariant: "light",
       customDialogClass: "my-custom-modal-dialog",
       modal_form_compra: "modal_form_compra",
+      modelo: "",
+      serie: "",
+      numero: "",
+      id_fornecedor: "",
+      fornecedor: "",
+      data_emissao: "",
+      data_chegada: "",
       items: [
         { name: "João", age: 30, email: "joao@example.com" },
         { name: "Maria", age: 28, email: "maria@example.com" },
@@ -543,6 +607,8 @@ export default {
         // Adicione mais itens ao array conforme necessário
       ],
       disabled: false,
+      produto: [],
+      resultado_Produdo: false, // Variável que armazenará o resultado
     };
   },
   beforeCreate() {},
@@ -551,8 +617,25 @@ export default {
     if (!this.form) {
       this.$router.push({ name: "compra" });
     }
+    this.data_emissao = this.obterDataAtual();
+    this.data_chegada = this.obterDataAtual();
   },
-  computed: {},
+  computed: {
+    todosParametrosPreenchidos() {
+      return (
+        this.modelo !== "" &&
+        this.serie !== "" &&
+        this.numero !== "" &&
+        this.id_fornecedor !== "" &&
+        this.fornecedor !== ""
+      );
+    },
+  },
+  watch: {
+    todosParametrosPreenchidos(result) {
+      this.resultado_Produdo = result;
+    },
+  },
   methods: {
     closeCompra() {
       //   this.onReset();
@@ -561,6 +644,28 @@ export default {
     },
     onSubmit() {
       alert("enviar");
+    },
+    changeSearchFornecedor(obj) {
+      if (obj.column.field === "btn") {
+        return;
+      }
+      this.id_fornecedor = obj.row.id;
+      this.fornecedor = obj.row.razaoSocial;
+      this.$bvModal.hide(this.modal_search_fornecedor);
+    },
+    showSearchFornecedor() {
+      this.$bvModal.show(this.modal_search_fornecedor);
+    },
+    fecharModalSearchFornecedor() {
+      this.$bvModal.hide(this.modal_search_fornecedor);
+    },
+    obterDataAtual() {
+      const dataAtual = new Date();
+      const ano = dataAtual.getFullYear();
+      const mes = String(dataAtual.getMonth() + 1).padStart(2, "0"); // Adiciona zero à esquerda se necessário
+      const dia = String(dataAtual.getDate()).padStart(2, "0"); // Adiciona zero à esquerda se necessário
+      const dataFormatada = `${ano}-${mes}-${dia}`;
+      return dataFormatada;
     },
   },
 };

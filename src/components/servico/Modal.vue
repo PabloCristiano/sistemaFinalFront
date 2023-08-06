@@ -55,45 +55,53 @@
             <div class="row col-12 mt-2">
               <div class="col-md-4">
                 <label>Tempo:<b style="color: rgb(245, 153, 153)"> *</b></label>
-                <b-form-input
-                  id="tempo"
-                  type="number"
-                  placeholder="Tempo em Minutos"
-                  :class="{ 'fail-error': $v.form.tempo.$error }"
-                  v-model="form.tempo"
-                  :disabled="form.disabled"
-                >
-                </b-form-input>
+                <b-input-group prepend="Min">
+                  <b-form-input
+                    id="tempo"
+                    type="number"
+                    placeholder="Minutos"
+                    :class="{ 'fail-error': $v.form.tempo.$error }"
+                    v-model="form.tempo"
+                    :disabled="form.disabled"
+                  >
+                  </b-form-input>
+                </b-input-group>
+
                 <small style="font-size: 11px; color: red">
                   {{ validationMsg($v.form.tempo) }}
                 </small>
               </div>
               <div class="col-md-4">
                 <label>Valor:<b style="color: rgb(245, 153, 153)"> *</b></label>
-                <b-form-input
-                  id="valor"
-                  type="number"
-                  placeholder="R$ 0,00"
-                  :class="{ 'fail-error': $v.form.valor.$error }"
-                  v-model="form.valor"
-                  :disabled="form.disabled"
-                >
-                </b-form-input>
+                <b-input-group prepend="R$">
+                  <b-form-input
+                    id="valor"
+                    type="number"
+                    placeholder="0,00"
+                    :class="{ 'fail-error': $v.form.valor.$error }"
+                    v-model="form.valor"
+                    :disabled="form.disabled"
+                  >
+                  </b-form-input>
+                </b-input-group>
                 <small style="font-size: 11px; color: red">
                   {{ validationMsg($v.form.valor) }}
                 </small>
               </div>
               <div class="col-md-4">
                 <label>Comissão:</label>
-                <b-form-input
-                  id="comissao"
-                  type="number"
-                  placeholder="%"
-                  :class="{ 'fail-error': $v.form.comissao.$error }"
-                  v-model="form.comissao"
-                  :disabled="form.disabled"
-                >
-                </b-form-input>
+                <b-input-group prepend="%">
+                  <b-form-input
+                    id="comissao"
+                    type="number"
+                    placeholder="%"
+                    :class="{ 'fail-error': $v.form.comissao.$error }"
+                    v-model="form.comissao"
+                    :disabled="form.disabled"
+                  >
+                  </b-form-input>
+                </b-input-group>
+
                 <small style="font-size: 11px; color: red">
                   {{ validationMsg($v.form.comissao) }}
                 </small>

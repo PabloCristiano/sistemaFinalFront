@@ -58,18 +58,6 @@
                     <small style="font-size: 11px; color: red"></small>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-4">
-                    <label>Data Emissão:</label>
-                    <b-form-input id="data_emissão" type="date"></b-form-input>
-                    <small style="font-size: 11px; color: red"></small>
-                  </div>
-                  <div class="col-md-4">
-                    <label>Data Chegada:</label>
-                    <b-form-input id="data_chegada" type="date"></b-form-input>
-                    <small style="font-size: 11px; color: red"></small>
-                  </div>
-                </div>
               </div>
               <!-- d-flex align-items-center -->
               <div class="col-md-6">
@@ -110,6 +98,18 @@
                       </b-input-group>
                       <small style="font-size: 11px; color: red"></small>
                     </b-overlay>
+                  </div>
+                </div>
+                <div class="row col-md-12 col-sm-12 justify-content-end">
+                  <div class="col-md-6 col-sm-6">
+                    <label>Data Emissão:</label>
+                    <b-form-input id="data_emissão" type="date"></b-form-input>
+                    <small style="font-size: 11px; color: red"></small>
+                  </div>
+                  <div class="col-md-6 col-sm-6">
+                    <label>Data Chegada:</label>
+                    <b-form-input id="data_chegada" type="date"></b-form-input>
+                    <small style="font-size: 11px; color: red"></small>
                   </div>
                 </div>
               </div>

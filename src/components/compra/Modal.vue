@@ -236,110 +236,88 @@
                           class="table text-center"
                           style="background: #212529; color: white"
                         >
-                          <th scope="col" class="tableTr">Cód</th>
-                          <th scope="col" class="tableTr">Produto</th>
-                          <th scope="col" class="tableTr">Unidade</th>
-                          <th scope="col" class="tableTr">Qtd</th>
-                          <th scope="col" class="tableTr">R$ Uni</th>
-                          <th scope="col" class="tableTr">Sub Total</th>
-                          <th scope="col" class="tableTr">Ações</th>
+                          <th scope="col" class="table_Tr">Cód</th>
+                          <th scope="col" class="table_Tr">Produto</th>
+                          <th scope="col" class="table_Tr">Unidade</th>
+                          <th scope="col" class="table_Tr">Qtd</th>
+                          <th scope="col" class="table_Tr">Valor Uni(R$)</th>
+                          <th scope="col" class="table_Tr">Desc(%)</th>
+                          <th scope="col" class="table_Tr">Sub Total(R$)</th>
+                          <th scope="col" class="table_Tr">Ações</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr
-                          class="tableTr text-center"
-                          :class="{ disabled: !form.parcelas[key].desativar }"
-                          v-for="(item, key) in form.parcelas"
+                          class="text-center"
+                          v-for="(item, key) in items"
                           :key="key"
                         >
-                          <td class="col-md-1">
+                          <td class="col-md-1 table_Td">
                             <input
+                              id="codigo"
                               type="text"
-                              v-model="form.parcelas[key].parcela"
                               class="form-control text-center"
-                              disabled="true"
+                              value="10"
+                              disabled
                             />
                           </td>
-                          <td class="col-md-2">
+                          <td class="col-md-3 table_Td">
                             <input
-                              type="number"
-                              v-model="form.parcelas[key].prazo"
-                              class="form-control text-center"
-                              :class="{
-                                'fail-error': form.parcelas[key].mgsPrazo,
-                              }"
-                              :disabled="!form.parcelas[key].editing"
+                              id="produto"
+                              type="text"
+                              class="form-control text-start"
+                              value="Podada Reviver"
+                              disabled
                             />
-                            <small
-                              style="font-size: 11px; color: rgb(228 96 96)"
-                              v-if="form.parcelas[key].mgsPrazo"
-                            >
-                              {{ validationMsg($v.validationParcela.prazo) }}
-                            </small>
                           </td>
-                          <td class="col-md-2">
+                          <td class="col-md-1 table_Td">
                             <input
-                              type="number"
-                              v-model="form.parcelas[key].porcentagem"
+                              id="unidade"
+                              type="text"
                               class="form-control text-center"
-                              :class="{
-                                'fail-error': form.parcelas[key].mgsPorcentagem,
-                              }"
-                              :disabled="!form.parcelas[key].editing"
+                              value="Uni"
+                              disabled
                             />
-                            <small
-                              style="font-size: 11px; color: rgb(228 96 96)"
-                              v-if="form.parcelas[key].mgsPorcentagem"
-                            >
-                              {{
-                                validationMsg($v.validationParcela.porcentagem)
-                              }}
-                              {{
-                                validationMsg(
-                                  $v.validationParcela.TotalValorPecent
-                                )
-                              }}
-                            </small>
                           </td>
-                          <td>
-                            <b-input-group>
-                              <b-form-input
-                                class="text-center"
-                                id="formapagemento"
-                                type="text"
-                                v-model="
-                                  form.parcelas[key].formaPagamento[0].forma_pg
-                                "
-                                placeholder="Pesquise uma forma de Pagamento"
-                                disabled
-                              >
-                              </b-form-input>
-                              <b-input-group-append>
-                                <b-button
-                                  @click="showSearchformaPagamento_parcela(key)"
-                                  text="Button"
-                                  variant="dark"
-                                  title="Pesquisar Forma de Pagamento"
-                                  :disabled="!form.parcelas[key].editing"
-                                  ><svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    fill="currentColor"
-                                    class="bi bi-search"
-                                    viewBox="0 0 16 16"
-                                  >
-                                    <path
-                                      d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-                                    /></svg
-                                ></b-button>
-                              </b-input-group-append>
-                            </b-input-group>
+                          <td class="col-md-1 table_Td">
+                            <input
+                              id="quantidade"
+                              type="text"
+                              class="form-control text-center"
+                              value="15"
+                              disabled
+                            />
                           </td>
-                          <td>
-                            <div v-if="!form.parcelas[key].editing">
+                          <td class="col-md-1 table_Td">
+                            <input
+                              id="valor_unitario"
+                              type="text"
+                              class="form-control text-center"
+                              value="R$ 1500,85"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-1 table_Td">
+                            <input
+                              id="desconto"
+                              type="text"
+                              class="form-control text-center"
+                              value="15 %"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-1 table_Td">
+                            <input
+                              id="subTotal"
+                              type="text"
+                              value="100050,00"
+                              class="form-control text-center"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-1 table_Td">
+                            <div v-if="true">
                               <button
-                                @click="toggleEditingParcela(key)"
                                 class="btn btn-sm me-1 mb-1 mt-1"
                                 type="button"
                                 title="EDITAR"
@@ -348,7 +326,6 @@
                                 <i class="bx bx-edit-alt"></i>
                               </button>
                               <button
-                                @click="deleteItemParcela(key)"
                                 class="btn btn-sm me-1 mb-1 mt-1"
                                 type="button"
                                 title="EXCLUIR"
@@ -359,7 +336,6 @@
                             </div>
                             <div v-else>
                               <button
-                                @click="saveChangesParcela(key)"
                                 class="btn btn-sm me-1 mb-1 mt-1"
                                 type="button"
                                 title="SALVAR"
@@ -368,7 +344,6 @@
                                 <i class="bx bx-check"></i>
                               </button>
                               <button
-                                @click="deleteItemParcela(key)"
                                 class="btn btn-sm me-1 mb-1 mt-1"
                                 type="button"
                                 title="EXCLUIR"
@@ -414,7 +389,123 @@
                 :header-html="textCard_CondicaoPagamento"
                 class="text-start"
               >
-                <span>estrutura Condicao Pagamento</span>
+                <div class="col-md-6">
+                  <div class="row col-md-12 col-sm-12">
+                    <div class="col-md-3 col-sm-4">
+                      <label>Código:</label>
+                      <b-form-input
+                        id="id_fornecedor"
+                        type="number"
+                        placeholder="Código"
+                      ></b-form-input>
+                      <small style="font-size: 11px; color: red"></small>
+                    </div>
+                    <div class="col-md-9 col-sm-8">
+                      <label
+                        >Condição de Pagamento:<b
+                          style="color: rgb(245, 153, 153)"
+                        >
+                          *</b
+                        ></label
+                      >
+                      <b-overlay :show="false" rounded="sm">
+                        <b-input-group>
+                          <b-form-input
+                            id="fornecedor"
+                            type="text"
+                            placeholder="Condição de Pagamento"
+                            disabled
+                          ></b-form-input>
+                          <b-input-group-append>
+                            <b-button
+                              text="Button"
+                              variant="dark"
+                              :disabled="form.disabled"
+                              title="Pesquisar Condição de Pagamento"
+                            >
+                              <i class="bx bx-search"></i>
+                            </b-button>
+                          </b-input-group-append>
+                        </b-input-group>
+                        <small style="font-size: 11px; color: red"></small>
+                      </b-overlay>
+                    </div>
+                  </div>
+                </div>
+                <!-- Tabela Condição Pagamento -->
+                <div class="row mt-02" style="margin-top: 20px">
+                  <div class="container mt-02 table-responsive">
+                    <table class="table">
+                      <thead class="fixed-header">
+                        <tr
+                          class="table text-center"
+                          style="background: #212529; color: white"
+                        >
+                          <th scope="col" class="table_Tr">Parcela</th>
+                          <th scope="col" class="table_Tr">Forma de Pagamento</th>
+                          <th scope="col" class="table_Tr">Vencimento</th>
+                          <th scope="col" class="table_Tr">Valor Parcela(R$)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          class="text-center"
+                          v-for="(item, key) in items"
+                          :key="key"
+                        >
+                          <td class="col-md-2 table_Td">
+                            <input
+                              id="codigo"
+                              type="text"
+                              class="form-control text-center"
+                              value="10"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-6 table_Td">
+                            <input
+                              id="produto"
+                              type="text"
+                              class="form-control text-start"
+                              value="Podada Reviver"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-2 table_Td">
+                            <input
+                              id="unidade"
+                              type="text"
+                              class="form-control text-center"
+                              value="Uni"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-2 table_Td">
+                            <input
+                              id="quantidade"
+                              type="text"
+                              class="form-control text-center"
+                              value="15"
+                              disabled
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div>
+                  <label for="">Observações:</label>
+                  <b-form-textarea
+                    id="textarea"
+                    v-model="text"
+                    placeholder="Enter something..."
+                    rows="3"
+                    max-rows="6"
+                  ></b-form-textarea>
+
+                  <pre class="mt-3 mb-0">{{ text }}</pre>
+                </div>
               </b-card>
             </div>
 
@@ -474,6 +565,12 @@ export default {
       headerTextVariant: "light",
       customDialogClass: "my-custom-modal-dialog",
       modal_form_compra: "modal_form_compra",
+      items: [
+        { name: "João", age: 30, email: "joao@example.com" },
+        { name: "Maria", age: 28, email: "maria@example.com" },
+        { name: "Pedro", age: 35, email: "pedro@example.com" },
+        // Adicione mais itens ao array conforme necessário
+      ],
     };
   },
   filters: {},
@@ -513,7 +610,16 @@ export default {
   opacity: 0.5; /* Opacidade reduzida para indicar desabilitação */
 }
 .my-custom-modal-dialog.modal-dialog {
-  max-width: 1400px; /* Defina o tamanho máximo horizontal desejado */
+  max-width: 1200px; /* Defina o tamanho máximo horizontal desejado */
   margin: 30px auto; /* Para centralizar verticalmente o modal na tela */
+}
+.table_Tr {
+  font-family: monospace;
+  font-weight: 100;
+  font-size:13px;
+}
+.table_Td {
+  font-family: inherit;
+  font-weight: 100;
 }
 </style>

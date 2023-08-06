@@ -608,7 +608,7 @@ export default {
       ],
       disabled: false,
       produto: [],
-      resultado_Produdo: false, // Variável que armazenará o resultado
+      resultado_Produdo: false,
     };
   },
   beforeCreate() {},

@@ -252,7 +252,7 @@
                           v-for="(item, key) in items"
                           :key="key"
                         >
-                          <td class="col-md-1 table_Td">
+                          <td class="col-md-1 col-sm-1 table_Td" title="10">
                             <input
                               id="codigo"
                               type="text"
@@ -261,7 +261,7 @@
                               disabled
                             />
                           </td>
-                          <td class="col-md-3 table_Td">
+                          <td class="col-md-4 col-sm-4 table_Td">
                             <input
                               id="produto"
                               type="text"
@@ -270,7 +270,7 @@
                               disabled
                             />
                           </td>
-                          <td class="col-md-1 table_Td">
+                          <td class="col-md-1 col-sm-1 table_Td">
                             <input
                               id="unidade"
                               type="text"
@@ -279,7 +279,7 @@
                               disabled
                             />
                           </td>
-                          <td class="col-md-1 table_Td">
+                          <td class="col-md-1 col-sm-1 table_Td">
                             <input
                               id="quantidade"
                               type="text"
@@ -288,16 +288,16 @@
                               disabled
                             />
                           </td>
-                          <td class="col-md-1 table_Td">
+                          <td class="col-md-1 col-sm-1 table_Td">
                             <input
                               id="valor_unitario"
                               type="text"
                               class="form-control text-center"
-                              value="R$ 1500,85"
+                              value="R$ 150000,85"
                               disabled
                             />
                           </td>
-                          <td class="col-md-1 table_Td">
+                          <td class="col-md-1 col-sm-1 table_Td">
                             <input
                               id="desconto"
                               type="text"
@@ -306,16 +306,16 @@
                               disabled
                             />
                           </td>
-                          <td class="col-md-1 table_Td">
+                          <td class="col-md-1 col-sm-1 table_Td">
                             <input
                               id="subTotal"
                               type="text"
-                              value="100050,00"
+                              value="R$ 100050,00"
                               class="form-control text-center"
                               disabled
                             />
                           </td>
-                          <td class="col-md-1 table_Td">
+                          <td class="col-md-1 col-sm-1 table_Td">
                             <div v-if="true">
                               <button
                                 class="btn btn-sm me-1 mb-1 mt-1"
@@ -610,7 +610,7 @@ export default {
   opacity: 0.5; /* Opacidade reduzida para indicar desabilitação */
 }
 .my-custom-modal-dialog.modal-dialog {
-  max-width: 1200px; /* Defina o tamanho máximo horizontal desejado */
+  max-width: 1700px; /* Defina o tamanho máximo horizontal desejado */
   margin: 30px auto; /* Para centralizar verticalmente o modal na tela */
 }
 .table_Tr {

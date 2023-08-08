@@ -56,16 +56,19 @@
             <div class="row col-12 mt-2">
               <div class="col-md-6">
                 <label
-                  >Unidade:<b style="color: rgb(245, 153, 153)">
-                    *</b
-                  ></label
+                  >Unidade:<b style="color: rgb(245, 153, 153)"> *</b></label
                 >
                 <b-form-select
                   class="form-select"
                   v-model="form.unidade"
                   placeholder="Selecione a Unidade"
                   :options="options"
+                  :disabled="form.disabled"
+                  :class="{ 'fail-error': $v.form.unidade.$error }"
                 ></b-form-select>
+                <small style="font-size: 11px; color: red">
+                  {{ validationMsg($v.form.unidade) }}
+                </small>
               </div>
               <div class="col-md-6">
                 <label
@@ -488,9 +491,7 @@ export default {
       isLoadingFornecedor: false,
       isLoadingCategoria: false,
       selected: null,
-      options: [
-          { value: 'Unidade', text: 'Unidade' },
-      ],
+      options: [{ value: "UNIDADE", text: "UNIDADE" }],
     };
   },
   filters: {
@@ -502,6 +503,9 @@ export default {
         produto: {
           required: validators.required,
           txtMinLen: validators.minLength(3),
+        },
+        unidade: {
+          required: validators.required,
         },
         qtdEstoque: {
           required: validators.required,

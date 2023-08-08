@@ -203,7 +203,7 @@ export default {
           const custoUltCompra = obj.data[0].custoUltCompra;
           this.form_produto.id = obj.data[0].id;
           this.form_produto.produto = obj.data[0].produto;
-          this.form_produto.unidade = obj.data[0].qtdEstoque;
+          this.form_produto.unidade = obj.data[0].unidade;
           this.form_produto.id_categoria = obj.data[0].categoria.id;
           this.form_produto.categoria = obj.data[0].categoria.categoria;
           this.form_produto.id_fornecedor = obj.data[0].fornecedor.id;

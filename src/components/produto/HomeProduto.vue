@@ -82,6 +82,11 @@ import Modal from "./Modal.vue";
 import { ServiceProduto } from "../../services/serviceProduto";
 export default {
   components: { VueGoodTable, Modal },
+  props: {
+    functionProduto: {
+      type: Function,
+    },
+  },
   data() {
     return {
       isLoading: false,
@@ -110,7 +115,7 @@ export default {
         },
       ],
       form_produto: {
-        id:null,
+        id: null,
         produto: "",
         unidade: "",
         id_categoria: "",
@@ -139,6 +144,7 @@ export default {
       this.isLoading = true;
       ServiceProduto.getAll()
         .then((obj) => {
+          console.log(obj)
           if (obj) {
             this.produtos = obj;
           }
@@ -149,8 +155,8 @@ export default {
         });
     },
     selectCellProdutos(params) {
-      if (this.functionCategorias) {
-          this.functionCidade(params);
+      if (this.functionProduto) {
+        this.functionProduto(params);
       }
     },
     showModalAlterarProduto(id) {
@@ -159,7 +165,7 @@ export default {
       this.form_produto.btn = "Alterar";
       this.funcGetById(id);
     },
-    showModalExcluirProduto(id) { 
+    showModalExcluirProduto(id) {
       this.form_produto.titulo = "Excluir Produto";
       this.form_produto.btn = "Excluir";
       this.form_produto.disabled = true;

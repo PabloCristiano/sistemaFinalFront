@@ -34,7 +34,7 @@
                 >
                 </b-form-input>
               </div>
-              <div class="col-md-7">
+              <div class="col-md-10">
                 <label
                   >Produto:<b style="color: rgb(245, 153, 153)"> *</b></label
                 >
@@ -52,7 +52,22 @@
                   {{ validationMsg($v.form.produto) }}
                 </small>
               </div>
-              <div class="col-md-3">
+            </div>
+            <div class="row col-12 mt-2">
+              <div class="col-md-6">
+                <label
+                  >Unidade:<b style="color: rgb(245, 153, 153)">
+                    *</b
+                  ></label
+                >
+                <b-form-select
+                  class="form-select"
+                  v-model="form.unidade"
+                  placeholder="Selecione a Unidade"
+                  :options="options"
+                ></b-form-select>
+              </div>
+              <div class="col-md-6">
                 <label
                   >Qtd Unidade:<b style="color: rgb(245, 153, 153)">
                     *</b
@@ -63,7 +78,7 @@
                   type="text"
                   v-model="form.qtdEstoque"
                   :class="{ 'fail-error': $v.form.qtdEstoque.$error }"
-                  placeholder="Unidade"
+                  placeholder="Qtd Unidade"
                   :disabled="form.disabled"
                 >
                 </b-form-input>
@@ -464,7 +479,6 @@ export default {
   components: { HomeCategoria, HomeFornecedor },
   data() {
     return {
-      teste:"<i class='bx bx-calendar'></i>",
       form: this.formulario,
       headerBgVariant: "dark",
       headerTextVariant: "light",
@@ -473,6 +487,10 @@ export default {
       modal_search_fornecedor: "modal_search_fornecedor",
       isLoadingFornecedor: false,
       isLoadingCategoria: false,
+      selected: null,
+      options: [
+          { value: 'Unidade', text: 'Unidade' },
+      ],
     };
   },
   filters: {

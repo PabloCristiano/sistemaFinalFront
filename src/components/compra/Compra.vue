@@ -111,7 +111,10 @@
             </div>
           </div>
           <!-- card Produto -->
-          <div class="mt-4" :class="{ card_produto_disabled: !resultado_Produdo }">
+          <div
+            class="mt-4"
+            :class="{ card_produto_disabled: !resultado_Produdo }"
+          >
             <b-card :header-html="textCard_Produto" class="text-start">
               <div class="row mt-02">
                 <div class="col-md-2">
@@ -143,6 +146,7 @@
                           variant="dark"
                           :disabled="form.disabled"
                           title="Pesquisar Produto"
+                          @click="showSearchProduto()"
                         >
                           <i class="bx bx-search"></i>
                         </b-button>
@@ -533,6 +537,7 @@
         </div>
       </slot>
     </b-card>
+    <!-- Modal HomeFornecedor -->
     <b-modal
       :id="modal_search_fornecedor"
       size="xl"
@@ -571,19 +576,58 @@
         >
       </b-container>
     </b-modal>
+    <!-- Modal HomeProduto -->
+    <b-modal
+      :id="modal_search_Produto"
+      size="xl"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+    >
+      <template v-slot:modal-header>
+        <h5>Pesquisar Fornecedor</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="fecharModalSearchProduto()"
+        >
+          X
+        </b-button>
+      </template>
+      <b-container fluid>
+        <HomeProduto :functionProduto="changeSearchProduto"></HomeProduto>
+      </b-container>
+      <b-container
+        class="col-sm-12 col-md-12 mt-3"
+        style="text-align: center"
+        footer
+      >
+        <b-button
+          @click="fecharModalSearchProduto()"
+          type="button"
+          id=""
+          class="btn btn-dark btn-sm"
+          >Fechar Pesquisa Produto</b-button
+        >
+      </b-container>
+    </b-modal>
     <br /><br />
   </div>
 </template>
 <script>
 import HomeFornecedor from "../fornecedores/HomeFornecedor.vue";
+import HomeProduto from "../produto/HomeProduto.vue";
 export default {
   props: {
     formulario: { type: Object },
   },
-  components: { HomeFornecedor },
+  components: { HomeFornecedor, HomeProduto },
   data() {
     return {
       modal_search_fornecedor: "modal_search_fornecedor",
+      modal_search_Produto: "modal_search_Produto",
       textCard_Produto:
         "<span class='Text-Card-0'><i class='bx bx-cart'></i> Produto</span>",
       textCard_CondicaoPagamento:
@@ -658,6 +702,21 @@ export default {
     },
     fecharModalSearchFornecedor() {
       this.$bvModal.hide(this.modal_search_fornecedor);
+    },
+    changeSearchProduto(obj) {
+      if (obj.column.field === "btn") {
+        return;
+      }
+      console.log(obj);
+      // this.id_fornecedor = obj.row.id;
+      // this.fornecedor = obj.row.razaoSocial;
+      this.$bvModal.hide(this.modal_search_Produto);
+    },
+    showSearchProduto() {
+      this.$bvModal.show(this.modal_search_Produto);
+    },
+    fecharModalSearchProduto() {
+      this.$bvModal.hide(this.modal_search_Produto);
     },
     obterDataAtual() {
       const dataAtual = new Date();

@@ -34,7 +34,7 @@
                 >
                 </b-form-input>
               </div>
-              <div class="col-md-7">
+              <div class="col-md-10">
                 <label
                   >Produto:<b style="color: rgb(245, 153, 153)"> *</b></label
                 >
@@ -52,7 +52,25 @@
                   {{ validationMsg($v.form.produto) }}
                 </small>
               </div>
-              <div class="col-md-3">
+            </div>
+            <div class="row col-12 mt-2">
+              <div class="col-md-6">
+                <label
+                  >Unidade:<b style="color: rgb(245, 153, 153)"> *</b></label
+                >
+                <b-form-select
+                  class="form-select"
+                  v-model="form.unidade"
+                  placeholder="Selecione a Unidade"
+                  :options="options"
+                  :disabled="form.disabled"
+                  :class="{ 'fail-error': $v.form.unidade.$error }"
+                ></b-form-select>
+                <small style="font-size: 11px; color: red">
+                  {{ validationMsg($v.form.unidade) }}
+                </small>
+              </div>
+              <div class="col-md-6">
                 <label
                   >Qtd Unidade:<b style="color: rgb(245, 153, 153)">
                     *</b
@@ -63,7 +81,7 @@
                   type="text"
                   v-model="form.qtdEstoque"
                   :class="{ 'fail-error': $v.form.qtdEstoque.$error }"
-                  placeholder="Unidade"
+                  placeholder="Qtd Unidade"
                   :disabled="form.disabled"
                 >
                 </b-form-input>
@@ -464,7 +482,6 @@ export default {
   components: { HomeCategoria, HomeFornecedor },
   data() {
     return {
-      teste:"<i class='bx bx-calendar'></i>",
       form: this.formulario,
       headerBgVariant: "dark",
       headerTextVariant: "light",
@@ -473,6 +490,8 @@ export default {
       modal_search_fornecedor: "modal_search_fornecedor",
       isLoadingFornecedor: false,
       isLoadingCategoria: false,
+      selected: null,
+      options: [{ value: "UNIDADE", text: "UNIDADE" }],
     };
   },
   filters: {
@@ -484,6 +503,9 @@ export default {
         produto: {
           required: validators.required,
           txtMinLen: validators.minLength(3),
+        },
+        unidade: {
+          required: validators.required,
         },
         qtdEstoque: {
           required: validators.required,
@@ -550,7 +572,6 @@ export default {
           ServiceProduto.storeProduto(this.form)
             .then((response) => {
               if (response.status === 200) {
-                console.log(response);
                 notyf.success(response.data.success);
                 vm.onReset();
                 vm.$bvModal.hide(vm.modal_form_produto);
@@ -559,7 +580,6 @@ export default {
                   notyf.error(response.data[1]);
                 }
               } else {
-                console.log(response.response.data.errors);
                 if (response.response.data.errors != null) {
                   Object.keys(response.response.data.errors).forEach(function (
                     key
@@ -577,7 +597,6 @@ export default {
           ServiceProduto.alterarProduto(this.form)
             .then((response) => {
               if (response.status === 200) {
-                console.log(response.data.success);
                 notyf.success(response.data.success);
                 vm.onReset();
                 vm.$bvModal.hide(vm.modal_form_produto);

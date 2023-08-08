@@ -1,0 +1,782 @@
+<template>
+  <div class="container" style="margin-bottom: -90px">
+    <b-card class="mt-0 mb-5" :header-html="form.headerForm">
+      <slot name="conteudo">
+        <b-form>
+          <div class="row mt-2">
+            <div class="col-md-6">
+              <div class="row col-md-12 col-sm-12">
+                <div class="col-md-4 col-sm-4">
+                  <label
+                    >Modelo:<b style="color: rgb(245, 153, 153)"> *</b></label
+                  >
+                  <b-form-input
+                    id="modelo"
+                    type="number"
+                    placeholder="Modelo"
+                    v-model="modelo"
+                  ></b-form-input>
+                </div>
+                <div class="col-md-4 col-sm-4">
+                  <label
+                    >Série:<b style="color: rgb(245, 153, 153)"> *</b></label
+                  >
+                  <b-form-input
+                    id="serie"
+                    type="number"
+                    placeholder="Série"
+                    v-model="serie"
+                  ></b-form-input>
+                </div>
+                <div class="col-md-4 col-sm-4">
+                  <label
+                    >Numero:<b style="color: rgb(245, 153, 153)"> *</b></label
+                  >
+                  <b-form-input
+                    id="numero"
+                    type="number"
+                    placeholder="Número"
+                    v-model="numero"
+                  ></b-form-input>
+                  <small style="font-size: 11px; color: red"></small>
+                </div>
+              </div>
+            </div>
+            <!-- d-flex align-items-center -->
+            <div class="col-md-6">
+              <div class="row col-md-12 col-sm-12">
+                <div class="col-md-3 col-sm-4">
+                  <label>Código:</label>
+                  <b-form-input
+                    id="id_fornecedor"
+                    type="number"
+                    placeholder="Código"
+                    v-model="id_fornecedor"
+                    :title="id_fornecedor"
+                  ></b-form-input>
+                  <small style="font-size: 11px; color: red"></small>
+                </div>
+                <div class="col-md-9 col-sm-8">
+                  <label
+                    >Fornecedor:<b style="color: rgb(245, 153, 153)">
+                      *</b
+                    ></label
+                  >
+                  <b-overlay :show="false" rounded="sm">
+                    <b-input-group>
+                      <b-form-input
+                        id="fornecedor"
+                        type="text"
+                        placeholder="Fornecedor"
+                        v-model="fornecedor"
+                        :title="fornecedor"
+                        disabled
+                      ></b-form-input>
+                      <b-input-group-append>
+                        <b-button
+                          text="Button"
+                          variant="dark"
+                          :disabled="form.disabled"
+                          @click="showSearchFornecedor()"
+                          title="Pesquisar Fornecedor"
+                        >
+                          <i class="bx bx-search"></i>
+                        </b-button>
+                      </b-input-group-append>
+                    </b-input-group>
+                    <small style="font-size: 11px; color: red"></small>
+                  </b-overlay>
+                </div>
+              </div>
+              <div class="row col-md-12 col-sm-12 justify-content-end">
+                <div class="col-md-6 col-sm-6">
+                  <label>Data Emissão:</label>
+                  <b-form-input
+                    id="data_emissão"
+                    type="date"
+                    v-model="data_emissao"
+                  ></b-form-input>
+                  <small style="font-size: 11px; color: red"></small>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                  <label>Data Chegada:</label>
+                  <b-form-input
+                    id="data_chegada"
+                    type="date"
+                    v-model="data_chegada"
+                  ></b-form-input>
+                  <small style="font-size: 11px; color: red"></small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- card Produto -->
+          <div
+            class="mt-4"
+            :class="{ card_produto_disabled: !resultado_Produdo }"
+          >
+            <b-card :header-html="textCard_Produto" class="text-start">
+              <div class="row mt-02">
+                <div class="col-md-2">
+                  <label>Código:</label>
+                  <b-form-input
+                    id="id_produto"
+                    v-model="id_produto"
+                    type="number"
+                    placeholder="Código"
+                  >
+                  </b-form-input>
+                  <small style="font-size: 11px; color: red"> </small>
+                </div>
+                <div class="col-md-8">
+                  <label
+                    >Produto:<b style="color: rgb(245, 153, 153)"> *</b></label
+                  >
+                  <b-overlay :show="false" rounded="sm">
+                    <b-input-group>
+                      <b-form-input
+                        id="produto"
+                        v-model="produto"
+                        type="text"
+                        placeholder="Produto"
+                        disabled
+                      >
+                      </b-form-input>
+                      <b-input-group-append>
+                        <b-button
+                          text="Button"
+                          variant="dark"
+                          :disabled="form.disabled"
+                          title="Pesquisar Produto"
+                          @click="showSearchProduto()"
+                        >
+                          <i class="bx bx-search"></i>
+                        </b-button>
+                      </b-input-group-append>
+                    </b-input-group>
+                    <small style="font-size: 11px; color: red"> </small>
+                  </b-overlay>
+                </div>
+                <div class="col-md-2">
+                  <label>Unidade:</label>
+                  <b-form-input
+                    id="Unidade"
+                    v-model="unidade"
+                    type="text"
+                    placeholder="Unidade"
+                    disabled
+                  >
+                  </b-form-input>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-md-3">
+                  <label
+                    >Quantidade:<b style="color: rgb(245, 153, 153)"> *</b>
+                  </label>
+                  <b-form-input
+                    id="quantidade"
+                    type="number"
+                    placeholder="Quantidade"
+                  >
+                  </b-form-input>
+                </div>
+                <div class="col-md-3">
+                  <label
+                    >Valor Unitário:<b style="color: rgb(245, 153, 153)"> *</b>
+                  </label>
+                  <b-input-group>
+                    <template #prepend>
+                      <b-input-group-text
+                        style="background-color: #212529; color: white"
+                        >R$</b-input-group-text
+                      >
+                    </template>
+                    <b-form-input
+                      id="valor_unitario"
+                      type="number"
+                      v-model="valor_unitario"
+                      placeholder="0,00"
+                      disabled
+                    ></b-form-input>
+                  </b-input-group>
+                </div>
+                <div class="col-md-3">
+                  <label
+                    >Desconto:<b style="color: rgb(245, 153, 153)"> *</b></label
+                  >
+                  <b-input-group>
+                    <template #prepend>
+                      <b-input-group-text
+                        style="background-color: #212529; color: white"
+                        >%</b-input-group-text
+                      >
+                    </template>
+                    <b-form-input
+                      id="desconto"
+                      type="number"
+                      placeholder="0,00"
+                    ></b-form-input>
+                  </b-input-group>
+                </div>
+                <div class="col-md-3" style="line-height: 85px">
+                  <b-button class="btn btn-sm" type="button" variant="dark">
+                    Adicionar Produto
+                  </b-button>
+                </div>
+              </div>
+              <!-- Tabela Produtos -->
+              <div class="row mt-02" style="margin-top: 20px">
+                <div class="container mt-02 table-responsive">
+                  <table class="table">
+                    <thead class="fixed-header">
+                      <tr
+                        class="table text-center"
+                        style="background: #212529; color: white"
+                      >
+                        <th scope="col" class="table_Tr">Cód</th>
+                        <th scope="col" class="table_Tr">Produto</th>
+                        <th scope="col" class="table_Tr">Unidade</th>
+                        <th scope="col" class="table_Tr">Qtd</th>
+                        <th scope="col" class="table_Tr">Valor Uni(R$)</th>
+                        <th scope="col" class="table_Tr">Desc(%)</th>
+                        <th scope="col" class="table_Tr">Sub Total(R$)</th>
+                        <th scope="col" class="table_Tr">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        class="text-center"
+                        v-for="(item, key) in items"
+                        :key="key"
+                      >
+                        <td class="col-md-1 col-sm-1 table_Td" title="10">
+                          <input
+                            id="codigo"
+                            type="text"
+                            class="form-control text-center"
+                            value="10"
+                            disabled
+                          />
+                        </td>
+                        <td class="col-md-4 col-sm-4 table_Td">
+                          <input
+                            id="produto"
+                            type="text"
+                            class="form-control text-start"
+                            value="Podada Reviver"
+                            disabled
+                          />
+                        </td>
+                        <td class="col-md-1 col-sm-1 table_Td">
+                          <input
+                            id="unidade"
+                            type="text"
+                            class="form-control text-center"
+                            value="Uni"
+                            disabled
+                          />
+                        </td>
+                        <td class="col-md-1 col-sm-1 table_Td">
+                          <input
+                            id="quantidade"
+                            type="text"
+                            class="form-control text-center"
+                            value="15"
+                            disabled
+                          />
+                        </td>
+                        <td class="col-md-1 col-sm-1 table_Td">
+                          <input
+                            id="valor_unitario"
+                            type="text"
+                            class="form-control text-center"
+                            value="R$ 150000,85"
+                            disabled
+                          />
+                        </td>
+                        <td class="col-md-1 col-sm-1 table_Td">
+                          <input
+                            id="desconto"
+                            type="text"
+                            class="form-control text-center"
+                            value="15 %"
+                            disabled
+                          />
+                        </td>
+                        <td class="col-md-1 col-sm-1 table_Td">
+                          <input
+                            id="subTotal"
+                            type="text"
+                            value="R$ 100050,00"
+                            class="form-control text-center"
+                            disabled
+                          />
+                        </td>
+                        <td class="col-md-1 col-sm-1 table_Td">
+                          <div v-if="true">
+                            <button
+                              class="btn btn-sm me-1 mb-1 mt-1"
+                              type="button"
+                              title="EDITAR"
+                              style="background-color: rgb(254 255 7 / 56%)"
+                            >
+                              <i class="bx bx-edit-alt"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm me-1 mb-1 mt-1"
+                              type="button"
+                              title="EXCLUIR"
+                              style="background-color: rgb(235 32 63 / 65%)"
+                            >
+                              <i class="bx bx-trash-alt"></i>
+                            </button>
+                          </div>
+                          <div v-else>
+                            <button
+                              class="btn btn-sm me-1 mb-1 mt-1"
+                              type="button"
+                              title="SALVAR"
+                              style="background-color: #28a74563"
+                            >
+                              <i class="bx bx-check"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm me-1 mb-1 mt-1"
+                              type="button"
+                              title="EXCLUIR"
+                              style="background-color: rgb(235 32 63 / 65%)"
+                            >
+                              <i class="bx bx-trash-alt"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <template #footer>
+                <div class="row">
+                  <div class="col-md-9 text-end mr-0 centered-text">
+                    <label for="input-default"><b>Total da Compra:</b></label>
+                  </div>
+                  <div class="col-md-3">
+                    <b-input-group>
+                      <template #prepend>
+                        <b-input-group-text
+                          style="background-color: #212529; color: white"
+                          >R$</b-input-group-text
+                        >
+                      </template>
+                      <b-form-input
+                        id="total_compra"
+                        type="number"
+                        placeholder="0,00"
+                        disabled
+                      ></b-form-input>
+                    </b-input-group>
+                  </div>
+                </div>
+              </template>
+            </b-card>
+          </div>
+          <!-- card Condição Pagamento -->
+          <div class="mt-4" :class="{ card_condicao_disabled: true }">
+            <b-card
+              :header-html="textCard_CondicaoPagamento"
+              class="text-start"
+            >
+              <div class="col-md-6">
+                <div class="row col-md-12 col-sm-12">
+                  <div class="col-md-3 col-sm-4">
+                    <label>Código:</label>
+                    <b-form-input
+                      id="id_fornecedor"
+                      type="number"
+                      placeholder="Código"
+                    ></b-form-input>
+                    <small style="font-size: 11px; color: red"></small>
+                  </div>
+                  <div class="col-md-9 col-sm-8">
+                    <label
+                      >Condição de Pagamento:<b
+                        style="color: rgb(245, 153, 153)"
+                      >
+                        *</b
+                      ></label
+                    >
+                    <b-overlay :show="false" rounded="sm">
+                      <b-input-group>
+                        <b-form-input
+                          id="fornecedor"
+                          type="text"
+                          placeholder="Condição de Pagamento"
+                          disabled
+                        ></b-form-input>
+                        <b-input-group-append>
+                          <b-button
+                            text="Button"
+                            variant="dark"
+                            :disabled="form.disabled"
+                            title="Pesquisar Condição de Pagamento"
+                          >
+                            <i class="bx bx-search"></i>
+                          </b-button>
+                        </b-input-group-append>
+                      </b-input-group>
+                      <small style="font-size: 11px; color: red"></small>
+                    </b-overlay>
+                  </div>
+                </div>
+              </div>
+              <!-- Tabela Condição Pagamento -->
+              <div class="row mt-02" style="margin-top: 20px">
+                <div class="container mt-02 table-responsive">
+                  <table class="table">
+                    <thead class="fixed-header">
+                      <tr
+                        class="table text-center"
+                        style="background: #212529; color: white"
+                      >
+                        <th scope="col" class="table_Tr">Parcela</th>
+                        <th scope="col" class="table_Tr">Forma de Pagamento</th>
+                        <th scope="col" class="table_Tr">Vencimento</th>
+                        <th scope="col" class="table_Tr">Valor Parcela(R$)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        class="text-center"
+                        v-for="(item, key) in items"
+                        :key="key"
+                      >
+                        <td class="col-md-2 table_Td">
+                          <input
+                            id="codigo"
+                            type="text"
+                            class="form-control text-center"
+                            value="10"
+                            disabled
+                          />
+                        </td>
+                        <td class="col-md-6 table_Td">
+                          <input
+                            id="produto"
+                            type="text"
+                            class="form-control text-start"
+                            value="Podada Reviver"
+                            disabled
+                          />
+                        </td>
+                        <td class="col-md-2 table_Td">
+                          <input
+                            id="unidade"
+                            type="text"
+                            class="form-control text-center"
+                            value="Uni"
+                            disabled
+                          />
+                        </td>
+                        <td class="col-md-2 table_Td">
+                          <input
+                            id="quantidade"
+                            type="text"
+                            class="form-control text-center"
+                            value="15"
+                            disabled
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div>
+                <label for="">Observações:</label>
+                <b-form-textarea
+                  id="textarea"
+                  placeholder="Enter something..."
+                  rows="3"
+                  max-rows="6"
+                ></b-form-textarea>
+              </div>
+            </b-card>
+          </div>
+
+          <small class="mt-2" style="font-size: 12px"
+            >Campos com <b style="color: rgb(245, 153, 153)">*</b> são
+            obrigatórios !</small
+          >
+        </b-form>
+      </slot>
+      <slot name="botao">
+        <div class="d-flex justify-content-end">
+          <b-button
+            class="btn btn-sm me-1"
+            type="button"
+            variant="dark"
+            @click.prevent="closeCompra()"
+          >
+            Cancelar
+          </b-button>
+          <b-button
+            class="btn btn-sm me-1"
+            type="button"
+            variant="dark"
+            @click.prevent="onSubmit()"
+          >
+            {{ form.btn }}<i class="bx bx-check"></i>
+          </b-button>
+        </div>
+      </slot>
+      <slot name="rodape">
+        <div class="col-12">
+          <small class="col-6 me-1" style="font-size: 11px"
+            ><b>Data Criação:</b>
+          </small>
+          <small class="col-6 me-1" style="font-size: 11px"
+            ><b>Data Ult-Alteração:</b>
+          </small>
+        </div>
+      </slot>
+    </b-card>
+    <!-- Modal HomeFornecedor -->
+    <b-modal
+      :id="modal_search_fornecedor"
+      size="xl"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+    >
+      <template v-slot:modal-header>
+        <h5>Pesquisar Fornecedor</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="fecharModalSearchFornecedor()"
+        >
+          X
+        </b-button>
+      </template>
+      <b-container fluid>
+        <HomeFornecedor
+          :functionFornecedor="changeSearchFornecedor"
+        ></HomeFornecedor>
+      </b-container>
+      <b-container
+        class="col-sm-12 col-md-12 mt-3"
+        style="text-align: center"
+        footer
+      >
+        <b-button
+          @click="fecharModalSearchFornecedor()"
+          type="button"
+          id=""
+          class="btn btn-dark btn-sm"
+          >Fechar Pesquisa Fornecedor</b-button
+        >
+      </b-container>
+    </b-modal>
+    <!-- Modal HomeProduto -->
+    <b-modal
+      :id="modal_search_Produto"
+      size="xl"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+    >
+      <template v-slot:modal-header>
+        <h5>Pesquisar Fornecedor</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="fecharModalSearchProduto()"
+        >
+          X
+        </b-button>
+      </template>
+      <b-container fluid>
+        <HomeProduto :functionProduto="changeSearchProduto"></HomeProduto>
+      </b-container>
+      <b-container
+        class="col-sm-12 col-md-12 mt-3"
+        style="text-align: center"
+        footer
+      >
+        <b-button
+          @click="fecharModalSearchProduto()"
+          type="button"
+          id=""
+          class="btn btn-dark btn-sm"
+          >Fechar Pesquisa Produto</b-button
+        >
+      </b-container>
+    </b-modal>
+    <br /><br />
+  </div>
+</template>
+<script>
+import HomeFornecedor from "../fornecedores/HomeFornecedor.vue";
+import HomeProduto from "../produto/HomeProduto.vue";
+export default {
+  props: {
+    formulario: { type: Object },
+  },
+  components: { HomeFornecedor, HomeProduto },
+  data() {
+    return {
+      modal_search_fornecedor: "modal_search_fornecedor",
+      modal_search_Produto: "modal_search_Produto",
+      textCard_Produto:
+        "<span class='Text-Card-0'><i class='bx bx-cart'></i> Produto</span>",
+      textCard_CondicaoPagamento:
+        "<span class='Text-Card-0'><i class='bx bx-wallet'></i> Condição de Pagamento</span>",
+      form: this.formulario,
+      headerBgVariant: "dark",
+      headerTextVariant: "light",
+      customDialogClass: "my-custom-modal-dialog",
+      modal_form_compra: "modal_form_compra",
+      modelo: "",
+      serie: "",
+      numero: "",
+      id_fornecedor: "",
+      fornecedor: "",
+      data_emissao: "",
+      data_chegada: "",
+      id_produto:"",
+      produto:"",
+      unidade:"",
+      quantidade:"",
+      valor_unitario:"",
+      desconto:"",
+      items: [
+        { name: "João", age: 30, email: "joao@example.com" },
+        { name: "Maria", age: 28, email: "maria@example.com" },
+        { name: "Pedro", age: 35, email: "pedro@example.com" },
+        // Adicione mais itens ao array conforme necessário
+      ],
+      disabled: false,
+      produtos: [],
+      resultado_Produdo: false,
+    };
+  },
+  beforeCreate() {},
+  filters: {},
+  created() {
+    if (!this.form) {
+      this.$router.push({ name: "compra" });
+    }
+    this.data_emissao = this.obterDataAtual();
+    this.data_chegada = this.obterDataAtual();
+  },
+  computed: {
+    todosParametrosPreenchidos() {
+      return (
+        this.modelo !== "" &&
+        this.serie !== "" &&
+        this.numero !== "" &&
+        this.id_fornecedor !== "" &&
+        this.fornecedor !== ""
+      );
+    },
+  },
+  watch: {
+    todosParametrosPreenchidos(result) {
+      this.resultado_Produdo = result;
+    },
+  },
+  methods: {
+    closeCompra() {
+      //   this.onReset();
+      this.$bvModal.hide(this.modal_form_compra);
+      this.$router.push({ name: "compra" });
+    },
+    onSubmit() {
+      alert("enviar");
+    },
+    changeSearchFornecedor(obj) {
+      if (obj.column.field === "btn") {
+        return;
+      }
+      this.id_fornecedor = obj.row.id;
+      this.fornecedor = obj.row.razaoSocial;
+      this.$bvModal.hide(this.modal_search_fornecedor);
+    },
+    showSearchFornecedor() {
+      this.$bvModal.show(this.modal_search_fornecedor);
+    },
+    fecharModalSearchFornecedor() {
+      this.$bvModal.hide(this.modal_search_fornecedor);
+    },
+    changeSearchProduto(obj) {
+      if (obj.column.field === "btn") {
+        return;
+      }
+      console.log(obj);
+      const precoVenda = obj.row.precoVenda;
+      this.id_produto = obj.row.id;
+      this.produto = obj.row.produto;
+      this.unidade = obj.row.unidade;
+      this.valor_unitario = precoVenda.toFixed(2);
+      this.$bvModal.hide(this.modal_search_Produto);
+    },
+    showSearchProduto() {
+      this.$bvModal.show(this.modal_search_Produto);
+    },
+    fecharModalSearchProduto() {
+      this.$bvModal.hide(this.modal_search_Produto);
+    },
+    obterDataAtual() {
+      const dataAtual = new Date();
+      const ano = dataAtual.getFullYear();
+      const mes = String(dataAtual.getMonth() + 1).padStart(2, "0"); // Adiciona zero à esquerda se necessário
+      const dia = String(dataAtual.getDate()).padStart(2, "0"); // Adiciona zero à esquerda se necessário
+      const dataFormatada = `${ano}-${mes}-${dia}`;
+      return dataFormatada;
+    },
+  },
+};
+</script>
+<style>
+.fail-error {
+  border: 2px solid #e46060bb;
+}
+.Text-Card-0 {
+  font-size: 18px;
+  font-weight: 500;
+}
+.centered-text {
+  line-height: 38px; /* A mesma altura definida na div para centralizar verticalmente */
+}
+.prepend-00 {
+  background-color: black;
+  font-size: 24px;
+  color: white;
+}
+.card_produto_disabled {
+  pointer-events: none; /* Impede interações com elementos filhos */
+  opacity: 0.5; /* Opacidade reduzida para indicar desabilitação */
+}
+.card_condicao_disabled {
+  pointer-events: none; /* Impede interações com elementos filhos */
+  opacity: 0.5; /* Opacidade reduzida para indicar desabilitação */
+}
+.my-custom-modal-dialog.modal-dialog {
+  max-width: 1700px; /* Defina o tamanho máximo horizontal desejado */
+  margin: 30px auto; /* Para centralizar verticalmente o modal na tela */
+}
+.table_Tr {
+  font-family: monospace;
+  font-weight: 100;
+  font-size: 13px;
+}
+.table_Td {
+  font-family: inherit;
+  font-weight: 100;
+}
+</style>

@@ -82,6 +82,11 @@ import Modal from "./Modal.vue";
 import { ServiceProduto } from "../../services/serviceProduto";
 export default {
   components: { VueGoodTable, Modal },
+  props: {
+    functionProduto: {
+      type: Function,
+    },
+  },
   data() {
     return {
       isLoading: false,
@@ -110,7 +115,7 @@ export default {
         },
       ],
       form_produto: {
-        id:null,
+        id: null,
         produto: "",
         unidade: "",
         id_categoria: "",
@@ -149,8 +154,8 @@ export default {
         });
     },
     selectCellProdutos(params) {
-      if (this.functionCategorias) {
-          this.functionCidade(params);
+      if (this.functionProduto) {
+        this.functionProduto(params);
       }
     },
     showModalAlterarProduto(id) {
@@ -159,7 +164,7 @@ export default {
       this.form_produto.btn = "Alterar";
       this.funcGetById(id);
     },
-    showModalExcluirProduto(id) { 
+    showModalExcluirProduto(id) {
       this.form_produto.titulo = "Excluir Produto";
       this.form_produto.btn = "Excluir";
       this.form_produto.disabled = true;
@@ -197,7 +202,7 @@ export default {
           const custoUltCompra = obj.data[0].custoUltCompra;
           this.form_produto.id = obj.data[0].id;
           this.form_produto.produto = obj.data[0].produto;
-          this.form_produto.unidade = obj.data[0].qtdEstoque;
+          this.form_produto.unidade = obj.data[0].unidade;
           this.form_produto.id_categoria = obj.data[0].categoria.id;
           this.form_produto.categoria = obj.data[0].categoria.categoria;
           this.form_produto.id_fornecedor = obj.data[0].fornecedor.id;

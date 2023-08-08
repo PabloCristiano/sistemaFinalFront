@@ -70,14 +70,14 @@
     </b-overlay>
     <br /><br />
     <!-- Modal Cadastro Compra -->
-    <Modal :formulario="form_compra"></Modal>
+    <!-- <Modal :formulario="form_compra"></Modal> -->
   </div>
 </template>
 <script>
 import { VueGoodTable } from "vue-good-table";
-import Modal from "./Modal.vue";
+// import Modal from "./Modal.vue";
 export default {
-  components: { VueGoodTable,Modal },
+  components: { VueGoodTable },
   data() {
     return {
       modal_form_compra: "modal_form_compra",  
@@ -166,10 +166,13 @@ export default {
       //this.form_cliente.id_condicaopg = '487';
       //this.form_cliente.condicaopg = '30/60/90';
       // <i class='bx bx-cart Text-Card'></i>
-      this.form_compra.titulo = "Cadastrar Nova Compra";
-      this.form_compra.headerForm = "<span class='Text-Card'>Nova Compra</span>";
-      this.form_compra.btn = "Salvar";
-      this.$bvModal.show(this.modal_form_compra);
+      // Modal
+       this.form_compra.titulo = "Cadastrar Nova Compra";
+       this.form_compra.headerForm = "<span class='Text-Card'>Nova Compra</span>";
+       this.form_compra.disabled = false;
+       this.form_compra.btn = "Salvar";
+       //this.$bvModal.show(this.modal_form_compra);
+      this.$router.push({name: 'adicionarCompra', params: { formulario: this.form_compra } });
     },
   },
 };

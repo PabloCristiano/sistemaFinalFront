@@ -20,6 +20,7 @@ const HomeProduto = ()=> import( /* webpackChunkName: "Produto" */ "@/components
 const HomeFormaPagamento = ()=> import( /* webpackChunkName: "FormaPagamento" */ "@/components/formaPagamento/HomeFormaPagamento");
 const HomeCondicaoPagamento = ()=> import( /* webpackChunkName: "CondicaoPagamento" */ "@/components/condicaoPagamento/HomeCondicaoPagamento");
 const HomeCompra = ()=> import(/* webpackChunkName: "Compra" */ "@/components/compra/HomeCompra");
+const AdicionarCompra = ()=> import(/* webpackChunkName: "Compra" */ "@/components/compra/Compra");
 
 
 Vue.use(VueRouter)
@@ -191,6 +192,18 @@ const routes = [{
         meta: {
           public: true,
           label: 'Cadastro Compra',
+          requiresPermission: 'admin'
+        }
+      },
+      {
+        path: '/compra/adicionarCompra',
+        component: AdicionarCompra,
+        props: true,
+        titulo: 'Cadastro Nova Compra',
+        name: 'adicionarCompra',
+        meta: {
+          public: true,
+          label: 'Cadastro Nova Compra',
           requiresPermission: 'admin'
         }
       }

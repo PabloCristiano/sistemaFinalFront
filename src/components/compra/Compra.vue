@@ -195,6 +195,7 @@
                     <b-form-input
                       id="valor_unitario"
                       type="number"
+                      v-model="valor_unitario"
                       placeholder="0,00"
                       disabled
                     ></b-form-input>
@@ -717,9 +718,11 @@ export default {
         return;
       }
       console.log(obj);
+      const precoVenda = obj.row.precoVenda;
       this.id_produto = obj.row.id;
       this.produto = obj.row.produto;
       this.unidade = obj.row.unidade;
+      this.valor_unitario = precoVenda.toFixed(2);
       this.$bvModal.hide(this.modal_search_Produto);
     },
     showSearchProduto() {

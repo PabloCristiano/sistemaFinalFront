@@ -572,7 +572,6 @@ export default {
           ServiceProduto.storeProduto(this.form)
             .then((response) => {
               if (response.status === 200) {
-                console.log(response);
                 notyf.success(response.data.success);
                 vm.onReset();
                 vm.$bvModal.hide(vm.modal_form_produto);
@@ -581,7 +580,6 @@ export default {
                   notyf.error(response.data[1]);
                 }
               } else {
-                console.log(response.response.data.errors);
                 if (response.response.data.errors != null) {
                   Object.keys(response.response.data.errors).forEach(function (
                     key
@@ -599,7 +597,6 @@ export default {
           ServiceProduto.alterarProduto(this.form)
             .then((response) => {
               if (response.status === 200) {
-                console.log(response.data.success);
                 notyf.success(response.data.success);
                 vm.onReset();
                 vm.$bvModal.hide(vm.modal_form_produto);

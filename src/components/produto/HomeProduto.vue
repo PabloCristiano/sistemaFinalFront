@@ -144,7 +144,6 @@ export default {
       this.isLoading = true;
       ServiceProduto.getAll()
         .then((obj) => {
-          console.log(obj)
           if (obj) {
             this.produtos = obj;
           }

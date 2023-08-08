@@ -120,7 +120,8 @@
                 <div class="col-md-2">
                   <label>Código:</label>
                   <b-form-input
-                    id="id_fornecedor"
+                    id="id_produto"
+                    v-model="id_produto"
                     type="number"
                     placeholder="Código"
                   >
@@ -135,6 +136,7 @@
                     <b-input-group>
                       <b-form-input
                         id="produto"
+                        v-model="produto"
                         type="text"
                         placeholder="Produto"
                         disabled
@@ -159,7 +161,8 @@
                   <label>Unidade:</label>
                   <b-form-input
                     id="Unidade"
-                    type="number"
+                    v-model="unidade"
+                    type="text"
                     placeholder="Unidade"
                     disabled
                   >
@@ -644,6 +647,12 @@ export default {
       fornecedor: "",
       data_emissao: "",
       data_chegada: "",
+      id_produto:"",
+      produto:"",
+      unidade:"",
+      quantidade:"",
+      valor_unitario:"",
+      desconto:"",
       items: [
         { name: "João", age: 30, email: "joao@example.com" },
         { name: "Maria", age: 28, email: "maria@example.com" },
@@ -651,7 +660,7 @@ export default {
         // Adicione mais itens ao array conforme necessário
       ],
       disabled: false,
-      produto: [],
+      produtos: [],
       resultado_Produdo: false,
     };
   },
@@ -708,8 +717,9 @@ export default {
         return;
       }
       console.log(obj);
-      // this.id_fornecedor = obj.row.id;
-      // this.fornecedor = obj.row.razaoSocial;
+      this.id_produto = obj.row.id;
+      this.produto = obj.row.produto;
+      this.unidade = obj.row.unidade;
       this.$bvModal.hide(this.modal_search_Produto);
     },
     showSearchProduto() {

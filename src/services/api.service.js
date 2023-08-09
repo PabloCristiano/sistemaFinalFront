@@ -33,7 +33,7 @@ const notyf = new Notyf({
 });
 const ApiService = {
     _401interceptor: null,
-    url: 'http://vmi1033367.contaboserver.net:8085/api/',
+     url: 'http://vmi1033367.contaboserver.net:8085/api/',
      //url: 'http://localhost:8000/api/',
     init(url) {
         axios.defaults.baseURL = url;

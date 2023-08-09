@@ -95,8 +95,14 @@
                     id="data_emissão"
                     type="date"
                     v-model="data_emissao"
+                    :max="maxDate"
                   ></b-form-input>
                   <small style="font-size: 11px; color: red"></small>
+                  <!-- <small
+                    v-if="max_isDateInvalid"
+                    style="font-size: 11px; color: red"
+                    >A data não pode ser maior que a data atual.</small
+                  > -->
                 </div>
                 <div class="col-md-6 col-sm-6">
                   <label>Data Chegada:</label>
@@ -104,6 +110,7 @@
                     id="data_chegada"
                     type="date"
                     v-model="data_chegada"
+                    :min="minDate"
                   ></b-form-input>
                   <small style="font-size: 11px; color: red"></small>
                 </div>
@@ -113,7 +120,7 @@
           <!-- card Produto -->
           <div
             class="mt-4"
-            :class="{ card_produto_disabled: !resultado_Produdo }"
+            :class="{ card_produto_disabled: !todosParametrosPreenchidos }"
           >
             <b-card :header-html="textCard_Produto" class="text-start">
               <div class="row mt-02">
@@ -623,6 +630,30 @@
 <script>
 import HomeFornecedor from "../fornecedores/HomeFornecedor.vue";
 import HomeProduto from "../produto/HomeProduto.vue";
+import { Notyf } from "notyf";
+const notyf = new Notyf({
+  position: {
+    x: "center",
+    y: "top",
+  },
+  types: [
+    {
+      type: "warning",
+      background: "orange",
+      icon: {
+        className: "material-icons",
+        tagName: "i",
+        text: "warning",
+      },
+    },
+    {
+      type: "error",
+      background: "indianred",
+      duration: 5000,
+      dismissible: true,
+    },
+  ],
+});
 export default {
   props: {
     formulario: { type: Object },
@@ -647,13 +678,13 @@ export default {
       id_fornecedor: "",
       fornecedor: "",
       data_emissao: "",
-      data_chegada: "",
-      id_produto:"",
-      produto:"",
-      unidade:"",
-      quantidade:"",
-      valor_unitario:"",
-      desconto:"",
+      data_chegada: this.obterDataAtual(),
+      id_produto: "",
+      produto: "",
+      unidade: "",
+      quantidade: "",
+      valor_unitario: "",
+      desconto: "",
       items: [
         { name: "João", age: 30, email: "joao@example.com" },
         { name: "Maria", age: 28, email: "maria@example.com" },
@@ -662,7 +693,8 @@ export default {
       ],
       disabled: false,
       produtos: [],
-      resultado_Produdo: false,
+      maxDate: "", // Define a data máxima como a data atual
+      minDate: "", // Define a data mínima como a data atual
     };
   },
   beforeCreate() {},
@@ -673,6 +705,8 @@ export default {
     }
     this.data_emissao = this.obterDataAtual();
     this.data_chegada = this.obterDataAtual();
+    this.maxDate = this.obterDataAtual();
+    this.minDate = this.obterDataAtual();
   },
   computed: {
     todosParametrosPreenchidos() {
@@ -684,10 +718,31 @@ export default {
         this.fornecedor !== ""
       );
     },
+    max_isDateInvalid() {
+      const data_emissao = new Date(this.data_emissao);
+      const maxDate = new Date();
+      maxDate.setHours(0, 0, 0, 0); // Zera o horário da data atual para comparar apenas as datas
+      return data_emissao > maxDate;
+    },
+    min_isDateInvalid() {
+      const selectedDate = new Date(this.data_chegada);
+      const currentDate = new Date();
+      currentDate.setHours(0, 0, 0, 0); // Zera o horário da data atual para comparar apenas as datas
+      return selectedDate < currentDate;
+    },
   },
   watch: {
-    todosParametrosPreenchidos(result) {
-      this.resultado_Produdo = result;
+    max_isDateInvalid(result) {
+      if (result) {
+        this.data_emissao = this.obterDataAtual();
+        notyf.error("A Data Emissão não pode ser maior que a data atual");
+      }
+    },
+    min_isDateInvalid(result) {
+      if (result) {
+        this.data_chegada = this.obterDataAtual();
+        notyf.error("A Data Chegada não pode ser menor que a data atual");
+      }
     },
   },
   methods: {

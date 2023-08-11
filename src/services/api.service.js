@@ -133,19 +133,19 @@ const ApiService = {
             if (error.response.status === 401 && error.response.data.message === 'Token has expired') {
                 console.log("enviar para o refresh");
                 router.push({
-                    name: 'login'
+                    name: 'Login'
                 });
             }
             if (error.response.statusText === 'Unauthorized') {
                 console.log("enviar para o refresh");
                 router.push({
-                    name: 'login'
+                    name: 'Login'
                 });
             }
             if (error.response.status === 401 && error.response.data.message === 'Wrong number of segments') {
                 console.log("enviar para o refresh");
                 router.push({
-                    name: 'login'
+                    name: 'Login'
                 });
             }
             return Promise.reject(error);

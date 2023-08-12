@@ -118,11 +118,10 @@
             </div>
           </div>
           <!-- card Produto -->
+          <!-- :class="{ card_produto_disabled: !todosParametrosPreenchidos }" -->
+          <!-- class="mt-4" -->
           <transition name="slow-motion" appear>
-            <div
-              v-if="todosParametrosPreenchidos"
-              class="slow-motion-div mt-4"
-            >
+            <div v-if="todosParametrosPreenchidos" class="slow-motion-div mt-4">
               <b-card :header-html="textCard_Produto" class="text-start">
                 <div class="row mt-02">
                   <div class="col-md-2">
@@ -397,128 +396,133 @@
             </div>
           </transition>
           <!-- card Condição Pagamento -->
-          <div class="mt-4" :class="{ card_condicao_disabled: true }">
-            <b-card
-              :header-html="textCard_CondicaoPagamento"
-              class="text-start"
-            >
-              <div class="col-md-6">
-                <div class="row col-md-12 col-sm-12">
-                  <div class="col-md-3 col-sm-4">
-                    <label>Código:</label>
-                    <b-form-input
-                      id="id_fornecedor"
-                      type="number"
-                      placeholder="Código"
-                    ></b-form-input>
-                    <small style="font-size: 11px; color: red"></small>
-                  </div>
-                  <div class="col-md-9 col-sm-8">
-                    <label
-                      >Condição de Pagamento:<b
-                        style="color: rgb(245, 153, 153)"
-                      >
-                        *</b
-                      ></label
-                    >
-                    <b-overlay :show="false" rounded="sm">
-                      <b-input-group>
-                        <b-form-input
-                          id="fornecedor"
-                          type="text"
-                          placeholder="Condição de Pagamento"
-                          disabled
-                        ></b-form-input>
-                        <b-input-group-append>
-                          <b-button
-                            text="Button"
-                            variant="dark"
-                            :disabled="form.disabled"
-                            title="Pesquisar Condição de Pagamento"
-                          >
-                            <i class="bx bx-search"></i>
-                          </b-button>
-                        </b-input-group-append>
-                      </b-input-group>
+          <transition name="slow-motion" appear>
+            <div v-if="todosParametrosPreenchidos" class="slow-motion-div mt-4">
+              <b-card
+                :header-html="textCard_CondicaoPagamento"
+                class="text-start"
+              >
+                <div class="col-md-6">
+                  <div class="row col-md-12 col-sm-12">
+                    <div class="col-md-3 col-sm-4">
+                      <label>Código:</label>
+                      <b-form-input
+                        id="id_fornecedor"
+                        type="number"
+                        placeholder="Código"
+                      ></b-form-input>
                       <small style="font-size: 11px; color: red"></small>
-                    </b-overlay>
+                    </div>
+                    <div class="col-md-9 col-sm-8">
+                      <label
+                        >Condição de Pagamento:<b
+                          style="color: rgb(245, 153, 153)"
+                        >
+                          *</b
+                        ></label
+                      >
+                      <b-overlay :show="false" rounded="sm">
+                        <b-input-group>
+                          <b-form-input
+                            id="fornecedor"
+                            type="text"
+                            placeholder="Condição de Pagamento"
+                            disabled
+                          ></b-form-input>
+                          <b-input-group-append>
+                            <b-button
+                              text="Button"
+                              variant="dark"
+                              :disabled="form.disabled"
+                              title="Pesquisar Condição de Pagamento"
+                            >
+                              <i class="bx bx-search"></i>
+                            </b-button>
+                          </b-input-group-append>
+                        </b-input-group>
+                        <small style="font-size: 11px; color: red"></small>
+                      </b-overlay>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <!-- Tabela Condição Pagamento -->
-              <div class="row mt-02" style="margin-top: 20px">
-                <div class="container mt-02 table-responsive">
-                  <table class="table">
-                    <thead class="fixed-header">
-                      <tr
-                        class="table text-center"
-                        style="background: #212529; color: white"
-                      >
-                        <th scope="col" class="table_Tr">Parcela</th>
-                        <th scope="col" class="table_Tr">Forma de Pagamento</th>
-                        <th scope="col" class="table_Tr">Vencimento</th>
-                        <th scope="col" class="table_Tr">Valor Parcela(R$)</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        class="text-center"
-                        v-for="(item, key) in items"
-                        :key="key"
-                      >
-                        <td class="col-md-2 table_Td">
-                          <input
-                            id="codigo"
-                            type="text"
-                            class="form-control text-center"
-                            value="10"
-                            disabled
-                          />
-                        </td>
-                        <td class="col-md-6 table_Td">
-                          <input
-                            id="produto"
-                            type="text"
-                            class="form-control text-start"
-                            value="Podada Reviver"
-                            disabled
-                          />
-                        </td>
-                        <td class="col-md-2 table_Td">
-                          <input
-                            id="unidade"
-                            type="text"
-                            class="form-control text-center"
-                            value="Uni"
-                            disabled
-                          />
-                        </td>
-                        <td class="col-md-2 table_Td">
-                          <input
-                            id="quantidade"
-                            type="text"
-                            class="form-control text-center"
-                            value="15"
-                            disabled
-                          />
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <!-- Tabela Condição Pagamento -->
+                <div class="row mt-02" style="margin-top: 20px">
+                  <div class="container mt-02 table-responsive">
+                    <table class="table">
+                      <thead class="fixed-header">
+                        <tr
+                          class="table text-center"
+                          style="background: #212529; color: white"
+                        >
+                          <th scope="col" class="table_Tr">Parcela</th>
+                          <th scope="col" class="table_Tr">
+                            Forma de Pagamento
+                          </th>
+                          <th scope="col" class="table_Tr">Vencimento</th>
+                          <th scope="col" class="table_Tr">
+                            Valor Parcela(R$)
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          class="text-center"
+                          v-for="(item, key) in items"
+                          :key="key"
+                        >
+                          <td class="col-md-2 table_Td">
+                            <input
+                              id="codigo"
+                              type="text"
+                              class="form-control text-center"
+                              value="10"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-6 table_Td">
+                            <input
+                              id="produto"
+                              type="text"
+                              class="form-control text-start"
+                              value="Podada Reviver"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-2 table_Td">
+                            <input
+                              id="unidade"
+                              type="text"
+                              class="form-control text-center"
+                              value="Uni"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-2 table_Td">
+                            <input
+                              id="quantidade"
+                              type="text"
+                              class="form-control text-center"
+                              value="15"
+                              disabled
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <label for="">Observações:</label>
-                <b-form-textarea
-                  id="textarea"
-                  placeholder="Enter something..."
-                  rows="3"
-                  max-rows="6"
-                ></b-form-textarea>
-              </div>
-            </b-card>
-          </div>
-
+                <div>
+                  <label for="">Observações:</label>
+                  <b-form-textarea
+                    id="textarea"
+                    placeholder="Enter something..."
+                    rows="3"
+                    max-rows="6"
+                  ></b-form-textarea>
+                </div>
+              </b-card>
+            </div>
+          </transition>
           <small class="mt-2" style="font-size: 12px"
             >Campos com <b style="color: rgb(245, 153, 153)">*</b> são
             obrigatórios !</small

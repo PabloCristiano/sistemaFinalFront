@@ -118,257 +118,85 @@
             </div>
           </div>
           <!-- card Produto -->
-          <div
-            class="mt-4"
-            :class="{ card_produto_disabled: !todosParametrosPreenchidos }"
-          >
-            <b-card :header-html="textCard_Produto" class="text-start">
-              <div class="row mt-02">
-                <div class="col-md-2">
-                  <label>Código:</label>
-                  <b-form-input
-                    id="id_produto"
-                    v-model="id_produto"
-                    type="number"
-                    placeholder="Código"
-                  >
-                  </b-form-input>
-                  <small style="font-size: 11px; color: red"> </small>
-                </div>
-                <div class="col-md-8">
-                  <label
-                    >Produto:<b style="color: rgb(245, 153, 153)"> *</b></label
-                  >
-                  <b-overlay :show="false" rounded="sm">
-                    <b-input-group>
-                      <b-form-input
-                        id="produto"
-                        v-model="produto"
-                        type="text"
-                        placeholder="Produto"
-                        disabled
-                      >
-                      </b-form-input>
-                      <b-input-group-append>
-                        <b-button
-                          text="Button"
-                          variant="dark"
-                          :disabled="form.disabled"
-                          title="Pesquisar Produto"
-                          @click="showSearchProduto()"
-                        >
-                          <i class="bx bx-search"></i>
-                        </b-button>
-                      </b-input-group-append>
-                    </b-input-group>
+          <transition name="slow-motion" appear>
+            <div
+              v-if="todosParametrosPreenchidos"
+              class="slow-motion-div mt-4"
+            >
+              <b-card :header-html="textCard_Produto" class="text-start">
+                <div class="row mt-02">
+                  <div class="col-md-2">
+                    <label>Código:</label>
+                    <b-form-input
+                      id="id_produto"
+                      v-model="id_produto"
+                      type="number"
+                      placeholder="Código"
+                    >
+                    </b-form-input>
                     <small style="font-size: 11px; color: red"> </small>
-                  </b-overlay>
-                </div>
-                <div class="col-md-2">
-                  <label>Unidade:</label>
-                  <b-form-input
-                    id="Unidade"
-                    v-model="unidade"
-                    type="text"
-                    placeholder="Unidade"
-                    disabled
-                  >
-                  </b-form-input>
-                </div>
-              </div>
-              <div class="row mt-2">
-                <div class="col-md-3">
-                  <label
-                    >Quantidade:<b style="color: rgb(245, 153, 153)"> *</b>
-                  </label>
-                  <b-form-input
-                    id="quantidade"
-                    type="number"
-                    placeholder="Quantidade"
-                  >
-                  </b-form-input>
-                </div>
-                <div class="col-md-3">
-                  <label
-                    >Valor Unitário:<b style="color: rgb(245, 153, 153)"> *</b>
-                  </label>
-                  <b-input-group>
-                    <template #prepend>
-                      <b-input-group-text
-                        style="background-color: #212529; color: white"
-                        >R$</b-input-group-text
-                      >
-                    </template>
+                  </div>
+                  <div class="col-md-8">
+                    <label
+                      >Produto:<b style="color: rgb(245, 153, 153)">
+                        *</b
+                      ></label
+                    >
+                    <b-overlay :show="false" rounded="sm">
+                      <b-input-group>
+                        <b-form-input
+                          id="produto"
+                          v-model="produto"
+                          type="text"
+                          placeholder="Produto"
+                          disabled
+                        >
+                        </b-form-input>
+                        <b-input-group-append>
+                          <b-button
+                            text="Button"
+                            variant="dark"
+                            :disabled="form.disabled"
+                            title="Pesquisar Produto"
+                            @click="showSearchProduto()"
+                          >
+                            <i class="bx bx-search"></i>
+                          </b-button>
+                        </b-input-group-append>
+                      </b-input-group>
+                      <small style="font-size: 11px; color: red"> </small>
+                    </b-overlay>
+                  </div>
+                  <div class="col-md-2">
+                    <label>Unidade:</label>
                     <b-form-input
-                      id="valor_unitario"
-                      type="number"
-                      v-model="valor_unitario"
-                      placeholder="0,00"
+                      id="Unidade"
+                      v-model="unidade"
+                      type="text"
+                      placeholder="Unidade"
                       disabled
-                    ></b-form-input>
-                  </b-input-group>
+                    >
+                    </b-form-input>
+                  </div>
                 </div>
-                <div class="col-md-3">
-                  <label
-                    >Desconto:<b style="color: rgb(245, 153, 153)"> *</b></label
-                  >
-                  <b-input-group>
-                    <template #prepend>
-                      <b-input-group-text
-                        style="background-color: #212529; color: white"
-                        >%</b-input-group-text
-                      >
-                    </template>
+                <div class="row mt-2">
+                  <div class="col-md-3">
+                    <label
+                      >Quantidade:<b style="color: rgb(245, 153, 153)"> *</b>
+                    </label>
                     <b-form-input
-                      id="desconto"
+                      id="quantidade"
                       type="number"
-                      placeholder="0,00"
-                    ></b-form-input>
-                  </b-input-group>
-                </div>
-                <div class="col-md-3" style="line-height: 85px">
-                  <b-button class="btn btn-sm" type="button" variant="dark">
-                    Adicionar Produto
-                  </b-button>
-                </div>
-              </div>
-              <!-- Tabela Produtos -->
-              <div class="row mt-02" style="margin-top: 20px">
-                <div class="container mt-02 table-responsive">
-                  <table class="table">
-                    <thead class="fixed-header">
-                      <tr
-                        class="table text-center"
-                        style="background: #212529; color: white"
-                      >
-                        <th scope="col" class="table_Tr">Cód</th>
-                        <th scope="col" class="table_Tr">Produto</th>
-                        <th scope="col" class="table_Tr">Unidade</th>
-                        <th scope="col" class="table_Tr">Qtd</th>
-                        <th scope="col" class="table_Tr">Valor Uni(R$)</th>
-                        <th scope="col" class="table_Tr">Desc(%)</th>
-                        <th scope="col" class="table_Tr">Sub Total(R$)</th>
-                        <th scope="col" class="table_Tr">Ações</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        class="text-center"
-                        v-for="(item, key) in items"
-                        :key="key"
-                      >
-                        <td class="col-md-1 col-sm-1 table_Td" title="10">
-                          <input
-                            id="codigo"
-                            type="text"
-                            class="form-control text-center"
-                            value="10"
-                            disabled
-                          />
-                        </td>
-                        <td class="col-md-4 col-sm-4 table_Td">
-                          <input
-                            id="produto"
-                            type="text"
-                            class="form-control text-start"
-                            value="Podada Reviver"
-                            disabled
-                          />
-                        </td>
-                        <td class="col-md-1 col-sm-1 table_Td">
-                          <input
-                            id="unidade"
-                            type="text"
-                            class="form-control text-center"
-                            value="Uni"
-                            disabled
-                          />
-                        </td>
-                        <td class="col-md-1 col-sm-1 table_Td">
-                          <input
-                            id="quantidade"
-                            type="text"
-                            class="form-control text-center"
-                            value="15"
-                            disabled
-                          />
-                        </td>
-                        <td class="col-md-1 col-sm-1 table_Td">
-                          <input
-                            id="valor_unitario"
-                            type="text"
-                            class="form-control text-center"
-                            value="R$ 150000,85"
-                            disabled
-                          />
-                        </td>
-                        <td class="col-md-1 col-sm-1 table_Td">
-                          <input
-                            id="desconto"
-                            type="text"
-                            class="form-control text-center"
-                            value="15 %"
-                            disabled
-                          />
-                        </td>
-                        <td class="col-md-1 col-sm-1 table_Td">
-                          <input
-                            id="subTotal"
-                            type="text"
-                            value="R$ 100050,00"
-                            class="form-control text-center"
-                            disabled
-                          />
-                        </td>
-                        <td class="col-md-1 col-sm-1 table_Td">
-                          <div v-if="true">
-                            <button
-                              class="btn btn-sm me-1 mb-1 mt-1"
-                              type="button"
-                              title="EDITAR"
-                              style="background-color: rgb(254 255 7 / 56%)"
-                            >
-                              <i class="bx bx-edit-alt"></i>
-                            </button>
-                            <button
-                              class="btn btn-sm me-1 mb-1 mt-1"
-                              type="button"
-                              title="EXCLUIR"
-                              style="background-color: rgb(235 32 63 / 65%)"
-                            >
-                              <i class="bx bx-trash-alt"></i>
-                            </button>
-                          </div>
-                          <div v-else>
-                            <button
-                              class="btn btn-sm me-1 mb-1 mt-1"
-                              type="button"
-                              title="SALVAR"
-                              style="background-color: #28a74563"
-                            >
-                              <i class="bx bx-check"></i>
-                            </button>
-                            <button
-                              class="btn btn-sm me-1 mb-1 mt-1"
-                              type="button"
-                              title="EXCLUIR"
-                              style="background-color: rgb(235 32 63 / 65%)"
-                            >
-                              <i class="bx bx-trash-alt"></i>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <template #footer>
-                <div class="row">
-                  <div class="col-md-9 text-end mr-0 centered-text">
-                    <label for="input-default"><b>Total da Compra:</b></label>
+                      placeholder="Quantidade"
+                    >
+                    </b-form-input>
                   </div>
                   <div class="col-md-3">
+                    <label
+                      >Valor Unitário:<b style="color: rgb(245, 153, 153)">
+                        *</b
+                      >
+                    </label>
                     <b-input-group>
                       <template #prepend>
                         <b-input-group-text
@@ -377,17 +205,197 @@
                         >
                       </template>
                       <b-form-input
-                        id="total_compra"
+                        id="valor_unitario"
                         type="number"
+                        v-model="valor_unitario"
                         placeholder="0,00"
                         disabled
                       ></b-form-input>
                     </b-input-group>
                   </div>
+                  <div class="col-md-3">
+                    <label
+                      >Desconto:<b style="color: rgb(245, 153, 153)">
+                        *</b
+                      ></label
+                    >
+                    <b-input-group>
+                      <template #prepend>
+                        <b-input-group-text
+                          style="background-color: #212529; color: white"
+                          >%</b-input-group-text
+                        >
+                      </template>
+                      <b-form-input
+                        id="desconto"
+                        type="number"
+                        placeholder="0,00"
+                      ></b-form-input>
+                    </b-input-group>
+                  </div>
+                  <div class="col-md-3" style="line-height: 85px">
+                    <b-button class="btn btn-sm" type="button" variant="dark">
+                      Adicionar Produto
+                    </b-button>
+                  </div>
                 </div>
-              </template>
-            </b-card>
-          </div>
+                <!-- Tabela Produtos -->
+                <div class="row mt-02" style="margin-top: 20px">
+                  <div class="container mt-02 table-responsive">
+                    <table class="table">
+                      <thead class="fixed-header">
+                        <tr
+                          class="table text-center"
+                          style="background: #212529; color: white"
+                        >
+                          <th scope="col" class="table_Tr">Cód</th>
+                          <th scope="col" class="table_Tr">Produto</th>
+                          <th scope="col" class="table_Tr">Unidade</th>
+                          <th scope="col" class="table_Tr">Qtd</th>
+                          <th scope="col" class="table_Tr">Valor Uni(R$)</th>
+                          <th scope="col" class="table_Tr">Desc(%)</th>
+                          <th scope="col" class="table_Tr">Sub Total(R$)</th>
+                          <th scope="col" class="table_Tr">Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          class="text-center"
+                          v-for="(item, key) in items"
+                          :key="key"
+                        >
+                          <td class="col-md-1 col-sm-1 table_Td" title="10">
+                            <input
+                              id="codigo"
+                              type="text"
+                              class="form-control text-center"
+                              value="10"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-4 col-sm-4 table_Td">
+                            <input
+                              id="produto"
+                              type="text"
+                              class="form-control text-start"
+                              value="Podada Reviver"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-1 col-sm-1 table_Td">
+                            <input
+                              id="unidade"
+                              type="text"
+                              class="form-control text-center"
+                              value="Uni"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-1 col-sm-1 table_Td">
+                            <input
+                              id="quantidade"
+                              type="text"
+                              class="form-control text-center"
+                              value="15"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-1 col-sm-1 table_Td">
+                            <input
+                              id="valor_unitario"
+                              type="text"
+                              class="form-control text-center"
+                              value="R$ 150000,85"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-1 col-sm-1 table_Td">
+                            <input
+                              id="desconto"
+                              type="text"
+                              class="form-control text-center"
+                              value="15 %"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-1 col-sm-1 table_Td">
+                            <input
+                              id="subTotal"
+                              type="text"
+                              value="R$ 100050,00"
+                              class="form-control text-center"
+                              disabled
+                            />
+                          </td>
+                          <td class="col-md-1 col-sm-1 table_Td">
+                            <div v-if="true">
+                              <button
+                                class="btn btn-sm me-1 mb-1 mt-1"
+                                type="button"
+                                title="EDITAR"
+                                style="background-color: rgb(254 255 7 / 56%)"
+                              >
+                                <i class="bx bx-edit-alt"></i>
+                              </button>
+                              <button
+                                class="btn btn-sm me-1 mb-1 mt-1"
+                                type="button"
+                                title="EXCLUIR"
+                                style="background-color: rgb(235 32 63 / 65%)"
+                              >
+                                <i class="bx bx-trash-alt"></i>
+                              </button>
+                            </div>
+                            <div v-else>
+                              <button
+                                class="btn btn-sm me-1 mb-1 mt-1"
+                                type="button"
+                                title="SALVAR"
+                                style="background-color: #28a74563"
+                              >
+                                <i class="bx bx-check"></i>
+                              </button>
+                              <button
+                                class="btn btn-sm me-1 mb-1 mt-1"
+                                type="button"
+                                title="EXCLUIR"
+                                style="background-color: rgb(235 32 63 / 65%)"
+                              >
+                                <i class="bx bx-trash-alt"></i>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <template #footer>
+                  <div class="row">
+                    <div class="col-md-9 text-end mr-0 centered-text">
+                      <label for="input-default"><b>Total da Compra:</b></label>
+                    </div>
+                    <div class="col-md-3">
+                      <b-input-group>
+                        <template #prepend>
+                          <b-input-group-text
+                            style="background-color: #212529; color: white"
+                            >R$</b-input-group-text
+                          >
+                        </template>
+                        <b-form-input
+                          id="total_compra"
+                          type="number"
+                          placeholder="0,00"
+                          disabled
+                        ></b-form-input>
+                      </b-input-group>
+                    </div>
+                  </div>
+                </template>
+              </b-card>
+            </div>
+          </transition>
           <!-- card Condição Pagamento -->
           <div class="mt-4" :class="{ card_condicao_disabled: true }">
             <b-card
@@ -833,5 +841,15 @@ export default {
 .table_Td {
   font-family: inherit;
   font-weight: 100;
+}
+
+.slow-motion-enter-active,
+.slow-motion-leave-active {
+  transition: all 2s; /* Ajuste o valor da transição para controlar a velocidade */
+}
+.slow-motion-enter,
+.slow-motion-leave-to {
+  opacity: 0;
+  transform: scale(0.5); /* Ajuste conforme necessário */
 }
 </style>

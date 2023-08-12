@@ -58,14 +58,16 @@
                 <label
                   >Unidade:<b style="color: rgb(245, 153, 153)"> *</b></label
                 >
-                <b-form-select
-                  class="form-select"
+                <b-form-input
+                  id="unidade"
+                  type="text"
+                  placeholder="Unidade"
                   v-model="form.unidade"
-                  placeholder="Selecione a Unidade"
-                  :options="options"
-                  :disabled="form.disabled"
                   :class="{ 'fail-error': $v.form.unidade.$error }"
-                ></b-form-select>
+                  :title="form.unidade"
+                  :disabled="form.disabled"
+                >
+                </b-form-input>
                 <small style="font-size: 11px; color: red">
                   {{ validationMsg($v.form.unidade) }}
                 </small>
@@ -490,8 +492,6 @@ export default {
       modal_search_fornecedor: "modal_search_fornecedor",
       isLoadingFornecedor: false,
       isLoadingCategoria: false,
-      selected: null,
-      options: [{ value: "UNIDADE", text: "UNIDADE" }],
     };
   },
   filters: {
@@ -503,9 +503,12 @@ export default {
         produto: {
           required: validators.required,
           txtMinLen: validators.minLength(3),
+          txtMaxLen: validators.maxLength(50),
         },
         unidade: {
           required: validators.required,
+          txtMinLen: validators.minLength(3),
+          txtMaxLen: validators.maxLength(20),
         },
         qtdEstoque: {
           required: validators.required,

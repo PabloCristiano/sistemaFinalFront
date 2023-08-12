@@ -849,11 +849,11 @@ export default {
 
 .slow-motion-enter-active,
 .slow-motion-leave-active {
-  transition: all 2s; /* Ajuste o valor da transição para controlar a velocidade */
+  transition: all 0.3s; /* Ajuste o valor da transição para controlar a velocidade */
 }
 .slow-motion-enter,
 .slow-motion-leave-to {
   opacity: 0;
-  transform: scale(0.5); /* Ajuste conforme necessário */
+  transform: scale(0.3); /* Ajuste conforme necessário */
 }
 </style>

@@ -17,7 +17,7 @@ const TokenService = {
    setUser (data){
      localStorage.setItem(USER_NAME, data.data.profissional);
      localStorage.setItem(USER_EMAIL, data.data.email);
-     localStorage.setItem(TYPE_USER, data.data.usuario === 1 ? true : false);
+     localStorage.setItem(TYPE_USER, data.data.tipoProf === 'USUÁRIO' ? true : false);
   },
 
   getUser(){

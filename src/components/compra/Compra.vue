@@ -120,6 +120,7 @@
           <!-- card Produto -->
           <!-- :class="{ card_produto_disabled: !todosParametrosPreenchidos }" -->
           <!-- class="mt-4" -->
+          {{ produtos }}
           <transition name="slow-motion" appear>
             <div v-if="todosParametrosPreenchidos" class="slow-motion-div mt-4">
               <b-card :header-html="textCard_Produto" class="text-start">
@@ -642,30 +643,31 @@
 <script>
 import HomeFornecedor from "../fornecedores/HomeFornecedor.vue";
 import HomeProduto from "../produto/HomeProduto.vue";
-import { Notyf } from "notyf";
-const notyf = new Notyf({
-  position: {
-    x: "center",
-    y: "top",
-  },
-  types: [
-    {
-      type: "warning",
-      background: "orange",
-      icon: {
-        className: "material-icons",
-        tagName: "i",
-        text: "warning",
-      },
-    },
-    {
-      type: "error",
-      background: "indianred",
-      duration: 5000,
-      dismissible: true,
-    },
-  ],
-});
+import { inverterDataPtBR } from "../../rules/filters";
+// import { Notyf } from "notyf";
+// const notyf = new Notyf({
+//   position: {
+//     x: "center",
+//     y: "top",
+//   },
+//   types: [
+//     {
+//       type: "warning",
+//       background: "orange",
+//       icon: {
+//         className: "material-icons",
+//         tagName: "i",
+//         text: "warning",
+//       },
+//     },
+//     {
+//       type: "error",
+//       background: "indianred",
+//       duration: 5000,
+//       dismissible: true,
+//     },
+//   ],
+// });
 export default {
   props: {
     formulario: { type: Object },
@@ -690,7 +692,7 @@ export default {
       id_fornecedor: "",
       fornecedor: "",
       data_emissao: "",
-      data_chegada: this.obterDataAtual(),
+      data_chegada: "",
       id_produto: "",
       produto: "",
       unidade: "",
@@ -715,10 +717,11 @@ export default {
     if (!this.form) {
       this.$router.push({ name: "compra" });
     }
-    this.data_emissao = this.obterDataAtual();
-    this.data_chegada = this.obterDataAtual();
-    this.maxDate = this.obterDataAtual();
-    this.minDate = this.obterDataAtual();
+    // this.data_emissao = this.obterDataAtual();
+    // this.data_chegada = this.obterDataAtual();
+    // this.maxDate = this.obterDataAtual();
+    // this.minDate = this.obterDataAtual();
+    this.setCompra(this.form);
   },
   computed: {
     todosParametrosPreenchidos() {
@@ -730,32 +733,32 @@ export default {
         this.fornecedor !== ""
       );
     },
-    max_isDateInvalid() {
-      const data_emissao = new Date(this.data_emissao);
-      const maxDate = new Date();
-      maxDate.setHours(0, 0, 0, 0); // Zera o horário da data atual para comparar apenas as datas
-      return data_emissao > maxDate;
-    },
-    min_isDateInvalid() {
-      const selectedDate = new Date(this.data_chegada);
-      const currentDate = new Date();
-      currentDate.setHours(0, 0, 0, 0); // Zera o horário da data atual para comparar apenas as datas
-      return selectedDate < currentDate;
-    },
+    // max_isDateInvalid() {
+    //   const data_emissao = new Date(this.data_emissao);
+    //   const maxDate = new Date();
+    //   maxDate.setHours(0, 0, 0, 0); // Zera o horário da data atual para comparar apenas as datas
+    //   return data_emissao > maxDate;
+    // },
+    // min_isDateInvalid() {
+    //   const selectedDate = new Date(this.data_chegada);
+    //   const currentDate = new Date();
+    //   currentDate.setHours(0, 0, 0, 0); // Zera o horário da data atual para comparar apenas as datas
+    //   return selectedDate < currentDate;
+    // },
   },
   watch: {
-    max_isDateInvalid(result) {
-      if (result) {
-        this.data_emissao = this.obterDataAtual();
-        notyf.error("A Data Emissão não pode ser maior que a data atual");
-      }
-    },
-    min_isDateInvalid(result) {
-      if (result) {
-        this.data_chegada = this.obterDataAtual();
-        notyf.error("A Data Chegada não pode ser menor que a data atual");
-      }
-    },
+    // max_isDateInvalid(result) {
+    //   if (result) {
+    //     this.data_emissao = this.obterDataAtual();
+    //     notyf.error("A Data Emissão não pode ser maior que a data atual");
+    //   }
+    // },
+    // min_isDateInvalid(result) {
+    //   if (result) {
+    //     this.data_chegada = this.obterDataAtual();
+    //     notyf.error("A Data Chegada não pode ser menor que a data atual");
+    //   }
+    // },
   },
   methods: {
     closeCompra() {
@@ -805,6 +808,19 @@ export default {
       const dia = String(dataAtual.getDate()).padStart(2, "0"); // Adiciona zero à esquerda se necessário
       const dataFormatada = `${ano}-${mes}-${dia}`;
       return dataFormatada;
+    },
+    setCompra(obj) {
+      console.log(obj);
+      if (obj) {
+        (this.modelo = obj.modelo),
+          (this.serie = obj.serie),
+          (this.numero = obj.numero_nota),
+          (this.id_fornecedor = obj.fornecedor.id),
+          (this.fornecedor = obj.fornecedor.razaoSocial),
+          (this.data_emissao = inverterDataPtBR(obj.data_emissao)),
+          (this.data_chegada = obj.data_chegada),
+          (this.produtos = obj.produtos);
+      }
     },
   },
 };

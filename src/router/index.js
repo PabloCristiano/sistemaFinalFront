@@ -224,7 +224,7 @@ router.beforeEach((to, from, next) => {
   ApiService.getInterceptor();
   if (!isPublic && !loggedIn) {
     NProgress.done();
-    return next('/')
+    return next('/login')
   }
   NProgress.done();
   next();

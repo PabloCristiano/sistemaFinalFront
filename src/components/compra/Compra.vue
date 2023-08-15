@@ -120,11 +120,10 @@
           <!-- card Produto -->
           <!-- :class="{ card_produto_disabled: !todosParametrosPreenchidos }" -->
           <!-- class="mt-4" -->
-          {{ produtos }}
           <transition name="slow-motion" appear>
             <div v-if="todosParametrosPreenchidos" class="slow-motion-div mt-4">
               <b-card :header-html="textCard_Produto" class="text-start">
-                <div class="row mt-02">
+                <div v-if="mostrarBlocoProduto" class="row mt-02">
                   <div class="col-md-2">
                     <label>Código:</label>
                     <b-form-input
@@ -179,7 +178,7 @@
                     </b-form-input>
                   </div>
                 </div>
-                <div class="row mt-2">
+                <div v-if="mostrarBlocoProduto" class="row mt-2">
                   <div class="col-md-3">
                     <label
                       >Quantidade:<b style="color: rgb(245, 153, 153)"> *</b>
@@ -261,7 +260,7 @@
                       <tbody>
                         <tr
                           class="text-center"
-                          v-for="(item, key) in items"
+                          v-for="(item, key) in produtos"
                           :key="key"
                         >
                           <td class="col-md-1 col-sm-1 table_Td" title="10">
@@ -269,7 +268,7 @@
                               id="codigo"
                               type="text"
                               class="form-control text-center"
-                              value="10"
+                              :value="item.id_produto"
                               disabled
                             />
                           </td>
@@ -278,7 +277,7 @@
                               id="produto"
                               type="text"
                               class="form-control text-start"
-                              value="Podada Reviver"
+                              :value="item.produto.produto"
                               disabled
                             />
                           </td>
@@ -287,7 +286,7 @@
                               id="unidade"
                               type="text"
                               class="form-control text-center"
-                              value="Uni"
+                              :value="item.unidade"
                               disabled
                             />
                           </td>
@@ -296,7 +295,7 @@
                               id="quantidade"
                               type="text"
                               class="form-control text-center"
-                              value="15"
+                              :value="item.qtd_produto"
                               disabled
                             />
                           </td>
@@ -305,7 +304,7 @@
                               id="valor_unitario"
                               type="text"
                               class="form-control text-center"
-                              value="R$ 150000,85"
+                              :value="item.valor_unitario"
                               disabled
                             />
                           </td>
@@ -314,7 +313,7 @@
                               id="desconto"
                               type="text"
                               class="form-control text-center"
-                              value="15 %"
+                              :value="item.desconto"
                               disabled
                             />
                           </td>
@@ -322,7 +321,7 @@
                             <input
                               id="subTotal"
                               type="text"
-                              value="R$ 100050,00"
+                              :value="item.total_produto"
                               class="form-control text-center"
                               disabled
                             />
@@ -387,6 +386,7 @@
                           id="total_compra"
                           type="number"
                           placeholder="0,00"
+                          :value="total_compra"
                           disabled
                         ></b-form-input>
                       </b-input-group>
@@ -468,7 +468,7 @@
                       <tbody>
                         <tr
                           class="text-center"
-                          v-for="(item, key) in items"
+                          v-for="(item, key) in condicaopagamento"
                           :key="key"
                         >
                           <td class="col-md-2 table_Td">
@@ -643,7 +643,11 @@
 <script>
 import HomeFornecedor from "../fornecedores/HomeFornecedor.vue";
 import HomeProduto from "../produto/HomeProduto.vue";
-import { inverterDataPtBR } from "../../rules/filters";
+import {
+  currency,
+  inverterDataPtBR,
+  currency_percentual,
+} from "../../rules/filters";
 // import { Notyf } from "notyf";
 // const notyf = new Notyf({
 //   position: {
@@ -707,8 +711,11 @@ export default {
       ],
       disabled: false,
       produtos: [],
+      condicaopagamento: [],
       maxDate: "", // Define a data máxima como a data atual
       minDate: "", // Define a data mínima como a data atual
+      mostrarBlocoProduto: true, // quando for pra adicionar o produto ele vai aparcer quando for visualizar irar sumir
+      total_compra: '',
     };
   },
   beforeCreate() {},
@@ -811,6 +818,7 @@ export default {
     },
     setCompra(obj) {
       console.log(obj);
+      let num = 0;
       if (obj) {
         (this.modelo = obj.modelo),
           (this.serie = obj.serie),
@@ -819,8 +827,24 @@ export default {
           (this.fornecedor = obj.fornecedor.razaoSocial),
           (this.data_emissao = inverterDataPtBR(obj.data_emissao)),
           (this.data_chegada = obj.data_chegada),
-          (this.produtos = obj.produtos);
+          (this.produtos = obj.produtos),
+          (num = this.somarArrayComForEach(this.produtos)),
+          (this.total_compra = num.toFixed(2)),
+          this.produtos.map(function (produtos) {
+            produtos.valor_unitario = currency(produtos.valor_unitario);
+            produtos.total_produto = currency(produtos.total_produto);
+            produtos.desconto = currency_percentual(produtos.desconto);
+            return produtos;
+          }),
+          (this.mostrarBlocoProduto = false);
       }
+    },
+    somarArrayComForEach(array) {
+      let soma = 0;
+      array.forEach(function (valor) {
+        soma += valor.total_produto;
+      });
+      return soma;
     },
   },
 };

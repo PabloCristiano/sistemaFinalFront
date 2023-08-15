@@ -7,7 +7,7 @@
           <div class="">
             <vue-good-table
               :columns="columns"
-              :rows="clientes"
+              :rows="compra"
               @on-cell-click="selectCellCompra"
               :search-options="{
                 enabled: true,
@@ -30,24 +30,14 @@
               <template slot="table-row" slot-scope="props">
                 <span v-if="props.column.field === 'btn'">
                   <a
-                    @click="showModalAlterarCompra(props.row.id)"
+                    @click="showCompra(props.row)"
                     size="sm"
                     class="btn btn-sm me-1 mb-1"
                     data-backdrop="static"
-                    title="EDITAR"
+                    title="VISUALIZAR"
                     style="background-color: #f0f8ff"
                   >
-                    <i class="bx bx-edit-alt"></i>
-                  </a>
-                  <a
-                    @click="showModalExcluirCompra(props.row.id)"
-                    size="sm"
-                    class="btn btn-sm me-1 mb-1"
-                    data-backdrop="static"
-                    title="EXCLUIR"
-                    style="background-color: #f0f8ff"
-                  >
-                    <i class="bx bx-trash-alt"></i>
+                    <i class="bx bx-clipboard"></i>
                   </a>
                 </span>
               </template>
@@ -76,23 +66,22 @@
 <script>
 import { VueGoodTable } from "vue-good-table";
 // import Modal from "./Modal.vue";
+import { ServiceCompra } from "@/services/serviceCompra";
+import {
+  currency,
+  formatarDataParaPtBR,
+} from "../../rules/filters";
 export default {
   components: { VueGoodTable },
   data() {
     return {
-      modal_form_compra: "modal_form_compra",  
+      modal_form_compra: "modal_form_compra",
       isLoading: false,
-      clientes: [],
+      compra: [],
       columns: [
         {
           label: "Nº Nota",
-          field: "numNota",
-          thClass: "text-center",
-          tdClass: "text-center",
-        },
-        {
-          label: "Série",
-          field: "serie",
+          field: "numero_nota",
           thClass: "text-center",
           tdClass: "text-center",
         },
@@ -103,20 +92,26 @@ export default {
           tdClass: "text-center",
         },
         {
+          label: "Série",
+          field: "serie",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
           label: "Fornecedor",
-          field: "fornecedor",
+          field: "fornecedor.razaoSocial",
           thClass: "text-center",
           tdClass: "text-center",
         },
         {
           label: "Data Emissão",
-          field: "fornecedor",
+          field: "data_emissao",
           thClass: "text-center",
           tdClass: "text-center",
         },
         {
           label: "Valor Total",
-          field: "fornecedor",
+          field: "valor_compra",
           thClass: "text-center",
           tdClass: "text-center",
         },
@@ -131,29 +126,47 @@ export default {
       ],
       form_compra: {
         titulo: "",
-        headerForm:"",
+        headerForm: "",
         btn: "",
         disabled: false,
       },
     };
   },
-  created() {},
+  created() {
+    this.getListCompra();
+  },
   methods: {
+    getListCompra() {
+      this.isLoading = true;
+      ServiceCompra.getAll()
+        .then((obj) => {
+          if (obj) {
+            console.log(obj);
+            if (obj) {
+              obj.map(function (obj) {
+                obj.valor_compra = currency(obj.valor_compra);
+                obj.data_emissao = formatarDataParaPtBR(obj.data_emissao);
+                return obj;
+              });
+            }
+            this.compra = obj;
+          }
+          this.isLoading = false;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     selectCellCompra(params) {
       if (this.functionEstado) {
         this.functionEstado(params);
       }
     },
-    showModalAlterarCompra(id) {
-      console.log(id);
-      //   this.onReset();
-      //   var titulo = "Alterar Cliente";
-      //   var btn = "Alterar";
-      //   var disabled = false;
-      //   this.funcGetById(id, titulo, btn, disabled);
-    },
-    showModalExcluirCompra(id) {
-      console.log(id);
+    showCompra(row) {
+      this.$router.push({
+        name: "adicionarCompra",
+        params: { formulario: row },
+      });
       //   this.onReset();
       //   var titulo = "Excluir Cliente";
       //   var btn = "Excluir";
@@ -161,25 +174,28 @@ export default {
       //   this.funcGetById(id, titulo, btn, disabled);
     },
     ShowModalFormCompra() {
-   
       // this.onReset();
       //this.form_cliente.id_condicaopg = '487';
       //this.form_cliente.condicaopg = '30/60/90';
       // <i class='bx bx-cart Text-Card'></i>
       // Modal
-       this.form_compra.titulo = "Cadastrar Nova Compra";
-       this.form_compra.headerForm = "<span class='Text-Card'>Nova Compra</span>";
-       this.form_compra.disabled = false;
-       this.form_compra.btn = "Salvar";
-       //this.$bvModal.show(this.modal_form_compra);
-      this.$router.push({name: 'adicionarCompra', params: { formulario: this.form_compra } });
+      this.form_compra.titulo = "Cadastrar Nova Compra";
+      this.form_compra.headerForm =
+        "<span class='Text-Card'>Nova Compra</span>";
+      this.form_compra.disabled = false;
+      this.form_compra.btn = "Salvar";
+      //this.$bvModal.show(this.modal_form_compra);
+      this.$router.push({
+        name: "adicionarCompra",
+        params: { formulario: this.form_compra },
+      });
     },
   },
 };
 </script>
 <style>
-.Text-Card{
- font-size: 16px;
- font-weight: 500;
+.Text-Card {
+  font-size: 16px;
+  font-weight: 500;
 }
 </style>

@@ -51,7 +51,7 @@ class UserService {
       routes.push('/home');
       return notyf.success('Seja Bem Vindo(a) ! ' + user.data.profissional);
     } catch (err) {
-      return notyf.error(err.response.data.error);
+      return err.response.data.error;
     }
   }
 

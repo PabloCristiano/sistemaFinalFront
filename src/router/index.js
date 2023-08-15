@@ -48,6 +48,7 @@ const routes = [{
     name: 'Home',
     titulo: 'Home',
     component: Home,
+    props: true,
     meta: {
       public: false,
       label: "Home",

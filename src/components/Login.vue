@@ -97,7 +97,7 @@ export default {
           this.form.password
         );
         if (response) {
-          this.msg = response;
+          this.msg = "Usuário ou Senha, estão incorretos.";
           this.isLoading = false;
         }
       } catch (e) {

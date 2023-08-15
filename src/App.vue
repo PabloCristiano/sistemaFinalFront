@@ -16,9 +16,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 #app {
-  font-family: monospace;
+  font-family: "Poppins", sans-serif !important;
 }
 
 body {

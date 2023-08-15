@@ -69,7 +69,7 @@ const routes = [{
         titulo: 'Cadastro Pais',
         name: 'Pais',
         meta: {
-          public: true,
+          public: false,
           label: 'Cadastro Pais',
           requiresPermission: 'admin'
         }
@@ -91,7 +91,7 @@ const routes = [{
         titulo: 'Cadastro Cidade',
         name: 'Cidade',
         meta: {
-          public: true,
+          public: false,
           label: 'Cadastro Cidade',
           requiresPermission: 'admin'
         }
@@ -102,7 +102,7 @@ const routes = [{
         titulo: 'Cadastro Fornecedores',
         name: 'fornecedores',
         meta: {
-          public: true,
+          public: false,
           label: 'Cadastro Fornecedores',
           requiresPermission: 'admin'
         }
@@ -113,7 +113,7 @@ const routes = [{
         titulo: 'Cadastro Clientes',
         name: 'clientes',
         meta: {
-          public: true,
+          public: false,
           label: 'Cadastro Clientes',
           requiresPermission: 'admin'
         }
@@ -124,7 +124,7 @@ const routes = [{
         titulo: 'Cadastro Categorias',
         name: 'categorias',
         meta: {
-          public: true,
+          public: false,
           label: 'Cadastro Categorias',
           requiresPermission: 'admin'
         }
@@ -135,7 +135,7 @@ const routes = [{
         titulo: 'Cadastro Serviços',
         name: 'servico',
         meta: {
-          public: true,
+          public: false,
           label: 'Cadastro Serviços',
           requiresPermission: 'admin'
         }
@@ -146,7 +146,7 @@ const routes = [{
         titulo: 'Cadastro Profissional',
         name: 'profissional',
         meta: {
-          public: true,
+          public: false,
           label: 'Cadastro Profissional',
           requiresPermission: 'admin'
         }
@@ -157,7 +157,7 @@ const routes = [{
         titulo: 'Cadastro Produto',
         name: 'produto',
         meta: {
-          public: true,
+          public: false,
           label: 'Cadastro Produto',
           requiresPermission: 'admin'
         }
@@ -168,7 +168,7 @@ const routes = [{
         titulo: 'Cadastro Forma de Pagamento',
         name: 'formapagamento',
         meta: {
-          public: true,
+          public: false,
           label: 'Cadastro Forma de Pagamento',
           requiresPermission: 'admin'
         }
@@ -179,7 +179,7 @@ const routes = [{
         titulo: 'Cadastro Codição de Pagamento',
         name: 'condicaopagamento',
         meta: {
-          public: true,
+          public: false,
           label: 'Cadastro Codição de Pagamento',
           requiresPermission: 'admin'
         }
@@ -190,7 +190,7 @@ const routes = [{
         titulo: 'Cadastro Compra',
         name: 'compra',
         meta: {
-          public: true,
+          public: false,
           label: 'Cadastro Compra',
           requiresPermission: 'admin'
         }
@@ -202,7 +202,7 @@ const routes = [{
         titulo: 'Cadastro Nova Compra',
         name: 'adicionarCompra',
         meta: {
-          public: true,
+          public: false,
           label: 'Cadastro Nova Compra',
           requiresPermission: 'admin'
         }

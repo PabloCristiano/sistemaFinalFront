@@ -41,7 +41,7 @@ export default {
     },
 };
 </script>
-<style scoped>
+<style>
 #Site {
     background-color: rgb(33, 37, 41) !important;
     height: 100vh;

@@ -48,9 +48,9 @@ class UserService {
         TokenService.setUser(user);
       }
       NProgress.done();
-      notyf.success('Seja Bem Vindo(a) ! ' + user.data.profissional);
       routes.push('/home');
-      return ;
+      notyf.success('Seja Bem Vindo(a) ! ' + user.data.profissional);
+      return 
     } catch (err) {
       return err.response.data.error;
     }

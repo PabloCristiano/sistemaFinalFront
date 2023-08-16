@@ -369,12 +369,81 @@
                     </table>
                   </div>
                 </div>
-                <template #footer>
+                <div class="row mt-2">
                   <div class="row">
                     <div class="col-md-9 text-end mr-0 centered-text">
-                      <label for="input-default"><b>Total da Compra:</b></label>
+                      <label for="input-default"
+                        ><b>Total dos Produtos:</b></label
+                      >
                     </div>
                     <div class="col-md-3">
+                      <b-input-group>
+                        <template #prepend>
+                          <b-input-group-text
+                            style="background-color: #212529; color: white"
+                            >R$</b-input-group-text
+                          >
+                        </template>
+                        <b-form-input
+                          id="total_compra"
+                          type="number"
+                          placeholder="0,00"
+                          :value="total_compra"
+                          disabled
+                        ></b-form-input>
+                      </b-input-group>
+                    </div>
+                  </div>
+                </div>
+                <template #footer>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <label
+                        >Frete:<b style="color: rgb(245, 153, 153)">
+                          *</b
+                        ></label
+                      >
+                      <b-form-input
+                        id="frete"
+                        v-model="id_produto"
+                        type="number"
+                        placeholder="Frete"
+                      >
+                      </b-form-input>
+                      <small style="font-size: 11px; color: red"> </small>
+                    </div>
+                    <div class="col-md-3">
+                      <label
+                        >Seguro:<b style="color: rgb(245, 153, 153)">
+                          *</b
+                        ></label
+                      >
+                      <b-form-input
+                        id="seguro"
+                        v-model="id_produto"
+                        type="number"
+                        placeholder="Seguro"
+                      >
+                      </b-form-input>
+                      <small style="font-size: 11px; color: red"> </small>
+                    </div>
+                    <div class="col-md-3">
+                      <label
+                        >Outras Despesas:<b style="color: rgb(245, 153, 153)">
+                          *</b
+                        ></label
+                      >
+                      <b-form-input
+                        id="outras_despesas"
+                        v-model="id_produto"
+                        type="number"
+                        placeholder="Outras Desoesas"
+                      >
+                      </b-form-input>
+                      <small style="font-size: 11px; color: red"> </small>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="input-default"><b>Total da Compra:</b></label>
                       <b-input-group>
                         <template #prepend>
                           <b-input-group-text
@@ -715,7 +784,7 @@ export default {
       maxDate: "", // Define a data máxima como a data atual
       minDate: "", // Define a data mínima como a data atual
       mostrarBlocoProduto: true, // quando for pra adicionar o produto ele vai aparcer quando for visualizar irar sumir
-      total_compra: '',
+      total_compra: "",
     };
   },
   beforeCreate() {},

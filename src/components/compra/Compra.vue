@@ -185,6 +185,7 @@
                     </label>
                     <b-form-input
                       id="quantidade"
+                      v-model="quantidade"
                       type="number"
                       placeholder="Quantidade"
                     >
@@ -227,13 +228,19 @@
                       </template>
                       <b-form-input
                         id="desconto"
+                        v-model="desconto"
                         type="number"
                         placeholder="0,00"
                       ></b-form-input>
                     </b-input-group>
                   </div>
                   <div class="col-md-3" style="line-height: 85px">
-                    <b-button class="btn btn-sm" type="button" variant="dark">
+                    <b-button
+                      @click.prevent="addProducts()"
+                      class="btn btn-sm"
+                      type="button"
+                      variant="dark"
+                    >
                       Adicionar Produto
                     </b-button>
                   </div>
@@ -916,6 +923,53 @@ export default {
         soma += valor.total_produto;
       });
       return soma;
+    },
+    addProducts() {
+      console.log(
+        this.id_produto,
+        this.produto,
+        this.quantidade,
+        this.valor_unitario,
+        this.desconto,
+        this.unidade
+      );
+      var id_produto = "";
+      var produto = "";
+      var unidade = "";
+      var quantidade = 0;
+      var valor_unitario = 0;
+      var porcentagem = 0;
+      var Valor_total_produto = 0;
+      var desconto = 0;
+      var valorDesconto = 0;
+      var subTotal = 0;
+
+      id_produto = this.id_produto;
+      produto = this.produto;
+      unidade = this.unidade;
+      quantidade = parseFloat(this.quantidade);
+      valor_unitario = parseFloat(this.valor_unitario);
+      porcentagem = parseFloat(this.desconto);
+      Valor_total_produto = quantidade * valor_unitario;
+      desconto = porcentagem / 100;
+      valorDesconto = Valor_total_produto * desconto;
+      subTotal = Valor_total_produto - valorDesconto;
+      this.produtos.push({
+        id_produto: id_produto,
+        produto: { produto: produto },
+        unidade: unidade,
+        qtd_produto: quantidade,
+        valor_unitario: valor_unitario,
+        desconto: porcentagem,
+        total_produto: subTotal,
+      });
+
+      (this.id_produto = ""),
+        (this.produto = ""),
+        (this.quantidade = ""),
+        (this.valor_unitario = ""),
+        (this.desconto = ""),
+        (this.unidade = "");
     },
   },
 };

@@ -722,7 +722,7 @@ import HomeProduto from "../produto/HomeProduto.vue";
 import {
   currency,
   inverterDataPtBR,
-  currency_percentual,
+  currency_percentual
 } from "../../rules/filters";
 // import { Notyf } from "notyf";
 // const notyf = new Notyf({
@@ -750,7 +750,7 @@ import {
 // });
 export default {
   props: {
-    formulario: { type: Object },
+    formulario: { type: Object }
   },
   components: { HomeFornecedor, HomeProduto },
   data() {
@@ -789,7 +789,7 @@ export default {
       total_produto: "",
       frete: "",
       seguro: "",
-      outras_despesas: "",
+      outras_despesas: ""
     };
   },
   beforeCreate() {},
@@ -797,12 +797,11 @@ export default {
   created() {
     if (!this.form) {
       this.$router.push({ name: "compra" });
-    }
+    } else this.setCompra(this.form);
     // this.data_emissao = this.obterDataAtual();
     // this.data_chegada = this.obterDataAtual();
     // this.maxDate = this.obterDataAtual();
     // this.minDate = this.obterDataAtual();
-    this.setCompra(this.form);
   },
   computed: {
     todosParametrosPreenchidos() {
@@ -813,7 +812,7 @@ export default {
         this.id_fornecedor !== "" &&
         this.fornecedor !== ""
       );
-    },
+    }
     // max_isDateInvalid() {
     //   const data_emissao = new Date(this.data_emissao);
     //   const maxDate = new Date();
@@ -925,20 +924,20 @@ export default {
       return soma;
     },
     addProducts() {
-      console.log(
-        this.id_produto,
-        this.produto,
-        this.quantidade,
-        this.valor_unitario,
-        this.desconto,
-        this.unidade
-      );
+      // console.log(
+      //   this.id_produto,
+      //   this.produto,
+      //   this.quantidade,
+      //   this.valor_unitario,
+      //   this.desconto,
+      //   this.unidade
+      // );
       var id_produto = "";
       var produto = "";
       var unidade = "";
+      var nDesconto = parseFloat(this.desconto);
       var quantidade = 0;
       var valor_unitario = 0;
-      var porcentagem = 0;
       var Valor_total_produto = 0;
       var desconto = 0;
       var valorDesconto = 0;
@@ -949,29 +948,35 @@ export default {
       unidade = this.unidade;
       quantidade = parseFloat(this.quantidade);
       valor_unitario = parseFloat(this.valor_unitario);
-      porcentagem = parseFloat(this.desconto);
-      Valor_total_produto = quantidade * valor_unitario;
-      desconto = porcentagem / 100;
+      Valor_total_produto = (quantidade * valor_unitario);
+      desconto = this.calcPorcentagem(parseFloat(this.desconto));
       valorDesconto = Valor_total_produto * desconto;
       subTotal = Valor_total_produto - valorDesconto;
+
       this.produtos.push({
         id_produto: id_produto,
         produto: { produto: produto },
         unidade: unidade,
         qtd_produto: quantidade,
         valor_unitario: valor_unitario,
-        desconto: porcentagem,
-        total_produto: subTotal,
+        desconto: nDesconto,
+        total_produto: subTotal
       });
 
-      (this.id_produto = ""),
+      this.clearInputsListProducts();
+    },
+    calcPorcentagem(porcentagem){
+      return (porcentagem / 100);
+    },
+    clearInputsListProducts() {
+        (this.id_produto = ""),
         (this.produto = ""),
         (this.quantidade = ""),
         (this.valor_unitario = ""),
         (this.desconto = ""),
         (this.unidade = "");
-    },
-  },
+    }
+  }
 };
 </script>
 <style>

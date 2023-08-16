@@ -388,7 +388,7 @@
                           id="total_compra"
                           type="number"
                           placeholder="0,00"
-                          :value="total_compra"
+                          :value="total_produto"
                           disabled
                         ></b-form-input>
                       </b-input-group>
@@ -405,7 +405,7 @@
                       >
                       <b-form-input
                         id="frete"
-                        v-model="id_produto"
+                        v-model="frete"
                         type="number"
                         placeholder="Frete"
                       >
@@ -420,7 +420,7 @@
                       >
                       <b-form-input
                         id="seguro"
-                        v-model="id_produto"
+                        v-model="seguro"
                         type="number"
                         placeholder="Seguro"
                       >
@@ -435,7 +435,7 @@
                       >
                       <b-form-input
                         id="outras_despesas"
-                        v-model="id_produto"
+                        v-model="outras_despesas"
                         type="number"
                         placeholder="Outras Desoesas"
                       >
@@ -772,12 +772,6 @@ export default {
       quantidade: "",
       valor_unitario: "",
       desconto: "",
-      items: [
-        { name: "João", age: 30, email: "joao@example.com" },
-        { name: "Maria", age: 28, email: "maria@example.com" },
-        { name: "Pedro", age: 35, email: "pedro@example.com" },
-        // Adicione mais itens ao array conforme necessário
-      ],
       disabled: false,
       produtos: [],
       condicaopagamento: [],
@@ -785,6 +779,10 @@ export default {
       minDate: "", // Define a data mínima como a data atual
       mostrarBlocoProduto: true, // quando for pra adicionar o produto ele vai aparcer quando for visualizar irar sumir
       total_compra: "",
+      total_produto: "",
+      frete: "",
+      seguro: "",
+      outras_despesas: "",
     };
   },
   beforeCreate() {},
@@ -905,6 +903,10 @@ export default {
             produtos.desconto = currency_percentual(produtos.desconto);
             return produtos;
           }),
+          (this.total_produto = obj.valor_produto),
+          (this.frete = obj.frete),
+          (this.seguro = obj.seguro),
+          (this.outras_despesas = obj.outras_despesas),
           (this.mostrarBlocoProduto = false);
       }
     },

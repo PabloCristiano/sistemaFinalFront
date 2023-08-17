@@ -395,7 +395,8 @@
                           id="total_compra"
                           type="number"
                           placeholder="0,00"
-                          :value="total_produto"
+                          v-model="total_produtos"
+                          :value="total_produtos"
                           disabled
                         ></b-form-input>
                       </b-input-group>
@@ -414,7 +415,7 @@
                         id="frete"
                         v-model="frete"
                         type="number"
-                        placeholder="Frete"
+                        placeholder="0,00"
                       >
                       </b-form-input>
                       <small style="font-size: 11px; color: red"> </small>
@@ -429,7 +430,7 @@
                         id="seguro"
                         v-model="seguro"
                         type="number"
-                        placeholder="Seguro"
+                        placeholder="0,00"
                       >
                       </b-form-input>
                       <small style="font-size: 11px; color: red"> </small>
@@ -444,7 +445,7 @@
                         id="outras_despesas"
                         v-model="outras_despesas"
                         type="number"
-                        placeholder="Outras Desoesas"
+                        placeholder="0,00"
                       >
                       </b-form-input>
                       <small style="font-size: 11px; color: red"> </small>
@@ -462,6 +463,7 @@
                           id="total_compra"
                           type="number"
                           placeholder="0,00"
+                          v-model="total_compra"
                           :value="total_compra"
                           disabled
                         ></b-form-input>
@@ -722,7 +724,7 @@ import HomeProduto from "../produto/HomeProduto.vue";
 import {
   currency,
   inverterDataPtBR,
-  currency_percentual
+  currency_percentual,
 } from "../../rules/filters";
 // import { Notyf } from "notyf";
 // const notyf = new Notyf({
@@ -750,7 +752,7 @@ import {
 // });
 export default {
   props: {
-    formulario: { type: Object }
+    formulario: { type: Object },
   },
   components: { HomeFornecedor, HomeProduto },
   data() {
@@ -787,9 +789,10 @@ export default {
       mostrarBlocoProduto: true, // quando for pra adicionar o produto ele vai aparcer quando for visualizar irar sumir
       total_compra: "",
       total_produto: "",
+      total_produtos: "",
       frete: "",
       seguro: "",
-      outras_despesas: ""
+      outras_despesas: "",
     };
   },
   beforeCreate() {},
@@ -802,6 +805,9 @@ export default {
     // this.data_chegada = this.obterDataAtual();
     // this.maxDate = this.obterDataAtual();
     // this.minDate = this.obterDataAtual();
+    this.frete = this.frete.toFixed(2);
+    this.seguro = this.seguro.toFixed(2);
+    this.outras_despesas = this.outras_despesas.toFixed(2);
   },
   computed: {
     todosParametrosPreenchidos() {
@@ -812,7 +818,7 @@ export default {
         this.id_fornecedor !== "" &&
         this.fornecedor !== ""
       );
-    }
+    },
     // max_isDateInvalid() {
     //   const data_emissao = new Date(this.data_emissao);
     //   const maxDate = new Date();
@@ -827,6 +833,88 @@ export default {
     // },
   },
   watch: {
+    frete(newValue) {
+      this.total_compra = this.calcTotalProduto(this.produtos);
+      this.calcularTotalFrete(this.total_compra, newValue);
+      if (!newValue) {
+        let soma = 0;
+        let soma1 = 0;
+        let format = 0;
+        if (
+          this.seguro !== null &&
+          this.seguro !== undefined &&
+          this.seguro !== ""
+        ) {
+          soma = soma + parseFloat(this.seguro);
+        }
+        if (
+          this.outras_despesas !== null &&
+          this.outras_despesas !== undefined &&
+          this.outras_despesas !== ""
+        ) {
+          soma = soma + parseFloat(this.seguro);
+        }
+        soma1 = parseFloat(this.calcTotalProduto(this.produtos));
+        format = soma1 + soma;
+        this.total_compra = format.toFixed(2);
+      }
+    },
+    seguro(newValue) {
+      this.total_compra = this.calcTotalProduto(this.produtos);
+      this.calcularTotalSeguro(this.total_compra, newValue);
+      if (!newValue) {
+        let soma = 0;
+        let soma1 = 0;
+        let format = 0;
+        if (
+          this.frete !== null &&
+          this.frete !== undefined &&
+          this.frete !== ""
+        ) {
+          soma = soma + parseFloat(this.frete);
+        }
+
+        if (
+          this.outras_despesas !== null &&
+          this.outras_despesas !== undefined &&
+          this.outras_despesas !== ""
+        ) {
+          soma = soma + parseFloat(this.outras_despesas);
+        }
+
+        soma1 = parseFloat(this.calcTotalProduto(this.produtos));
+        format = soma1 + soma;
+        this.total_compra = format.toFixed(2);
+      }
+    },
+    outras_despesas(newValue) {
+      this.total_compra = this.calcTotalProduto(this.produtos);
+      this.calcularTotalOutrasDespesas(this.total_compra, newValue);
+      if (!newValue) {
+        let soma = 0;
+        let soma1 = 0;
+        let format = 0;
+        if (
+          this.frete !== null &&
+          this.frete !== undefined &&
+          this.frete !== ""
+        ) {
+          soma = soma + parseFloat(this.frete);
+        }
+
+        if (
+          this.seguro !== null &&
+          this.seguro !== undefined &&
+          this.seguro !== ""
+        ) {
+          soma = soma + parseFloat(this.seguro);
+        }
+
+        soma1 = parseFloat(this.calcTotalProduto(this.produtos));
+        format = soma1 + soma;
+        this.total_compra = format.toFixed(2);
+      }
+    },
     // max_isDateInvalid(result) {
     //   if (result) {
     //     this.data_emissao = this.obterDataAtual();
@@ -867,7 +955,6 @@ export default {
       if (obj.column.field === "btn") {
         return;
       }
-      console.log(obj);
       const precoVenda = obj.row.precoVenda;
       this.id_produto = obj.row.id;
       this.produto = obj.row.produto;
@@ -901,7 +988,8 @@ export default {
           (this.data_emissao = inverterDataPtBR(obj.data_emissao)),
           (this.data_chegada = obj.data_chegada),
           (this.produtos = obj.produtos),
-          (num = this.somarArrayComForEach(this.produtos)),
+          (this.total_produtos = this.calcTotalProduto(this.produtos));
+        (num = this.somarArrayComForEach(this.produtos)),
           (this.total_compra = num.toFixed(2)),
           this.produtos.map(function (produtos) {
             produtos.valor_unitario = currency(produtos.valor_unitario);
@@ -948,7 +1036,7 @@ export default {
       unidade = this.unidade;
       quantidade = parseFloat(this.quantidade);
       valor_unitario = parseFloat(this.valor_unitario);
-      Valor_total_produto = (quantidade * valor_unitario);
+      Valor_total_produto = quantidade * valor_unitario;
       desconto = this.calcPorcentagem(parseFloat(this.desconto));
       valorDesconto = Valor_total_produto * desconto;
       subTotal = Valor_total_produto - valorDesconto;
@@ -960,23 +1048,93 @@ export default {
         qtd_produto: quantidade,
         valor_unitario: valor_unitario,
         desconto: nDesconto,
-        total_produto: subTotal
+        total_produto: subTotal,
       });
-
+      this.total_produtos = this.calcTotalProduto(this.produtos);
+      this.total_compra = this.total_produtos;
       this.clearInputsListProducts();
     },
-    calcPorcentagem(porcentagem){
-      return (porcentagem / 100);
+    calcPorcentagem(porcentagem) {
+      return porcentagem / 100;
     },
     clearInputsListProducts() {
-        (this.id_produto = ""),
+      (this.id_produto = ""),
         (this.produto = ""),
         (this.quantidade = ""),
         (this.valor_unitario = ""),
         (this.desconto = ""),
         (this.unidade = "");
-    }
-  }
+    },
+    calcTotalProduto(obj) {
+      let soma = 0;
+      for (let i = 0; i < obj.length; i++) {
+        soma += obj[i].total_produto;
+      }
+      return soma.toFixed(2);
+    },
+    calcularTotalFrete(valorCompra, frete) {
+      let soma;
+      soma = parseFloat(valorCompra) + parseFloat(frete);
+
+      if (
+        this.seguro !== null &&
+        this.seguro !== undefined &&
+        this.seguro !== ""
+      ) {
+        soma = soma + parseFloat(this.seguro);
+      }
+      if (
+        this.outras_despesas !== null &&
+        this.outras_despesas !== undefined &&
+        this.outras_despesas !== ""
+      ) {
+        soma = soma + parseFloat(this.seguro);
+      }
+
+      this.total_compra = soma.toFixed(2);
+    },
+    calcularTotalSeguro(valorCompra, seguro) {
+      let soma;
+      soma = parseFloat(valorCompra) + parseFloat(seguro);
+
+      if (
+        this.frete !== null &&
+        this.frete !== undefined &&
+        this.frete !== ""
+      ) {
+        soma = soma + parseFloat(this.frete);
+      }
+      if (
+        this.outras_despesas !== null &&
+        this.outras_despesas !== undefined &&
+        this.outras_despesas !== ""
+      ) {
+        soma = soma + parseFloat(this.seguro);
+      }
+
+      this.total_compra = soma.toFixed(2);
+    },
+    calcularTotalOutrasDespesas(valorCompra, outras_despesas) {
+      let soma;
+      soma = parseFloat(valorCompra) + parseFloat(outras_despesas);
+
+      if (
+        this.frete !== null &&
+        this.frete !== undefined &&
+        this.frete !== ""
+      ) {
+        soma = soma + parseFloat(this.frete);
+      }
+      if (
+        this.seguro !== null &&
+        this.seguro !== undefined &&
+        this.seguro !== ""
+      ) {
+        soma = soma + parseFloat(this.seguro);
+      }
+      this.total_compra = soma.toFixed(2);
+    },
+  },
 };
 </script>
 <style>

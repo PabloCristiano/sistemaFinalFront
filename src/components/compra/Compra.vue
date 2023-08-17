@@ -407,9 +407,7 @@
                   <div class="row">
                     <div class="col-md-3">
                       <label
-                        >Frete:<b style="color: rgb(245, 153, 153)">
-                          *</b
-                        ></label
+                        >Frete:</label
                       >
                       <b-form-input
                         id="frete"
@@ -422,9 +420,7 @@
                     </div>
                     <div class="col-md-3">
                       <label
-                        >Seguro:<b style="color: rgb(245, 153, 153)">
-                          *</b
-                        ></label
+                        >Seguro:</label
                       >
                       <b-form-input
                         id="seguro"
@@ -437,9 +433,7 @@
                     </div>
                     <div class="col-md-3">
                       <label
-                        >Outras Despesas:<b style="color: rgb(245, 153, 153)">
-                          *</b
-                        ></label
+                        >Outras Despesas:</label
                       >
                       <b-form-input
                         id="outras_despesas"
@@ -800,14 +794,16 @@ export default {
   created() {
     if (!this.form) {
       this.$router.push({ name: "compra" });
-    } else this.setCompra(this.form);
+    } else {
+      this.setCompra(this.form);
+      this.frete = this.frete.toFixed(2);
+      this.seguro = this.seguro.toFixed(2);
+      this.outras_despesas = this.outras_despesas.toFixed(2);
+    }
     // this.data_emissao = this.obterDataAtual();
     // this.data_chegada = this.obterDataAtual();
     // this.maxDate = this.obterDataAtual();
     // this.minDate = this.obterDataAtual();
-    this.frete = this.frete.toFixed(2);
-    this.seguro = this.seguro.toFixed(2);
-    this.outras_despesas = this.outras_despesas.toFixed(2);
   },
   computed: {
     todosParametrosPreenchidos() {

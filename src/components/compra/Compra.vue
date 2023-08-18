@@ -710,6 +710,7 @@
 import HomeFornecedor from "../fornecedores/HomeFornecedor.vue";
 import HomeProduto from "../produto/HomeProduto.vue";
 import { inverterDataPtBR, currencyFormat } from "../../rules/filters";
+// import { decimal } from "vuelidate/lib/validators";
 // import { Notyf } from "notyf";
 // const notyf = new Notyf({
 //   position: {
@@ -1028,8 +1029,7 @@ export default {
       Valor_total_produto = quantidade * valor_unitario;
       desconto = this.calcPorcentagem(parseFloat(this.desconto).toFixed(2));
       valorDesconto = Valor_total_produto * desconto;
-      subTotal = Valor_total_produto - valorDesconto;
-
+      subTotal = (Valor_total_produto - valorDesconto).toFixed(2);
       this.produtos.push({
         id_produto: id_produto,
         produto: { produto: produto },
@@ -1037,7 +1037,7 @@ export default {
         qtd_produto: quantidade,
         valor_unitario: valor_unitario,
         desconto: nDesconto,
-        total_produto: subTotal.toFixed(2)
+        total_produto: subTotal
       });
       this.total_produtos = this.calcTotalProduto(this.produtos);
       this.total_compra = this.total_produtos;
@@ -1059,7 +1059,7 @@ export default {
       for (let i = 0; i < obj.length; i++) {
         soma += parseFloat(obj[i].total_produto);
       }
-      return soma;
+      return soma.toFixed(2);
     },
     calcularTotalFrete(valorCompra, frete) {
       let soma;

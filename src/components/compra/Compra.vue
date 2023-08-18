@@ -710,6 +710,7 @@
 import HomeFornecedor from "../fornecedores/HomeFornecedor.vue";
 import HomeProduto from "../produto/HomeProduto.vue";
 import { inverterDataPtBR, currencyFormat } from "../../rules/filters";
+import { Decimal } from "decimal.js";
 // import { decimal } from "vuelidate/lib/validators";
 // import { Notyf } from "notyf";
 // const notyf = new Notyf({
@@ -965,7 +966,6 @@ export default {
       return dataFormatada;
     },
     setCompra(obj) {
-      console.log(obj);
       let num = 0;
       if (obj) {
         (this.modelo = obj.modelo),
@@ -976,15 +976,16 @@ export default {
           (this.data_emissao = inverterDataPtBR(obj.data_emissao)),
           (this.data_chegada = obj.data_chegada),
           (this.produtos = obj.produtos),
-          (this.total_produtos = this.calcTotalProduto(this.produtos));
-        (num = this.calcSomaTotalCompra(this.produtos)),
-          (this.total_compra = num.toFixed(2)),
           this.produtos.map(function (produtos) {
             produtos.valor_unitario = currencyFormat(produtos.valor_unitario);
             produtos.total_produto = currencyFormat(produtos.total_produto);
             produtos.desconto = currencyFormat(produtos.desconto);
             return produtos;
           }),
+          (this.total_produtos = this.calcTotalProduto(this.produtos));
+
+        (num = this.calcSomaTotalCompra(this.produtos)),
+          (this.total_compra = num),
           (this.total_produto = obj.valor_produto),
           (this.frete = obj.frete),
           (this.seguro = obj.seguro),
@@ -1029,7 +1030,7 @@ export default {
       Valor_total_produto = quantidade * valor_unitario;
       desconto = this.calcPorcentagem(parseFloat(this.desconto).toFixed(2));
       valorDesconto = Valor_total_produto * desconto;
-      subTotal = (Valor_total_produto - valorDesconto).toFixed(2);
+      subTotal = Valor_total_produto - valorDesconto;
       this.produtos.push({
         id_produto: id_produto,
         produto: { produto: produto },
@@ -1037,7 +1038,7 @@ export default {
         qtd_produto: quantidade,
         valor_unitario: valor_unitario,
         desconto: nDesconto,
-        total_produto: subTotal
+        total_produto: currencyFormat(subTotal)
       });
       this.total_produtos = this.calcTotalProduto(this.produtos);
       this.total_compra = this.total_produtos;
@@ -1056,8 +1057,13 @@ export default {
     },
     calcTotalProduto(obj) {
       let soma = 0;
+      let soma2 = 0;
+      let format = 0;
       for (let i = 0; i < obj.length; i++) {
-        soma += parseFloat(obj[i].total_produto);
+        let decimal = new Decimal(obj[i].total_produto.replace(",", "."));
+        format = decimal;
+        soma2 = parseFloat(format);
+        soma += soma2;
       }
       return soma.toFixed(2);
     },

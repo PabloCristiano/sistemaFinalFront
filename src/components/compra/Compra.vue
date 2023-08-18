@@ -709,7 +709,7 @@
 <script>
 import HomeFornecedor from "../fornecedores/HomeFornecedor.vue";
 import HomeProduto from "../produto/HomeProduto.vue";
-import { inverterDataPtBR, currencyFormat } from "../../rules/filters";
+import { inverterDataPtBR, currencyFormat, currency_percentual } from "../../rules/filters";
 import { Decimal } from "decimal.js";
 // import { decimal } from "vuelidate/lib/validators";
 // import { Notyf } from "notyf";
@@ -979,7 +979,7 @@ export default {
           this.produtos.map(function (produtos) {
             produtos.valor_unitario = currencyFormat(produtos.valor_unitario);
             produtos.total_produto = currencyFormat(produtos.total_produto);
-            produtos.desconto = currencyFormat(produtos.desconto);
+            produtos.desconto = currency_percentual(produtos.desconto);
             return produtos;
           }),
           (this.total_produtos = this.calcTotalProduto(this.produtos));
@@ -1037,7 +1037,7 @@ export default {
         unidade: unidade,
         qtd_produto: quantidade,
         valor_unitario: valor_unitario,
-        desconto: nDesconto,
+        desconto: currency_percentual(nDesconto),
         total_produto: currencyFormat(subTotal)
       });
       this.total_produtos = this.calcTotalProduto(this.produtos);

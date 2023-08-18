@@ -16,6 +16,12 @@ export function currency(value, currencySymbol = "R$ ") {
   if (isNaN(value)) return "";
   return currencySymbol + value.toFixed(2).replace(".", ",");
 }
+
+export function currencyFormat(value) {
+  if (isNaN(value)) return "";
+  return value.toFixed(2).replace(".", ",");
+}
+
 export function currency_percentual(value, currencySymbol = "%") {
   if (isNaN(value)) return "";
   return value.toFixed(2).replace(".", ",") + currencySymbol;

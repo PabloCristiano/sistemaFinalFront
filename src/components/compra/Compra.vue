@@ -406,9 +406,7 @@
                 <template #footer>
                   <div class="row">
                     <div class="col-md-3">
-                      <label
-                        >Frete:</label
-                      >
+                      <label>Frete:</label>
                       <b-form-input
                         id="frete"
                         v-model="frete"
@@ -419,9 +417,7 @@
                       <small style="font-size: 11px; color: red"> </small>
                     </div>
                     <div class="col-md-3">
-                      <label
-                        >Seguro:</label
-                      >
+                      <label>Seguro:</label>
                       <b-form-input
                         id="seguro"
                         v-model="seguro"
@@ -432,9 +428,7 @@
                       <small style="font-size: 11px; color: red"> </small>
                     </div>
                     <div class="col-md-3">
-                      <label
-                        >Outras Despesas:</label
-                      >
+                      <label>Outras Despesas:</label>
                       <b-form-input
                         id="outras_despesas"
                         v-model="outras_despesas"
@@ -715,11 +709,7 @@
 <script>
 import HomeFornecedor from "../fornecedores/HomeFornecedor.vue";
 import HomeProduto from "../produto/HomeProduto.vue";
-import {
-  currency,
-  inverterDataPtBR,
-  currency_percentual,
-} from "../../rules/filters";
+import { inverterDataPtBR, currencyFormat } from "../../rules/filters";
 // import { Notyf } from "notyf";
 // const notyf = new Notyf({
 //   position: {
@@ -746,7 +736,7 @@ import {
 // });
 export default {
   props: {
-    formulario: { type: Object },
+    formulario: { type: Object }
   },
   components: { HomeFornecedor, HomeProduto },
   data() {
@@ -786,7 +776,7 @@ export default {
       total_produtos: "",
       frete: "",
       seguro: "",
-      outras_despesas: "",
+      outras_despesas: ""
     };
   },
   beforeCreate() {},
@@ -814,7 +804,7 @@ export default {
         this.id_fornecedor !== "" &&
         this.fornecedor !== ""
       );
-    },
+    }
     // max_isDateInvalid() {
     //   const data_emissao = new Date(this.data_emissao);
     //   const maxDate = new Date();
@@ -843,12 +833,13 @@ export default {
         ) {
           soma = soma + parseFloat(this.seguro);
         }
+
         if (
           this.outras_despesas !== null &&
           this.outras_despesas !== undefined &&
           this.outras_despesas !== ""
         ) {
-          soma = soma + parseFloat(this.seguro);
+          soma = soma + parseFloat(this.outras_despesas);
         }
         soma1 = parseFloat(this.calcTotalProduto(this.produtos));
         format = soma1 + soma;
@@ -910,7 +901,7 @@ export default {
         format = soma1 + soma;
         this.total_compra = format.toFixed(2);
       }
-    },
+    }
     // max_isDateInvalid(result) {
     //   if (result) {
     //     this.data_emissao = this.obterDataAtual();
@@ -985,12 +976,12 @@ export default {
           (this.data_chegada = obj.data_chegada),
           (this.produtos = obj.produtos),
           (this.total_produtos = this.calcTotalProduto(this.produtos));
-        (num = this.somarArrayComForEach(this.produtos)),
+        (num = this.calcSomaTotalCompra(this.produtos)),
           (this.total_compra = num.toFixed(2)),
           this.produtos.map(function (produtos) {
-            produtos.valor_unitario = currency(produtos.valor_unitario);
-            produtos.total_produto = currency(produtos.total_produto);
-            produtos.desconto = currency_percentual(produtos.desconto);
+            produtos.valor_unitario = currencyFormat(produtos.valor_unitario);
+            produtos.total_produto = currencyFormat(produtos.total_produto);
+            produtos.desconto = currencyFormat(produtos.desconto);
             return produtos;
           }),
           (this.total_produto = obj.valor_produto),
@@ -1000,12 +991,14 @@ export default {
           (this.mostrarBlocoProduto = false);
       }
     },
-    somarArrayComForEach(array) {
+    calcSomaTotalCompra(array) {
       let soma = 0;
+      let format;
       array.forEach(function (valor) {
         soma += valor.total_produto;
       });
-      return soma;
+      format = currencyFormat(soma);
+      return format;
     },
     addProducts() {
       // console.log(
@@ -1030,10 +1023,10 @@ export default {
       id_produto = this.id_produto;
       produto = this.produto;
       unidade = this.unidade;
-      quantidade = parseFloat(this.quantidade);
-      valor_unitario = parseFloat(this.valor_unitario);
+      quantidade = this.quantidade;
+      valor_unitario = parseFloat(this.valor_unitario).toFixed(2);
       Valor_total_produto = quantidade * valor_unitario;
-      desconto = this.calcPorcentagem(parseFloat(this.desconto));
+      desconto = this.calcPorcentagem(parseFloat(this.desconto).toFixed(2));
       valorDesconto = Valor_total_produto * desconto;
       subTotal = Valor_total_produto - valorDesconto;
 
@@ -1044,7 +1037,7 @@ export default {
         qtd_produto: quantidade,
         valor_unitario: valor_unitario,
         desconto: nDesconto,
-        total_produto: subTotal,
+        total_produto: subTotal.toFixed(2)
       });
       this.total_produtos = this.calcTotalProduto(this.produtos);
       this.total_compra = this.total_produtos;
@@ -1064,9 +1057,9 @@ export default {
     calcTotalProduto(obj) {
       let soma = 0;
       for (let i = 0; i < obj.length; i++) {
-        soma += obj[i].total_produto;
+        soma += parseFloat(obj[i].total_produto);
       }
-      return soma.toFixed(2);
+      return soma;
     },
     calcularTotalFrete(valorCompra, frete) {
       let soma;
@@ -1084,7 +1077,7 @@ export default {
         this.outras_despesas !== undefined &&
         this.outras_despesas !== ""
       ) {
-        soma = soma + parseFloat(this.seguro);
+        soma = soma + parseFloat(this.outras_despesas);
       }
 
       this.total_compra = soma.toFixed(2);
@@ -1105,7 +1098,7 @@ export default {
         this.outras_despesas !== undefined &&
         this.outras_despesas !== ""
       ) {
-        soma = soma + parseFloat(this.seguro);
+        soma = soma + parseFloat(this.outras_despesas);
       }
 
       this.total_compra = soma.toFixed(2);
@@ -1129,8 +1122,8 @@ export default {
         soma = soma + parseFloat(this.seguro);
       }
       this.total_compra = soma.toFixed(2);
-    },
-  },
+    }
+  }
 };
 </script>
 <style>

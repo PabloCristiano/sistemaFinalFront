@@ -703,6 +703,7 @@
         >
       </b-container>
     </b-modal>
+    <!-- Modal HomeCondicão Pagamento -->
     <br /><br />
   </div>
 </template>
@@ -1021,12 +1022,14 @@ export default {
       var desconto = 0;
       var valorDesconto = 0;
       var subTotal = 0;
-
+      var decimal = new Decimal(this.valor_unitario);
+      var f_valor_unitario = 0;
       id_produto = this.id_produto;
       produto = this.produto;
       unidade = this.unidade;
       quantidade = this.quantidade;
       valor_unitario = parseFloat(this.valor_unitario).toFixed(2);
+      f_valor_unitario = parseFloat(decimal) ;
       Valor_total_produto = quantidade * valor_unitario;
       desconto = this.calcPorcentagem(parseFloat(this.desconto).toFixed(2));
       valorDesconto = Valor_total_produto * desconto;
@@ -1036,7 +1039,7 @@ export default {
         produto: { produto: produto },
         unidade: unidade,
         qtd_produto: quantidade,
-        valor_unitario: valor_unitario,
+        valor_unitario: currencyFormat(f_valor_unitario),
         desconto: currency_percentual(nDesconto),
         total_produto: currencyFormat(subTotal)
       });

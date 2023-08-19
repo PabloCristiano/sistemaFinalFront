@@ -1011,22 +1011,6 @@ export default {
       if (obj.column.field === "btn") {
         return;
       }
-      // const precoVenda = obj.row.precoVenda;
-      // this.id_produto = obj.row.id;
-      // this.produto = obj.row.produto;
-      // this.unidade = obj.row.unidade;
-      // this.valor_unitario = precoVenda.toFixed(2);
-      // var condicao = {
-      //   id: obj.row.id,
-      //   condicao_pagamento: obj.row.condicao_pagamento,
-      //   juros: obj.row.juros,
-      //   multa: obj.row.multa,
-      //   desconto: obj.row.desconto,
-      //   qtd_parcela: obj.row.qtd_parcela,
-      //   parcelas: obj.row.parcelas,
-      //   data_create: obj.row.data_create,
-      //   data_alt: obj.row.data_alt,
-      // };
       var valor_compra = currency(parseFloat(this.total_compra));
       this.setCondicaoPagamento(obj.row, valor_compra);
       this.$bvModal.hide(this.modal_search_condicaoPagamento);

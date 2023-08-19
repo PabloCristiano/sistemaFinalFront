@@ -141,7 +141,6 @@ export default {
       ServiceCompra.getAll()
         .then((obj) => {
           if (obj) {
-            console.log(obj);
             if (obj) {
               obj.map(function (obj) {
                 obj.valor_compra = currency(obj.valor_compra);

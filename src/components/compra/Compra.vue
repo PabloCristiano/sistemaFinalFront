@@ -474,8 +474,9 @@
                     <div class="col-md-3 col-sm-4">
                       <label>Código:</label>
                       <b-form-input
-                        id="id_fornecedor"
+                        id="id_condicaopg"
                         type="number"
+                        v-model="id_condicaopg"
                         placeholder="Código"
                       ></b-form-input>
                       <small style="font-size: 11px; color: red"></small>
@@ -494,6 +495,7 @@
                             id="fornecedor"
                             type="text"
                             placeholder="Condição de Pagamento"
+                            v-model="condicaopg"
                             disabled
                           ></b-form-input>
                           <b-input-group-append>
@@ -502,6 +504,7 @@
                               variant="dark"
                               :disabled="form.disabled"
                               title="Pesquisar Condição de Pagamento"
+                              @click.prevent="showSearchCondicaoPagamento()"
                             >
                               <i class="bx bx-search"></i>
                             </b-button>
@@ -539,37 +542,37 @@
                         >
                           <td class="col-md-2 table_Td">
                             <input
-                              id="codigo"
+                              id="parcela"
                               type="text"
                               class="form-control text-center"
-                              value="10"
+                              :value="item.parcela"
                               disabled
                             />
                           </td>
-                          <td class="col-md-6 table_Td">
+                          <td class="col-md-4 table_Td">
                             <input
-                              id="produto"
+                              id="formaPagamento"
                               type="text"
-                              class="form-control text-start"
-                              value="Podada Reviver"
+                              class="form-control text-center"
+                              :value="item.formaPagamento"
                               disabled
                             />
                           </td>
-                          <td class="col-md-2 table_Td">
+                          <td class="col-md-3 table_Td">
                             <input
-                              id="unidade"
+                              id="vencimento"
                               type="text"
                               class="form-control text-center"
-                              value="Uni"
+                              :value="item.Vencimento"
                               disabled
                             />
                           </td>
-                          <td class="col-md-2 table_Td">
+                          <td class="col-md-3 table_Td">
                             <input
-                              id="quantidade"
+                              id="valor_parcela"
                               type="text"
                               class="form-control text-center"
-                              value="15"
+                              :value="item.valorParcela"
                               disabled
                             />
                           </td>
@@ -704,13 +707,59 @@
       </b-container>
     </b-modal>
     <!-- Modal HomeCondicão Pagamento -->
+    <b-modal
+      :id="modal_search_condicaoPagamento"
+      size="xl"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+    >
+      <template v-slot:modal-header>
+        <h5>Pesquisar Condição de Pagamento</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="fecharModalSearchCondicaoPagamento()"
+        >
+          X
+        </b-button>
+      </template>
+      <b-container fluid>
+        <HomeCondicaoPagamento
+          :functionCondicao="changeSearchCondicaoPagamento"
+        ></HomeCondicaoPagamento>
+      </b-container>
+      <b-container
+        class="col-sm-12 col-md-12 mt-3"
+        style="text-align: center"
+        footer
+      >
+        <b-button
+          @click="fecharModalSearchCondicaoPagamento()"
+          type="button"
+          id=""
+          class="btn btn-dark btn-sm"
+          >Fechar Pesquisa Condicão de Pagamento</b-button
+        >
+      </b-container>
+    </b-modal>
     <br /><br />
   </div>
 </template>
 <script>
 import HomeFornecedor from "../fornecedores/HomeFornecedor.vue";
 import HomeProduto from "../produto/HomeProduto.vue";
-import { inverterDataPtBR, currencyFormat, currency_percentual } from "../../rules/filters";
+import HomeCondicaoPagamento from "../condicaoPagamento/HomeCondicaoPagamento.vue";
+import {
+  currency,
+  inverterDataPtBR,
+  currencyFormat,
+  currency_percentual,
+  formatarDataParaPtBR,
+  extrairNumero,
+} from "../../rules/filters";
 import { Decimal } from "decimal.js";
 // import { decimal } from "vuelidate/lib/validators";
 // import { Notyf } from "notyf";
@@ -739,13 +788,14 @@ import { Decimal } from "decimal.js";
 // });
 export default {
   props: {
-    formulario: { type: Object }
+    formulario: { type: Object },
   },
-  components: { HomeFornecedor, HomeProduto },
+  components: { HomeFornecedor, HomeProduto, HomeCondicaoPagamento },
   data() {
     return {
       modal_search_fornecedor: "modal_search_fornecedor",
       modal_search_Produto: "modal_search_Produto",
+      modal_search_condicaoPagamento: "modal_search_condicaoPagamento",
       textCard_Produto:
         "<span class='Text-Card-0'><i class='bx bx-cart'></i> Produto</span>",
       textCard_CondicaoPagamento:
@@ -760,6 +810,8 @@ export default {
       numero: "",
       id_fornecedor: "",
       fornecedor: "",
+      id_condicaopg: "",
+      condicaopg: "",
       data_emissao: "",
       data_chegada: "",
       id_produto: "",
@@ -779,7 +831,7 @@ export default {
       total_produtos: "",
       frete: "",
       seguro: "",
-      outras_despesas: ""
+      outras_despesas: "",
     };
   },
   beforeCreate() {},
@@ -807,7 +859,7 @@ export default {
         this.id_fornecedor !== "" &&
         this.fornecedor !== ""
       );
-    }
+    },
     // max_isDateInvalid() {
     //   const data_emissao = new Date(this.data_emissao);
     //   const maxDate = new Date();
@@ -904,7 +956,7 @@ export default {
         format = soma1 + soma;
         this.total_compra = format.toFixed(2);
       }
-    }
+    },
     // max_isDateInvalid(result) {
     //   if (result) {
     //     this.data_emissao = this.obterDataAtual();
@@ -938,6 +990,9 @@ export default {
     showSearchFornecedor() {
       this.$bvModal.show(this.modal_search_fornecedor);
     },
+    showSearchCondicaoPagamento() {
+      this.$bvModal.show(this.modal_search_condicaoPagamento);
+    },
     fecharModalSearchFornecedor() {
       this.$bvModal.hide(this.modal_search_fornecedor);
     },
@@ -952,11 +1007,38 @@ export default {
       this.valor_unitario = precoVenda.toFixed(2);
       this.$bvModal.hide(this.modal_search_Produto);
     },
+    changeSearchCondicaoPagamento(obj) {
+      if (obj.column.field === "btn") {
+        return;
+      }
+      // const precoVenda = obj.row.precoVenda;
+      // this.id_produto = obj.row.id;
+      // this.produto = obj.row.produto;
+      // this.unidade = obj.row.unidade;
+      // this.valor_unitario = precoVenda.toFixed(2);
+      // var condicao = {
+      //   id: obj.row.id,
+      //   condicao_pagamento: obj.row.condicao_pagamento,
+      //   juros: obj.row.juros,
+      //   multa: obj.row.multa,
+      //   desconto: obj.row.desconto,
+      //   qtd_parcela: obj.row.qtd_parcela,
+      //   parcelas: obj.row.parcelas,
+      //   data_create: obj.row.data_create,
+      //   data_alt: obj.row.data_alt,
+      // };
+      var valor_compra = currency(parseFloat(this.total_compra));
+      this.setCondicaoPagamento(obj.row, valor_compra);
+      this.$bvModal.hide(this.modal_search_condicaoPagamento);
+    },
     showSearchProduto() {
       this.$bvModal.show(this.modal_search_Produto);
     },
     fecharModalSearchProduto() {
       this.$bvModal.hide(this.modal_search_Produto);
+    },
+    fecharModalSearchCondicaoPagamento() {
+      this.$bvModal.hide(this.modal_search_condicaoPagamento);
     },
     obterDataAtual() {
       const dataAtual = new Date();
@@ -967,7 +1049,6 @@ export default {
       return dataFormatada;
     },
     setCompra(obj) {
-      let num = 0;
       if (obj) {
         (this.modelo = obj.modelo),
           (this.serie = obj.serie),
@@ -984,14 +1065,13 @@ export default {
             return produtos;
           }),
           (this.total_produtos = this.calcTotalProduto(this.produtos));
-
-        (num = this.calcSomaTotalCompra(this.produtos)),
-          (this.total_compra = num),
-          (this.total_produto = obj.valor_produto),
+        (this.total_produto = obj.valor_produto),
           (this.frete = obj.frete),
           (this.seguro = obj.seguro),
           (this.outras_despesas = obj.outras_despesas),
           (this.mostrarBlocoProduto = false);
+        this.total_compra = obj.valor_compra;
+        this.setCondicaoPagamento(obj.condicao_pagamento, this.total_compra);
       }
     },
     calcSomaTotalCompra(array) {
@@ -1004,14 +1084,6 @@ export default {
       return format;
     },
     addProducts() {
-      // console.log(
-      //   this.id_produto,
-      //   this.produto,
-      //   this.quantidade,
-      //   this.valor_unitario,
-      //   this.desconto,
-      //   this.unidade
-      // );
       var id_produto = "";
       var produto = "";
       var unidade = "";
@@ -1029,7 +1101,7 @@ export default {
       unidade = this.unidade;
       quantidade = this.quantidade;
       valor_unitario = parseFloat(this.valor_unitario).toFixed(2);
-      f_valor_unitario = parseFloat(decimal) ;
+      f_valor_unitario = parseFloat(decimal);
       Valor_total_produto = quantidade * valor_unitario;
       desconto = this.calcPorcentagem(parseFloat(this.desconto).toFixed(2));
       valorDesconto = Valor_total_produto * desconto;
@@ -1041,7 +1113,7 @@ export default {
         qtd_produto: quantidade,
         valor_unitario: currencyFormat(f_valor_unitario),
         desconto: currency_percentual(nDesconto),
-        total_produto: currencyFormat(subTotal)
+        total_produto: currencyFormat(subTotal),
       });
       this.total_produtos = this.calcTotalProduto(this.produtos);
       this.total_compra = this.total_produtos;
@@ -1131,8 +1203,32 @@ export default {
         soma = soma + parseFloat(this.seguro);
       }
       this.total_compra = soma.toFixed(2);
-    }
-  }
+    },
+    setCondicaoPagamento(obj, valor_compra) {
+      this.id_condicaopg = obj.id;
+      this.condicaopg = obj.condicao_pagamento;
+      var valorCompra = extrairNumero(valor_compra);
+      console.log(obj.qtd_parcela, valor_compra, valorCompra);
+      for (var i = 0; i < obj.qtd_parcela; i++) {
+        var Vencimento = "";
+        var valor_parcela = 0;
+        var datavencimento = "";
+        Vencimento = new Date(this.data_emissao);
+        Vencimento.setDate(Vencimento.getDate() + obj.parcelas[i].prazo);
+        datavencimento = Vencimento.toISOString().substr(0, 10);
+        valor_parcela = valorCompra;
+        this.condicaopagamento.push({
+          parcela: obj.parcelas[i].parcela,
+          formaPagamento: obj.parcelas[i].formaPagamento[0].forma_pg,
+          Vencimento: formatarDataParaPtBR(datavencimento),
+          valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100,
+        });
+      }
+      this.condicaopagamento.map(function (c) {
+        c.valorParcela = currency(c.valorParcela);
+      });
+    },
+  },
 };
 </script>
 <style>

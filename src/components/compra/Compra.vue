@@ -976,6 +976,7 @@ export default {
     },
     onSubmit() {
       alert("enviar");
+      console.log(this.produtos,this.condicaopagamento)
     },
     changeSearchFornecedor(obj) {
       if (obj.column.field === "btn") {

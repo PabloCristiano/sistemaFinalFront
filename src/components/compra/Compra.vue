@@ -837,6 +837,8 @@ export default {
   beforeCreate() {},
   filters: {},
   created() {
+    this.data_emissao = this.obterDataAtual();
+    this.data_chegada = this.obterDataAtual();
     if (!this.form) {
       this.$router.push({ name: "compra" });
     } else {
@@ -845,10 +847,6 @@ export default {
       this.seguro = this.seguro.toFixed(2);
       this.outras_despesas = this.outras_despesas.toFixed(2);
     }
-    // this.data_emissao = this.obterDataAtual();
-    // this.data_chegada = this.obterDataAtual();
-    // this.maxDate = this.obterDataAtual();
-    // this.minDate = this.obterDataAtual();
   },
   computed: {
     todosParametrosPreenchidos() {
@@ -1192,7 +1190,7 @@ export default {
       this.id_condicaopg = obj.id;
       this.condicaopg = obj.condicao_pagamento;
       var valorCompra = extrairNumero(valor_compra);
-      console.log(obj.qtd_parcela, valor_compra, valorCompra);
+      this.condicaopagamento = [];
       for (var i = 0; i < obj.qtd_parcela; i++) {
         var Vencimento = "";
         var valor_parcela = 0;

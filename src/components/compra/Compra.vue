@@ -347,6 +347,7 @@
                                 class="btn btn-sm me-1 mb-1 mt-1"
                                 type="button"
                                 title="EXCLUIR"
+                                @click.prevent="deleteItemProduto(key)"
                                 style="background-color: rgb(235 32 63 / 65%)"
                               >
                                 <i class="bx bx-trash-alt"></i>
@@ -837,6 +838,7 @@ export default {
       minDate: "", // Define a data mínima como a data atual
       mostrarBlocoProduto: true, // quando for pra adicionar o produto ele vai aparcer quando for visualizar irar sumir
       disabled: false,
+      obj_condicao: {},
     };
   },
   beforeCreate() {},
@@ -877,7 +879,7 @@ export default {
     // },
   },
   watch: {
-    'form.frete'(newValue) {
+    "form.frete"(newValue) {
       this.form.total_compra = this.calcTotalProduto(this.form.produtos);
       this.calcularTotalFrete(this.form.total_compra, newValue);
       if (!newValue) {
@@ -903,8 +905,14 @@ export default {
         format = soma1 + soma;
         this.form.total_compra = format.toFixed(2);
       }
+      if (this.form.condicaopagamento.length > 0) {
+        var num = 0;
+        num = parseFloat(this.form.total_compra);
+        num = currency(num);
+        this.setCondicaoPagamento(this.obj_condicao, num);
+      }
     },
-    'form.seguro'(newValue) {
+    "form.seguro"(newValue) {
       this.form.total_compra = this.calcTotalProduto(this.form.produtos);
       this.calcularTotalSeguro(this.form.total_compra, newValue);
       if (!newValue) {
@@ -931,8 +939,14 @@ export default {
         format = soma1 + soma;
         this.form.total_compra = format.toFixed(2);
       }
+      if (this.form.condicaopagamento.length > 0) {
+        var num = 0;
+        num = parseFloat(this.form.total_compra);
+        num = currency(num);
+        this.setCondicaoPagamento(this.obj_condicao, num);
+      }
     },
-    'form.outras_despesas'(newValue) {
+    "form.outras_despesas"(newValue) {
       this.form.total_compra = this.calcTotalProduto(this.form.produtos);
       this.calcularTotalOutrasDespesas(this.form.total_compra, newValue);
       if (!newValue) {
@@ -958,6 +972,12 @@ export default {
         soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
         format = soma1 + soma;
         this.form.total_compra = format.toFixed(2);
+      }
+      if (this.form.condicaopagamento.length > 0) {
+        var num = 0;
+        num = parseFloat(this.form.total_compra);
+        num = currency(num);
+        this.setCondicaoPagamento(this.obj_condicao, num);
       }
     },
     // max_isDateInvalid(result) {
@@ -1062,7 +1082,10 @@ export default {
           (this.mostrarBlocoProduto = false);
         this.form.observacao = obj.observacao;
         this.form.total_compra = obj.valor_compra;
-        this.setCondicaoPagamento(obj.condicao_pagamento,this.form.total_compra);
+        this.setCondicaoPagamento(
+          obj.condicao_pagamento,
+          this.form.total_compra
+        );
         this.form.total_compra = extrairNumero(obj.valor_compra);
       }
     },
@@ -1199,6 +1222,7 @@ export default {
       this.form.total_compra = soma.toFixed(2);
     },
     setCondicaoPagamento(obj, valor_compra) {
+      this.obj_condicao = obj;
       this.form.id_condicaopg = obj.id;
       this.form.condicaopg = obj.condicao_pagamento;
       var valorCompra = extrairNumero(valor_compra);
@@ -1221,6 +1245,24 @@ export default {
       this.form.condicaopagamento.map(function (c) {
         c.valorParcela = currency(c.valorParcela);
       });
+    },
+    deleteItemProduto(index) {
+      this.form.produtos.splice(index, 1);
+      this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
+      this.form.total_compra = this.form.total_produtos;
+
+      if (this.form.condicaopagamento.length > 0) {
+        var num = 0;
+        num = parseFloat(this.form.total_compra);
+        if (num > 0) {
+          num = currency(num);
+          this.setCondicaoPagamento(this.obj_condicao, num);
+        } else {
+          this.form.condicaopagamento = [];
+          this.form.id_condicaopg = "";
+          this.form.condicaopg = "";
+        }
+      }
     },
   },
 };

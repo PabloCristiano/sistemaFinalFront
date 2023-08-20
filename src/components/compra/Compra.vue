@@ -267,6 +267,7 @@
                       <tbody>
                         <tr
                           class="text-center"
+                          :class="{ disabled: !form.produtos[key].desativar }"
                           v-for="(item, key) in form.produtos"
                           :key="key"
                         >
@@ -300,10 +301,10 @@
                           <td class="col-md-1 col-sm-1 table_Td">
                             <input
                               id="quantidade"
-                              type="text"
+                              type="number"
                               class="form-control text-center"
                               :value="item.qtd_produto"
-                              disabled
+                              :disabled="!item.editing"
                             />
                           </td>
                           <td class="col-md-1 col-sm-1 table_Td">
@@ -321,7 +322,7 @@
                               type="text"
                               class="form-control text-center"
                               :value="item.desconto"
-                              disabled
+                              :disabled="!item.editing"
                             />
                           </td>
                           <td class="col-md-1 col-sm-1 table_Td">
@@ -334,11 +335,12 @@
                             />
                           </td>
                           <td class="col-md-1 col-sm-1 table_Td">
-                            <div v-if="true">
+                            <div v-if="!form.produtos[key].editing">
                               <button
                                 class="btn btn-sm me-1 mb-1 mt-1"
                                 type="button"
                                 title="EDITAR"
+                                @click.prevent="toggleEditingParcela(key)"
                                 style="background-color: rgb(254 255 7 / 56%)"
                               >
                                 <i class="bx bx-edit-alt"></i>
@@ -358,6 +360,7 @@
                                 class="btn btn-sm me-1 mb-1 mt-1"
                                 type="button"
                                 title="SALVAR"
+                                @click="saveChangesParcela(key)"
                                 style="background-color: #28a74563"
                               >
                                 <i class="bx bx-check"></i>
@@ -839,6 +842,7 @@ export default {
       mostrarBlocoProduto: true, // quando for pra adicionar o produto ele vai aparcer quando for visualizar irar sumir
       disabled: false,
       obj_condicao: {},
+      buttonLock: false,
     };
   },
   beforeCreate() {},
@@ -1070,6 +1074,8 @@ export default {
             produtos.valor_unitario = currencyFormat(produtos.valor_unitario);
             produtos.total_produto = currencyFormat(produtos.total_produto);
             produtos.desconto = currency_percentual(produtos.desconto);
+            produtos.desativar = true;
+            produtos.editing = false;
             return produtos;
           }),
           (this.form.total_produtos = this.calcTotalProduto(
@@ -1131,6 +1137,8 @@ export default {
         valor_unitario: currencyFormat(f_valor_unitario),
         desconto: currency_percentual(nDesconto),
         total_produto: currencyFormat(subTotal),
+        desativar: true,
+        editing: false,
       });
       this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
       this.form.total_compra = this.form.total_produtos;
@@ -1264,6 +1272,29 @@ export default {
         }
       }
     },
+    toggleEditingParcela(index) {
+      this.form.produtos[index].editing = !this.form.produtos[index].editing;
+      this.buttonLock = true;
+      //desativar linhas na tabela
+      this.form.produtos.forEach((row, rowIndex) => {
+        row.desativar = rowIndex === index; // Ativa ou desativa a linha clicada
+      });
+    },
+    saveChangesParcela(index) {
+      console.log(this.form.produtos[index]);
+      // var quantidade = 0;
+      // var valor_unitario = 0;
+      // var Valor_total_produto = 0;
+      // var desconto = 0;
+      // var valorDesconto = 0;
+      // var subTotal = 0;
+      //desativar linhas Tabela
+      this.form.produtos.forEach((row) => {
+        row.desativar = true;
+      });
+      this.form.produtos[index].editing = false;
+      this.buttonLock = false;
+    },
   },
 };
 </script>
@@ -1313,5 +1344,9 @@ export default {
 .slow-motion-leave-to {
   opacity: 0;
   transform: scale(0.3); /* Ajuste conforme necessário */
+}
+.disabled {
+  pointer-events: none; /* Impede interações com elementos filhos */
+  opacity: 0.5; /* Opacidade reduzida para indicar desabilitação */
 }
 </style>

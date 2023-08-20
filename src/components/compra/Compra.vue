@@ -14,7 +14,7 @@
                     id="modelo"
                     type="number"
                     placeholder="Modelo"
-                    v-model="modelo"
+                    v-model="form.modelo"
                   ></b-form-input>
                 </div>
                 <div class="col-md-4 col-sm-4">
@@ -25,7 +25,7 @@
                     id="serie"
                     type="number"
                     placeholder="Série"
-                    v-model="serie"
+                    v-model="form.serie"
                   ></b-form-input>
                 </div>
                 <div class="col-md-4 col-sm-4">
@@ -36,7 +36,7 @@
                     id="numero"
                     type="number"
                     placeholder="Número"
-                    v-model="numero"
+                    v-model="form.numero"
                   ></b-form-input>
                   <small style="font-size: 11px; color: red"></small>
                 </div>
@@ -51,8 +51,8 @@
                     id="id_fornecedor"
                     type="number"
                     placeholder="Código"
-                    v-model="id_fornecedor"
-                    :title="id_fornecedor"
+                    v-model="form.id_fornecedor"
+                    :title="form.id_fornecedor"
                   ></b-form-input>
                   <small style="font-size: 11px; color: red"></small>
                 </div>
@@ -68,8 +68,8 @@
                         id="fornecedor"
                         type="text"
                         placeholder="Fornecedor"
-                        v-model="fornecedor"
-                        :title="fornecedor"
+                        v-model="form.fornecedor"
+                        :title="form.fornecedor"
                         disabled
                       ></b-form-input>
                       <b-input-group-append>
@@ -94,7 +94,7 @@
                   <b-form-input
                     id="data_emissão"
                     type="date"
-                    v-model="data_emissao"
+                    v-model="form.data_emissao"
                     :max="maxDate"
                   ></b-form-input>
                   <small style="font-size: 11px; color: red"></small>
@@ -109,7 +109,7 @@
                   <b-form-input
                     id="data_chegada"
                     type="date"
-                    v-model="data_chegada"
+                    v-model="form.data_chegada"
                     :min="minDate"
                   ></b-form-input>
                   <small style="font-size: 11px; color: red"></small>
@@ -128,7 +128,7 @@
                     <label>Código:</label>
                     <b-form-input
                       id="id_produto"
-                      v-model="id_produto"
+                      v-model="form.id_produto"
                       type="number"
                       placeholder="Código"
                     >
@@ -145,7 +145,7 @@
                       <b-input-group>
                         <b-form-input
                           id="produto"
-                          v-model="produto"
+                          v-model="form.produto"
                           type="text"
                           placeholder="Produto"
                           disabled
@@ -170,7 +170,7 @@
                     <label>Unidade:</label>
                     <b-form-input
                       id="Unidade"
-                      v-model="unidade"
+                      v-model="form.unidade"
                       type="text"
                       placeholder="Unidade"
                       disabled
@@ -185,7 +185,7 @@
                     </label>
                     <b-form-input
                       id="quantidade"
-                      v-model="quantidade"
+                      v-model="form.quantidade"
                       type="number"
                       placeholder="Quantidade"
                     >
@@ -207,7 +207,7 @@
                       <b-form-input
                         id="valor_unitario"
                         type="number"
-                        v-model="valor_unitario"
+                        v-model="form.valor_unitario"
                         placeholder="0,00"
                         disabled
                       ></b-form-input>
@@ -228,7 +228,7 @@
                       </template>
                       <b-form-input
                         id="desconto"
-                        v-model="desconto"
+                        v-model="form.desconto"
                         type="number"
                         placeholder="0,00"
                       ></b-form-input>
@@ -267,7 +267,7 @@
                       <tbody>
                         <tr
                           class="text-center"
-                          v-for="(item, key) in produtos"
+                          v-for="(item, key) in form.produtos"
                           :key="key"
                         >
                           <td class="col-md-1 col-sm-1 table_Td" title="10">
@@ -395,8 +395,8 @@
                           id="total_compra"
                           type="number"
                           placeholder="0,00"
-                          v-model="total_produtos"
-                          :value="total_produtos"
+                          v-model="form.total_produtos"
+                          :value="form.total_produtos"
                           disabled
                         ></b-form-input>
                       </b-input-group>
@@ -409,7 +409,7 @@
                       <label>Frete:</label>
                       <b-form-input
                         id="frete"
-                        v-model="frete"
+                        v-model="form.frete"
                         type="number"
                         placeholder="0,00"
                       >
@@ -420,7 +420,7 @@
                       <label>Seguro:</label>
                       <b-form-input
                         id="seguro"
-                        v-model="seguro"
+                        v-model="form.seguro"
                         type="number"
                         placeholder="0,00"
                       >
@@ -431,7 +431,7 @@
                       <label>Outras Despesas:</label>
                       <b-form-input
                         id="outras_despesas"
-                        v-model="outras_despesas"
+                        v-model="form.outras_despesas"
                         type="number"
                         placeholder="0,00"
                       >
@@ -451,8 +451,8 @@
                           id="total_compra"
                           type="number"
                           placeholder="0,00"
-                          v-model="total_compra"
-                          :value="total_compra"
+                          v-model="form.total_compra"
+                          :value="form.total_compra"
                           disabled
                         ></b-form-input>
                       </b-input-group>
@@ -476,7 +476,7 @@
                       <b-form-input
                         id="id_condicaopg"
                         type="number"
-                        v-model="id_condicaopg"
+                        v-model="form.id_condicaopg"
                         placeholder="Código"
                       ></b-form-input>
                       <small style="font-size: 11px; color: red"></small>
@@ -495,7 +495,7 @@
                             id="fornecedor"
                             type="text"
                             placeholder="Condição de Pagamento"
-                            v-model="condicaopg"
+                            v-model="form.condicaopg"
                             disabled
                           ></b-form-input>
                           <b-input-group-append>
@@ -537,7 +537,7 @@
                       <tbody>
                         <tr
                           class="text-center"
-                          v-for="(item, key) in condicaopagamento"
+                          v-for="(item, key) in form.condicaopagamento"
                           :key="key"
                         >
                           <td class="col-md-2 table_Td">
@@ -584,8 +584,9 @@
                 <div>
                   <label for="">Observações:</label>
                   <b-form-textarea
-                    id="textarea"
-                    placeholder="Enter something..."
+                    id="observacao"
+                    v-model="form.observacao"
+                    placeholder="Observações"
                     rows="3"
                     max-rows="6"
                   ></b-form-textarea>
@@ -800,62 +801,65 @@ export default {
         "<span class='Text-Card-0'><i class='bx bx-cart'></i> Produto</span>",
       textCard_CondicaoPagamento:
         "<span class='Text-Card-0'><i class='bx bx-wallet'></i> Condição de Pagamento</span>",
-      form: this.formulario,
+      /*form: this.formulario,*/
       headerBgVariant: "dark",
       headerTextVariant: "light",
       customDialogClass: "my-custom-modal-dialog",
       modal_form_compra: "modal_form_compra",
-      modelo: "",
-      serie: "",
-      numero: "",
-      id_fornecedor: "",
-      fornecedor: "",
-      id_condicaopg: "",
-      condicaopg: "",
-      data_emissao: "",
-      data_chegada: "",
-      id_produto: "",
-      produto: "",
-      unidade: "",
-      quantidade: "",
-      valor_unitario: "",
-      desconto: "",
-      disabled: false,
-      produtos: [],
-      condicaopagamento: [],
+      form: {
+        modelo: "",
+        serie: "",
+        numero: "",
+        id_fornecedor: "",
+        fornecedor: "",
+        id_condicaopg: "",
+        condicaopg: "",
+        data_emissao: "",
+        data_chegada: "",
+        id_produto: "",
+        produto: "",
+        unidade: "",
+        quantidade: "",
+        valor_unitario: "",
+        desconto: "",
+        total_compra: "",
+        total_produto: "",
+        total_produtos: "",
+        frete: "",
+        seguro: "",
+        outras_despesas: "",
+        observacao: "",
+        produtos: [],
+        condicaopagamento: [],
+      },
       maxDate: "", // Define a data máxima como a data atual
       minDate: "", // Define a data mínima como a data atual
       mostrarBlocoProduto: true, // quando for pra adicionar o produto ele vai aparcer quando for visualizar irar sumir
-      total_compra: "",
-      total_produto: "",
-      total_produtos: "",
-      frete: "",
-      seguro: "",
-      outras_despesas: "",
+      disabled: false,
     };
   },
   beforeCreate() {},
   filters: {},
   created() {
-    this.data_emissao = this.obterDataAtual();
-    this.data_chegada = this.obterDataAtual();
-    if (!this.form) {
+    this.form.data_emissao = this.obterDataAtual();
+    this.form.data_chegada = this.obterDataAtual();
+    if (!this.formulario) {
       this.$router.push({ name: "compra" });
     } else {
-      this.setCompra(this.form);
-      this.frete = this.frete.toFixed(2);
-      this.seguro = this.seguro.toFixed(2);
-      this.outras_despesas = this.outras_despesas.toFixed(2);
+      this.setCompra(this.formulario);
+      this.form.frete = this.form.frete.toFixed(2);
+      this.form.seguro = this.form.seguro.toFixed(2);
+      this.form.outras_despesas = this.form.outras_despesas.toFixed(2);
     }
   },
   computed: {
     todosParametrosPreenchidos() {
       return (
-        this.modelo !== "" &&
-        this.serie !== "" &&
-        this.numero !== "" &&
-        this.id_fornecedor !== "" &&
-        this.fornecedor !== ""
+        this.form.modelo !== "" &&
+        this.form.serie !== "" &&
+        this.form.numero !== "" &&
+        this.form.id_fornecedor !== "" &&
+        this.form.fornecedor !== ""
       );
     },
     // max_isDateInvalid() {
@@ -872,87 +876,87 @@ export default {
     // },
   },
   watch: {
-    frete(newValue) {
-      this.total_compra = this.calcTotalProduto(this.produtos);
-      this.calcularTotalFrete(this.total_compra, newValue);
+    'form.frete'(newValue) {
+      this.form.total_compra = this.calcTotalProduto(this.form.produtos);
+      this.calcularTotalFrete(this.form.total_compra, newValue);
       if (!newValue) {
         let soma = 0;
         let soma1 = 0;
         let format = 0;
         if (
-          this.seguro !== null &&
-          this.seguro !== undefined &&
-          this.seguro !== ""
+          this.form.seguro !== null &&
+          this.form.seguro !== undefined &&
+          this.form.seguro !== ""
         ) {
-          soma = soma + parseFloat(this.seguro);
+          soma = soma + parseFloat(this.form.seguro);
         }
 
         if (
-          this.outras_despesas !== null &&
-          this.outras_despesas !== undefined &&
-          this.outras_despesas !== ""
+          this.form.outras_despesas !== null &&
+          this.form.outras_despesas !== undefined &&
+          this.form.outras_despesas !== ""
         ) {
-          soma = soma + parseFloat(this.outras_despesas);
+          soma = soma + parseFloat(this.form.outras_despesas);
         }
-        soma1 = parseFloat(this.calcTotalProduto(this.produtos));
+        soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
         format = soma1 + soma;
-        this.total_compra = format.toFixed(2);
+        this.form.total_compra = format.toFixed(2);
       }
     },
-    seguro(newValue) {
-      this.total_compra = this.calcTotalProduto(this.produtos);
-      this.calcularTotalSeguro(this.total_compra, newValue);
+    'form.seguro'(newValue) {
+      this.form.total_compra = this.calcTotalProduto(this.form.produtos);
+      this.calcularTotalSeguro(this.form.total_compra, newValue);
       if (!newValue) {
         let soma = 0;
         let soma1 = 0;
         let format = 0;
         if (
-          this.frete !== null &&
-          this.frete !== undefined &&
-          this.frete !== ""
+          this.form.frete !== null &&
+          this.form.frete !== undefined &&
+          this.form.frete !== ""
         ) {
-          soma = soma + parseFloat(this.frete);
+          soma = soma + parseFloat(this.form.frete);
         }
 
         if (
-          this.outras_despesas !== null &&
-          this.outras_despesas !== undefined &&
-          this.outras_despesas !== ""
+          this.form.outras_despesas !== null &&
+          this.form.outras_despesas !== undefined &&
+          this.form.outras_despesas !== ""
         ) {
-          soma = soma + parseFloat(this.outras_despesas);
+          soma = soma + parseFloat(this.form.outras_despesas);
         }
 
-        soma1 = parseFloat(this.calcTotalProduto(this.produtos));
+        soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
         format = soma1 + soma;
-        this.total_compra = format.toFixed(2);
+        this.form.total_compra = format.toFixed(2);
       }
     },
-    outras_despesas(newValue) {
-      this.total_compra = this.calcTotalProduto(this.produtos);
-      this.calcularTotalOutrasDespesas(this.total_compra, newValue);
+    'form.outras_despesas'(newValue) {
+      this.form.total_compra = this.calcTotalProduto(this.form.produtos);
+      this.calcularTotalOutrasDespesas(this.form.total_compra, newValue);
       if (!newValue) {
         let soma = 0;
         let soma1 = 0;
         let format = 0;
         if (
-          this.frete !== null &&
-          this.frete !== undefined &&
-          this.frete !== ""
+          this.form.frete !== null &&
+          this.form.frete !== undefined &&
+          this.form.frete !== ""
         ) {
-          soma = soma + parseFloat(this.frete);
+          soma = soma + parseFloat(this.form.frete);
         }
 
         if (
-          this.seguro !== null &&
-          this.seguro !== undefined &&
-          this.seguro !== ""
+          this.form.seguro !== null &&
+          this.form.seguro !== undefined &&
+          this.form.seguro !== ""
         ) {
-          soma = soma + parseFloat(this.seguro);
+          soma = soma + parseFloat(this.form.seguro);
         }
 
-        soma1 = parseFloat(this.calcTotalProduto(this.produtos));
+        soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
         format = soma1 + soma;
-        this.total_compra = format.toFixed(2);
+        this.form.total_compra = format.toFixed(2);
       }
     },
     // max_isDateInvalid(result) {
@@ -976,14 +980,14 @@ export default {
     },
     onSubmit() {
       alert("enviar");
-      console.log(this.produtos,this.condicaopagamento)
+      console.log(this.form);
     },
     changeSearchFornecedor(obj) {
       if (obj.column.field === "btn") {
         return;
       }
-      this.id_fornecedor = obj.row.id;
-      this.fornecedor = obj.row.razaoSocial;
+      this.form.id_fornecedor = obj.row.id;
+      this.form.fornecedor = obj.row.razaoSocial;
       this.$bvModal.hide(this.modal_search_fornecedor);
     },
     showSearchFornecedor() {
@@ -1000,17 +1004,17 @@ export default {
         return;
       }
       const precoVenda = obj.row.precoVenda;
-      this.id_produto = obj.row.id;
-      this.produto = obj.row.produto;
-      this.unidade = obj.row.unidade;
-      this.valor_unitario = precoVenda.toFixed(2);
+      this.form.id_produto = obj.row.id;
+      this.form.produto = obj.row.produto;
+      this.form.unidade = obj.row.unidade;
+      this.form.valor_unitario = precoVenda.toFixed(2);
       this.$bvModal.hide(this.modal_search_Produto);
     },
     changeSearchCondicaoPagamento(obj) {
       if (obj.column.field === "btn") {
         return;
       }
-      var valor_compra = currency(parseFloat(this.total_compra));
+      var valor_compra = currency(parseFloat(this.form.total_compra));
       this.setCondicaoPagamento(obj.row, valor_compra);
       this.$bvModal.hide(this.modal_search_condicaoPagamento);
     },
@@ -1033,28 +1037,32 @@ export default {
     },
     setCompra(obj) {
       if (obj) {
-        (this.modelo = obj.modelo),
-          (this.serie = obj.serie),
-          (this.numero = obj.numero_nota),
-          (this.id_fornecedor = obj.fornecedor.id),
-          (this.fornecedor = obj.fornecedor.razaoSocial),
-          (this.data_emissao = inverterDataPtBR(obj.data_emissao)),
-          (this.data_chegada = obj.data_chegada),
-          (this.produtos = obj.produtos),
-          this.produtos.map(function (produtos) {
+        (this.form.modelo = obj.modelo),
+          (this.form.serie = obj.serie),
+          (this.form.numero = obj.numero_nota),
+          (this.form.id_fornecedor = obj.fornecedor.id),
+          (this.form.fornecedor = obj.fornecedor.razaoSocial),
+          (this.form.data_emissao = inverterDataPtBR(obj.data_emissao)),
+          (this.form.data_chegada = obj.data_chegada),
+          (this.form.produtos = obj.produtos),
+          this.form.produtos.map(function (produtos) {
             produtos.valor_unitario = currencyFormat(produtos.valor_unitario);
             produtos.total_produto = currencyFormat(produtos.total_produto);
             produtos.desconto = currency_percentual(produtos.desconto);
             return produtos;
           }),
-          (this.total_produtos = this.calcTotalProduto(this.produtos));
-        (this.total_produto = obj.valor_produto),
-          (this.frete = obj.frete),
-          (this.seguro = obj.seguro),
-          (this.outras_despesas = obj.outras_despesas),
+          (this.form.total_produtos = this.calcTotalProduto(
+            this.form.produtos
+          ));
+        (this.form.total_produto = obj.valor_produto),
+          (this.form.frete = obj.frete),
+          (this.form.seguro = obj.seguro),
+          (this.form.outras_despesas = obj.outras_despesas),
           (this.mostrarBlocoProduto = false);
-        this.total_compra = obj.valor_compra;
-        this.setCondicaoPagamento(obj.condicao_pagamento, this.total_compra);
+        this.form.observacao = obj.observacao;
+        this.form.total_compra = obj.valor_compra;
+        this.setCondicaoPagamento(obj.condicao_pagamento,this.form.total_compra);
+        this.form.total_compra = extrairNumero(obj.valor_compra);
       }
     },
     calcSomaTotalCompra(array) {
@@ -1070,26 +1078,28 @@ export default {
       var id_produto = "";
       var produto = "";
       var unidade = "";
-      var nDesconto = parseFloat(this.desconto);
+      var nDesconto = parseFloat(this.form.desconto);
       var quantidade = 0;
       var valor_unitario = 0;
       var Valor_total_produto = 0;
       var desconto = 0;
       var valorDesconto = 0;
       var subTotal = 0;
-      var decimal = new Decimal(this.valor_unitario);
+      var decimal = new Decimal(this.form.valor_unitario);
       var f_valor_unitario = 0;
-      id_produto = this.id_produto;
-      produto = this.produto;
-      unidade = this.unidade;
-      quantidade = this.quantidade;
-      valor_unitario = parseFloat(this.valor_unitario).toFixed(2);
+      id_produto = this.form.id_produto;
+      produto = this.form.produto;
+      unidade = this.form.unidade;
+      quantidade = this.form.quantidade;
+      valor_unitario = parseFloat(this.form.valor_unitario).toFixed(2);
       f_valor_unitario = parseFloat(decimal);
       Valor_total_produto = quantidade * valor_unitario;
-      desconto = this.calcPorcentagem(parseFloat(this.desconto).toFixed(2));
+      desconto = this.calcPorcentagem(
+        parseFloat(this.form.desconto).toFixed(2)
+      );
       valorDesconto = Valor_total_produto * desconto;
       subTotal = Valor_total_produto - valorDesconto;
-      this.produtos.push({
+      this.form.produtos.push({
         id_produto: id_produto,
         produto: { produto: produto },
         unidade: unidade,
@@ -1098,20 +1108,20 @@ export default {
         desconto: currency_percentual(nDesconto),
         total_produto: currencyFormat(subTotal),
       });
-      this.total_produtos = this.calcTotalProduto(this.produtos);
-      this.total_compra = this.total_produtos;
+      this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
+      this.form.total_compra = this.form.total_produtos;
       this.clearInputsListProducts();
     },
     calcPorcentagem(porcentagem) {
       return porcentagem / 100;
     },
     clearInputsListProducts() {
-      (this.id_produto = ""),
-        (this.produto = ""),
-        (this.quantidade = ""),
-        (this.valor_unitario = ""),
-        (this.desconto = ""),
-        (this.unidade = "");
+      (this.form.id_produto = ""),
+        (this.form.produto = ""),
+        (this.form.quantidade = ""),
+        (this.form.valor_unitario = ""),
+        (this.form.desconto = ""),
+        (this.form.unidade = "");
     },
     calcTotalProduto(obj) {
       let soma = 0;
@@ -1130,84 +1140,84 @@ export default {
       soma = parseFloat(valorCompra) + parseFloat(frete);
 
       if (
-        this.seguro !== null &&
-        this.seguro !== undefined &&
-        this.seguro !== ""
+        this.form.seguro !== null &&
+        this.form.seguro !== undefined &&
+        this.form.seguro !== ""
       ) {
-        soma = soma + parseFloat(this.seguro);
+        soma = soma + parseFloat(this.form.seguro);
       }
       if (
-        this.outras_despesas !== null &&
-        this.outras_despesas !== undefined &&
-        this.outras_despesas !== ""
+        this.form.outras_despesas !== null &&
+        this.form.outras_despesas !== undefined &&
+        this.form.outras_despesas !== ""
       ) {
-        soma = soma + parseFloat(this.outras_despesas);
+        soma = soma + parseFloat(this.form.outras_despesas);
       }
 
-      this.total_compra = soma.toFixed(2);
+      this.form.total_compra = soma.toFixed(2);
     },
     calcularTotalSeguro(valorCompra, seguro) {
       let soma;
       soma = parseFloat(valorCompra) + parseFloat(seguro);
 
       if (
-        this.frete !== null &&
-        this.frete !== undefined &&
-        this.frete !== ""
+        this.form.frete !== null &&
+        this.form.frete !== undefined &&
+        this.form.frete !== ""
       ) {
-        soma = soma + parseFloat(this.frete);
+        soma = soma + parseFloat(this.form.frete);
       }
       if (
-        this.outras_despesas !== null &&
-        this.outras_despesas !== undefined &&
-        this.outras_despesas !== ""
+        this.form.outras_despesas !== null &&
+        this.form.outras_despesas !== undefined &&
+        this.form.outras_despesas !== ""
       ) {
-        soma = soma + parseFloat(this.outras_despesas);
+        soma = soma + parseFloat(this.form.outras_despesas);
       }
 
-      this.total_compra = soma.toFixed(2);
+      this.form.total_compra = soma.toFixed(2);
     },
     calcularTotalOutrasDespesas(valorCompra, outras_despesas) {
       let soma;
       soma = parseFloat(valorCompra) + parseFloat(outras_despesas);
 
       if (
-        this.frete !== null &&
-        this.frete !== undefined &&
-        this.frete !== ""
+        this.form.frete !== null &&
+        this.form.frete !== undefined &&
+        this.form.frete !== ""
       ) {
-        soma = soma + parseFloat(this.frete);
+        soma = soma + parseFloat(this.form.frete);
       }
       if (
-        this.seguro !== null &&
-        this.seguro !== undefined &&
-        this.seguro !== ""
+        this.form.seguro !== null &&
+        this.form.seguro !== undefined &&
+        this.form.seguro !== ""
       ) {
-        soma = soma + parseFloat(this.seguro);
+        soma = soma + parseFloat(this.form.seguro);
       }
-      this.total_compra = soma.toFixed(2);
+      this.form.total_compra = soma.toFixed(2);
     },
     setCondicaoPagamento(obj, valor_compra) {
-      this.id_condicaopg = obj.id;
-      this.condicaopg = obj.condicao_pagamento;
+      this.form.id_condicaopg = obj.id;
+      this.form.condicaopg = obj.condicao_pagamento;
       var valorCompra = extrairNumero(valor_compra);
-      this.condicaopagamento = [];
+      this.form.condicaopagamento = [];
       for (var i = 0; i < obj.qtd_parcela; i++) {
         var Vencimento = "";
         var valor_parcela = 0;
         var datavencimento = "";
-        Vencimento = new Date(this.data_emissao);
+        Vencimento = new Date(this.form.data_emissao);
         Vencimento.setDate(Vencimento.getDate() + obj.parcelas[i].prazo);
         datavencimento = Vencimento.toISOString().substr(0, 10);
         valor_parcela = valorCompra;
-        this.condicaopagamento.push({
+        this.form.condicaopagamento.push({
           parcela: obj.parcelas[i].parcela,
           formaPagamento: obj.parcelas[i].formaPagamento[0].forma_pg,
           Vencimento: formatarDataParaPtBR(datavencimento),
           valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100,
         });
       }
-      this.condicaopagamento.map(function (c) {
+      this.form.condicaopagamento.map(function (c) {
         c.valorParcela = currency(c.valorParcela);
       });
     },

@@ -162,6 +162,7 @@ export default {
       }
     },
     showCompra(row) {
+      console.log(row);
       this.$router.push({
         name: "adicionarCompra",
         params: { formulario: row },

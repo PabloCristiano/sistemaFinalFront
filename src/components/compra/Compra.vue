@@ -1,6 +1,6 @@
 <template>
   <div class="container" style="margin-bottom: -90px">
-    <b-card class="mt-0 mb-5" :header-html="form.headerForm">
+    <b-card class="mt-0 mb-5" :header-html="textCard_Compra">
       <slot name="conteudo">
         <b-form>
           <div class="row mt-2">
@@ -616,7 +616,7 @@
             variant="dark"
             @click.prevent="onSubmit()"
           >
-            {{ form.btn }}<i class="bx bx-check"></i>
+            Salvar<i class="bx bx-check"></i>
           </b-button>
         </div>
       </slot>
@@ -801,7 +801,8 @@ export default {
         "<span class='Text-Card-0'><i class='bx bx-cart'></i> Produto</span>",
       textCard_CondicaoPagamento:
         "<span class='Text-Card-0'><i class='bx bx-wallet'></i> Condição de Pagamento</span>",
-      /*form: this.formulario,*/
+      textCard_Compra:
+        "<span class='Text-Card-0'><i class='bx bx-spreadsheet'></i> Pedido de Compra</span>",
       headerBgVariant: "dark",
       headerTextVariant: "light",
       customDialogClass: "my-custom-modal-dialog",

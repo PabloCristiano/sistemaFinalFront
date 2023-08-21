@@ -305,7 +305,7 @@
                               type="number"
                               class="form-control text-center"
                               :class="{
-                                'fail-error': form.produtos[key].msgError
+                                'fail-error': form.produtos[key].msgErrorQtd
                               }"
                               v-model="item.qtd_produto"
                               :disabled="!item.editing"
@@ -325,6 +325,9 @@
                               id="desconto"
                               type="text"
                               class="form-control text-center"
+                              :class="{
+                                'fail-error': form.produtos[key].msgErrorPer
+                              }"
                               v-model="item.desconto"
                               :disabled="!item.editing"
                             />
@@ -766,36 +769,34 @@ import {
   currency,
   inverterDataPtBR,
   currencyFormat,
-  currency_percentual,
   formatarDataParaPtBR,
   extrairNumero
 } from "../../rules/filters";
 import { Decimal } from "decimal.js";
-// import { decimal } from "vuelidate/lib/validators";
-// import { Notyf } from "notyf";
-// const notyf = new Notyf({
-//   position: {
-//     x: "center",
-//     y: "top",
-//   },
-//   types: [
-//     {
-//       type: "warning",
-//       background: "orange",
-//       icon: {
-//         className: "material-icons",
-//         tagName: "i",
-//         text: "warning",
-//       },
-//     },
-//     {
-//       type: "error",
-//       background: "indianred",
-//       duration: 5000,
-//       dismissible: true,
-//     },
-//   ],
-// });
+import { Notyf } from "notyf";
+const notyf = new Notyf({
+  position: {
+    x: "center",
+    y: "top"
+  },
+  types: [
+    {
+      type: "warning",
+      background: "orange",
+      icon: {
+        className: "material-icons",
+        tagName: "i",
+        text: "warning"
+      }
+    },
+    {
+      type: "error",
+      background: "indianred",
+      duration: 5000,
+      dismissible: true
+    }
+  ]
+});
 export default {
   props: {
     formulario: { type: Object }
@@ -1078,10 +1079,11 @@ export default {
           this.form.produtos.map(function (produtos) {
             produtos.valor_unitario = currencyFormat(produtos.valor_unitario);
             produtos.total_produto = currencyFormat(produtos.total_produto);
-            produtos.desconto = currency_percentual(produtos.desconto);
+            produtos.desconto = currencyFormat(produtos.desconto);
             produtos.desativar = true;
             produtos.editing = false;
-            produtos.msgError = false;
+            produtos.msgErrorQtd = false;
+            produtos.msgErrorPer = false;
             return produtos;
           }),
           (this.form.total_produtos = this.calcTotalProduto(
@@ -1141,11 +1143,12 @@ export default {
         unidade: unidade,
         qtd_produto: quantidade,
         valor_unitario: currencyFormat(f_valor_unitario),
-        desconto: currency_percentual(nDesconto),
+        desconto: currencyFormat(nDesconto),
         total_produto: currencyFormat(subTotal),
         desativar: true,
         editing: false,
-        msgError: false
+        msgErrorQtd: false,
+        msgErrorPer: false
       });
       this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
       this.form.total_compra = this.form.total_produtos;
@@ -1288,7 +1291,6 @@ export default {
       });
     },
     saveChangesProdutos(index) {
-      console.log(this.form.produtos[index]);
       var quantidade = 0;
       var valor_unitario = 0;
       var Valor_total_produto = 0;
@@ -1296,9 +1298,16 @@ export default {
       var valorDesconto = 0;
       var subTotal = 0;
       quantidade = parseFloat(this.form.produtos[index].qtd_produto);
-      console.log(quantidade);
-      if (Number.isInteger(quantidade) && quantidade > 0) {
-        this.form.produtos[index].msgError = false;
+      desconto = parseFloat(this.form.produtos[index].desconto);
+      console.log(quantidade, desconto);
+      if (
+        Number.isInteger(quantidade) &&
+        quantidade > 0 &&
+        desconto >= 0 &&
+        desconto <= 100
+      ) {
+        this.form.produtos[index].msgErrorQtd = false;
+        this.form.produtos[index].msgErrorPer = false;
         valor_unitario = extrairNumero(
           this.form.produtos[index].valor_unitario
         );
@@ -1309,23 +1318,38 @@ export default {
         valorDesconto = desconto * Valor_total_produto;
         subTotal = Valor_total_produto - valorDesconto;
         this.form.produtos[index].total_produto = currencyFormat(subTotal);
-        this.form.produtos[index].desconto = currency_percentual(
-          desconto * 100
-        );
+        this.form.produtos[index].desconto = currencyFormat(desconto * 100);
         this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
         this.form.total_compra = this.form.total_produtos;
         this.form.produtos[index].editing = false;
         this.buttonLock = false;
-
         //desativar linhas Tabela
         this.form.produtos.forEach((row) => {
           row.desativar = true;
         });
-      } else {
-        this.form.produtos[index].msgError = true;
-        this.buttonLock = true;
-        console.log("menor ou zerado");
       }
+
+      if(!Number.isInteger(quantidade)) {
+        this.form.produtos[index].msgErrorQtd = true;
+        notyf.error("Qtd precisa ser um número inteiro.");
+        this.buttonLock = true;
+      }
+      if (quantidade <= 0) {
+        this.form.produtos[index].msgErrorQtd = true;
+        notyf.error("Qtd precisa ser um número maior que zero.");
+        this.buttonLock = true;
+      }
+      // if (!desconto >= 0 || desconto <= 100) {
+      //   this.form.produtos[index].msgErrorPer = true;
+      //   notyf.error("Porcentagem igual ou maior que Zero");
+      //   this.buttonLock = true;
+      // }
+      // if (desconto < 100) {
+      //   this.form.produtos[index].msgErrorPer = true;
+      //   notyf.error("Porcentagem igual ou menor que 100");
+      // }
+
+      //  console.log(notyf.error('Quantidade tem que ser um % maior que zero.'));
     }
   }
 };

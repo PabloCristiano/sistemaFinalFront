@@ -303,7 +303,7 @@
                               id="quantidade"
                               type="number"
                               class="form-control text-center"
-                              :value="item.qtd_produto"
+                              v-model="item.qtd_produto"
                               :disabled="!item.editing"
                             />
                           </td>
@@ -321,7 +321,7 @@
                               id="desconto"
                               type="text"
                               class="form-control text-center"
-                              :value="item.desconto"
+                              v-model="item.desconto"
                               :disabled="!item.editing"
                             />
                           </td>
@@ -340,7 +340,7 @@
                                 class="btn btn-sm me-1 mb-1 mt-1"
                                 type="button"
                                 title="EDITAR"
-                                @click.prevent="toggleEditingParcela(key)"
+                                @click.prevent="toggleEditingProdutos(key)"
                                 style="background-color: rgb(254 255 7 / 56%)"
                               >
                                 <i class="bx bx-edit-alt"></i>
@@ -360,7 +360,7 @@
                                 class="btn btn-sm me-1 mb-1 mt-1"
                                 type="button"
                                 title="SALVAR"
-                                @click="saveChangesParcela(key)"
+                                @click="saveChangesProdutos(key)"
                                 style="background-color: #28a74563"
                               >
                                 <i class="bx bx-check"></i>
@@ -763,7 +763,7 @@ import {
   currencyFormat,
   currency_percentual,
   formatarDataParaPtBR,
-  extrairNumero,
+  extrairNumero
 } from "../../rules/filters";
 import { Decimal } from "decimal.js";
 // import { decimal } from "vuelidate/lib/validators";
@@ -793,7 +793,7 @@ import { Decimal } from "decimal.js";
 // });
 export default {
   props: {
-    formulario: { type: Object },
+    formulario: { type: Object }
   },
   components: { HomeFornecedor, HomeProduto, HomeCondicaoPagamento },
   data() {
@@ -835,14 +835,14 @@ export default {
         outras_despesas: "",
         observacao: "",
         produtos: [],
-        condicaopagamento: [],
+        condicaopagamento: []
       },
       maxDate: "", // Define a data máxima como a data atual
       minDate: "", // Define a data mínima como a data atual
       mostrarBlocoProduto: true, // quando for pra adicionar o produto ele vai aparcer quando for visualizar irar sumir
       disabled: false,
       obj_condicao: {},
-      buttonLock: false,
+      buttonLock: false
     };
   },
   beforeCreate() {},
@@ -868,7 +868,7 @@ export default {
         this.form.id_fornecedor !== "" &&
         this.form.fornecedor !== ""
       );
-    },
+    }
     // max_isDateInvalid() {
     //   const data_emissao = new Date(this.data_emissao);
     //   const maxDate = new Date();
@@ -983,7 +983,7 @@ export default {
         num = currency(num);
         this.setCondicaoPagamento(this.obj_condicao, num);
       }
-    },
+    }
     // max_isDateInvalid(result) {
     //   if (result) {
     //     this.data_emissao = this.obterDataAtual();
@@ -1138,7 +1138,7 @@ export default {
         desconto: currency_percentual(nDesconto),
         total_produto: currencyFormat(subTotal),
         desativar: true,
-        editing: false,
+        editing: false
       });
       this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
       this.form.total_compra = this.form.total_produtos;
@@ -1247,7 +1247,7 @@ export default {
           parcela: obj.parcelas[i].parcela,
           formaPagamento: obj.parcelas[i].formaPagamento[0].forma_pg,
           Vencimento: formatarDataParaPtBR(datavencimento),
-          valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100,
+          valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100
         });
       }
       this.form.condicaopagamento.map(function (c) {
@@ -1272,7 +1272,7 @@ export default {
         }
       }
     },
-    toggleEditingParcela(index) {
+    toggleEditingProdutos(index) {
       this.form.produtos[index].editing = !this.form.produtos[index].editing;
       this.buttonLock = true;
       //desativar linhas na tabela
@@ -1280,7 +1280,7 @@ export default {
         row.desativar = rowIndex === index; // Ativa ou desativa a linha clicada
       });
     },
-    saveChangesParcela(index) {
+    saveChangesProdutos(index) {
       console.log(this.form.produtos[index]);
       // var quantidade = 0;
       // var valor_unitario = 0;
@@ -1288,14 +1288,20 @@ export default {
       // var desconto = 0;
       // var valorDesconto = 0;
       // var subTotal = 0;
+
+      this.form.produtos[index].qtd_produto = parseFloat(this.form.produtos[index].qtd_produto);
+      console.log(parseFloat(this.form.produtos[index].qtd_produto));
+
+
+
       //desativar linhas Tabela
       this.form.produtos.forEach((row) => {
         row.desativar = true;
       });
       this.form.produtos[index].editing = false;
       this.buttonLock = false;
-    },
-  },
+    }
+  }
 };
 </script>
 <style>

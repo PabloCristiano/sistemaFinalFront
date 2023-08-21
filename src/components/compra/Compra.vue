@@ -1288,25 +1288,33 @@ export default {
       var desconto = 0;
       var valorDesconto = 0;
       var subTotal = 0;
-      quantidade = parseFloat(this.form.produtos[index].qtd_produto);
-      valor_unitario = extrairNumero(this.form.produtos[index].valor_unitario);
-      desconto = this.calcPorcentagem(
-        extrairNumero(this.form.produtos[index].desconto)
-      );
-      Valor_total_produto = quantidade * valor_unitario;
-      valorDesconto = desconto * Valor_total_produto;
-      subTotal = Valor_total_produto - valorDesconto;
-      this.form.produtos[index].total_produto = currencyFormat(subTotal);
-      this.form.produtos[index].desconto = currency_percentual(desconto * 100);
-      this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
-      this.form.total_compra = this.form.total_produtos;
-
-      //desativar linhas Tabela
-      this.form.produtos.forEach((row) => {
-        row.desativar = true;
-      });
-      this.form.produtos[index].editing = false;
-      this.buttonLock = false;
+      if (parseFloat(this.form.produtos[index].qtd_produto) > 0) {
+        console.log("maior que zero");
+        quantidade = parseFloat(this.form.produtos[index].qtd_produto);
+        valor_unitario = extrairNumero(
+          this.form.produtos[index].valor_unitario
+        );
+        desconto = this.calcPorcentagem(
+          extrairNumero(this.form.produtos[index].desconto)
+        );
+        Valor_total_produto = quantidade * valor_unitario;
+        valorDesconto = desconto * Valor_total_produto;
+        subTotal = Valor_total_produto - valorDesconto;
+        this.form.produtos[index].total_produto = currencyFormat(subTotal);
+        this.form.produtos[index].desconto = currency_percentual(
+          desconto * 100
+        );
+        this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
+        this.form.total_compra = this.form.total_produtos;
+        this.form.produtos[index].editing = false;
+        this.buttonLock = false;
+        //desativar linhas Tabela
+        this.form.produtos.forEach((row) => {
+          row.desativar = true;
+        });
+      } else {
+        console.log("menor ou zerado");
+      }
     }
   }
 };

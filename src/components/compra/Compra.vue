@@ -1288,7 +1288,6 @@ export default {
       // var desconto = 0;
       // var valorDesconto = 0;
       // var subTotal = 0;
-
       this.form.produtos[index].qtd_produto = parseFloat(this.form.produtos[index].qtd_produto);
       console.log(parseFloat(this.form.produtos[index].qtd_produto));
 

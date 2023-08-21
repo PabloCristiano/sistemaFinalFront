@@ -372,14 +372,6 @@
                               >
                                 <i class="bx bx-check"></i>
                               </button>
-                              <button
-                                class="btn btn-sm me-1 mb-1 mt-1"
-                                type="button"
-                                title="EXCLUIR"
-                                style="background-color: rgb(235 32 63 / 65%)"
-                              >
-                                <i class="bx bx-trash-alt"></i>
-                              </button>
                             </div>
                           </td>
                         </tr>
@@ -1329,27 +1321,24 @@ export default {
         });
       }
 
-      if(!Number.isInteger(quantidade)) {
+      if (!Number.isInteger(quantidade) || quantidade <= 0) {
         this.form.produtos[index].msgErrorQtd = true;
-        notyf.error("Qtd precisa ser um número inteiro.");
+        notyf.error(
+          "A quantidade precisa ser um número inteiro maior que zero."
+        );
+        this.buttonLock = true;
+      } else {
+        this.form.produtos[index].msgErrorQtd = false;
+        this.buttonLock = false;
+      }
+      if (desconto >= 0 && desconto <= 100) {
+        this.form.produtos[index].msgErrorPer = false;
+        this.buttonLock = false;
+      } else {
+        this.form.produtos[index].msgErrorPer = true;
+        notyf.error("Porcentagem deve estar entre 0 e 100");
         this.buttonLock = true;
       }
-      if (quantidade <= 0) {
-        this.form.produtos[index].msgErrorQtd = true;
-        notyf.error("Qtd precisa ser um número maior que zero.");
-        this.buttonLock = true;
-      }
-      // if (!desconto >= 0 || desconto <= 100) {
-      //   this.form.produtos[index].msgErrorPer = true;
-      //   notyf.error("Porcentagem igual ou maior que Zero");
-      //   this.buttonLock = true;
-      // }
-      // if (desconto < 100) {
-      //   this.form.produtos[index].msgErrorPer = true;
-      //   notyf.error("Porcentagem igual ou menor que 100");
-      // }
-
-      //  console.log(notyf.error('Quantidade tem que ser um % maior que zero.'));
     }
   }
 };

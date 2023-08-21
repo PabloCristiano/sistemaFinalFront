@@ -1380,7 +1380,6 @@ export default {
   font-family: inherit;
   font-weight: 100;
 }
-
 .slow-motion-enter-active,
 .slow-motion-leave-active {
   transition: all 0.3s; /* Ajuste o valor da transição para controlar a velocidade */

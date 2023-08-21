@@ -1288,7 +1288,6 @@ export default {
       var desconto = 0;
       var valorDesconto = 0;
       var subTotal = 0;
-      // this.form.produtos[index].qtd_produto = parseFloat(this.form.produtos[index].qtd_produto);
       quantidade = parseFloat(this.form.produtos[index].qtd_produto);
       valor_unitario = extrairNumero(this.form.produtos[index].valor_unitario);
       desconto = this.calcPorcentagem(
@@ -1299,18 +1298,8 @@ export default {
       subTotal = Valor_total_produto - valorDesconto;
       this.form.produtos[index].total_produto = currencyFormat(subTotal);
       this.form.produtos[index].desconto = currency_percentual(desconto * 100);
-      console.log(
-        quantidade,
-        desconto,
-        valorDesconto,
-        valor_unitario,
-        Valor_total_produto,
-        subTotal,
-        this.form.produtos[index].desconto
-      );
-
-      //this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
-      //this.form.total_compra = this.form.total_produtos;
+      this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
+      this.form.total_compra = this.form.total_produtos;
 
       //desativar linhas Tabela
       this.form.produtos.forEach((row) => {

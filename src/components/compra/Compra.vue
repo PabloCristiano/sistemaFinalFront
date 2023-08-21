@@ -234,7 +234,7 @@
                       ></b-form-input>
                     </b-input-group>
                   </div>
-                  <div class="col-md-3" style="line-height: 85px">
+                  <div class="col-md-2" style="line-height: 85px">
                     <b-button
                       @click.prevent="addProducts()"
                       class="btn btn-sm"
@@ -243,6 +243,17 @@
                       :class="{ disabled: buttonLock }"
                     >
                       Adicionar Produto
+                    </b-button>
+                  </div>
+                  <div class="col-md-1" style="line-height: 85px">
+                    <b-button
+                      class="btn btn-sm"
+                      type="button"
+                      variant="dark"
+                      title="Limpar campos produtos"
+                      @click="clearInputsListProducts()"
+                    >
+                    <i class='bx bx-trash'></i>
                     </b-button>
                   </div>
                 </div>

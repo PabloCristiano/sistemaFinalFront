@@ -240,6 +240,7 @@
                       class="btn btn-sm"
                       type="button"
                       variant="dark"
+                      :class="{ disabled: buttonLock }"
                     >
                       Adicionar Produto
                     </b-button>
@@ -303,6 +304,9 @@
                               id="quantidade"
                               type="number"
                               class="form-control text-center"
+                              :class="{
+                                'fail-error': form.produtos[key].msgError
+                              }"
                               v-model="item.qtd_produto"
                               :disabled="!item.editing"
                             />
@@ -616,6 +620,7 @@
           </b-button>
           <b-button
             class="btn btn-sm me-1"
+            :class="{ disabled: buttonLock }"
             type="button"
             variant="dark"
             @click.prevent="onSubmit()"
@@ -1076,6 +1081,7 @@ export default {
             produtos.desconto = currency_percentual(produtos.desconto);
             produtos.desativar = true;
             produtos.editing = false;
+            produtos.msgError = false;
             return produtos;
           }),
           (this.form.total_produtos = this.calcTotalProduto(
@@ -1138,7 +1144,8 @@ export default {
         desconto: currency_percentual(nDesconto),
         total_produto: currencyFormat(subTotal),
         desativar: true,
-        editing: false
+        editing: false,
+        msgError: false
       });
       this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
       this.form.total_compra = this.form.total_produtos;
@@ -1288,9 +1295,10 @@ export default {
       var desconto = 0;
       var valorDesconto = 0;
       var subTotal = 0;
-      if (parseFloat(this.form.produtos[index].qtd_produto) > 0) {
-        console.log("maior que zero");
-        quantidade = parseFloat(this.form.produtos[index].qtd_produto);
+      quantidade = parseFloat(this.form.produtos[index].qtd_produto);
+      console.log(quantidade);
+      if (Number.isInteger(quantidade) && quantidade > 0) {
+        this.form.produtos[index].msgError = false;
         valor_unitario = extrairNumero(
           this.form.produtos[index].valor_unitario
         );
@@ -1308,11 +1316,14 @@ export default {
         this.form.total_compra = this.form.total_produtos;
         this.form.produtos[index].editing = false;
         this.buttonLock = false;
+
         //desativar linhas Tabela
         this.form.produtos.forEach((row) => {
           row.desativar = true;
         });
       } else {
+        this.form.produtos[index].msgError = true;
+        this.buttonLock = true;
         console.log("menor ou zerado");
       }
     }
@@ -1369,5 +1380,8 @@ export default {
 .disabled {
   pointer-events: none; /* Impede interações com elementos filhos */
   opacity: 0.5; /* Opacidade reduzida para indicar desabilitação */
+}
+.fail-error {
+  border: 2px solid #e46060bb !important;
 }
 </style>

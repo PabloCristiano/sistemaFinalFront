@@ -1298,7 +1298,7 @@ export default {
       valorDesconto = desconto * Valor_total_produto;
       subTotal = Valor_total_produto - valorDesconto;
       this.form.produtos[index].total_produto = currencyFormat(subTotal);
-      this.form.produtos[index].desconto = currency_percentual((desconto * 100));
+      this.form.produtos[index].desconto = currency_percentual(desconto * 100);
       console.log(
         quantidade,
         desconto,
@@ -1309,7 +1309,6 @@ export default {
         this.form.produtos[index].desconto
       );
 
-      
       //this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
       //this.form.total_compra = this.form.total_produtos;
 

@@ -128,12 +128,17 @@
                     <label>Código:</label>
                     <b-form-input
                       id="id_produto"
-                      v-model="form.id_produto"
+                      v-model="validaProdutos.id_produto"
+                      :class="{
+                        'fail-error': $v.validaProdutos.id_produto.$error,
+                      }"
                       type="number"
                       placeholder="Código"
                     >
                     </b-form-input>
-                    <small style="font-size: 11px; color: red"> </small>
+                    <small style="font-size: 11px; color: rgb(228 96 96)">
+                      {{ validationMsg($v.validaProdutos.id_produto) }}
+                    </small>
                   </div>
                   <div class="col-md-8">
                     <label
@@ -145,9 +150,12 @@
                       <b-input-group>
                         <b-form-input
                           id="produto"
-                          v-model="form.produto"
+                          v-model="validaProdutos.produto"
                           type="text"
                           placeholder="Produto"
+                          :class="{
+                            'fail-error': $v.validaProdutos.produto.$error,
+                          }"
                           disabled
                         >
                         </b-form-input>
@@ -165,17 +173,26 @@
                       </b-input-group>
                       <small style="font-size: 11px; color: red"> </small>
                     </b-overlay>
+                    <small style="font-size: 11px; color: rgb(228 96 96)">
+                      {{ validationMsg($v.validaProdutos.produto) }}
+                    </small>
                   </div>
                   <div class="col-md-2">
                     <label>Unidade:</label>
                     <b-form-input
                       id="Unidade"
-                      v-model="form.unidade"
+                      v-model="validaProdutos.unidade"
                       type="text"
                       placeholder="Unidade"
+                      :class="{
+                        'fail-error': $v.validaProdutos.unidade.$error,
+                      }"
                       disabled
                     >
                     </b-form-input>
+                    <small style="font-size: 11px; color: rgb(228 96 96)">
+                      {{ validationMsg($v.validaProdutos.unidade) }}
+                    </small>
                   </div>
                 </div>
                 <div v-if="mostrarBlocoProduto" class="row mt-2">
@@ -185,11 +202,17 @@
                     </label>
                     <b-form-input
                       id="quantidade"
-                      v-model="form.quantidade"
+                      v-model="validaProdutos.quantidade"
                       type="number"
                       placeholder="Quantidade"
+                      :class="{
+                        'fail-error': $v.validaProdutos.quantidade.$error,
+                      }"
                     >
                     </b-form-input>
+                    <small style="font-size: 11px; color: rgb(228 96 96)">
+                      {{ validationMsg($v.validaProdutos.quantidade) }}
+                    </small>
                   </div>
                   <div class="col-md-3">
                     <label
@@ -207,11 +230,17 @@
                       <b-form-input
                         id="valor_unitario"
                         type="number"
-                        v-model="form.valor_unitario"
+                        v-model="validaProdutos.valor_unitario"
                         placeholder="0,00"
+                        :class="{
+                          'fail-error': $v.validaProdutos.valor_unitario.$error,
+                        }"
                         disabled
                       ></b-form-input>
                     </b-input-group>
+                    <small style="font-size: 11px; color: rgb(228 96 96)">
+                      {{ validationMsg($v.validaProdutos.valor_unitario) }}
+                    </small>
                   </div>
                   <div class="col-md-3">
                     <label
@@ -228,11 +257,17 @@
                       </template>
                       <b-form-input
                         id="desconto"
-                        v-model="form.desconto"
+                        :class="{
+                          'fail-error': $v.validaProdutos.desconto.$error,
+                        }"
+                        v-model="validaProdutos.desconto"
                         type="number"
                         placeholder="0,00"
                       ></b-form-input>
                     </b-input-group>
+                    <small style="font-size: 11px; color: rgb(228 96 96)">
+                      {{ validationMsg($v.validaProdutos.desconto) }}
+                    </small>
                   </div>
                   <div class="col-md-2" style="line-height: 85px">
                     <b-button
@@ -253,7 +288,7 @@
                       title="Limpar campos produtos"
                       @click="clearInputsListProducts()"
                     >
-                    <i class='bx bx-trash'></i>
+                      <i class="bx bx-trash"></i>
                     </b-button>
                   </div>
                 </div>
@@ -316,7 +351,7 @@
                               type="number"
                               class="form-control text-center"
                               :class="{
-                                'fail-error': form.produtos[key].msgErrorQtd
+                                'fail-error': form.produtos[key].msgErrorQtd,
                               }"
                               v-model="item.qtd_produto"
                               :disabled="!item.editing"
@@ -337,7 +372,7 @@
                               type="text"
                               class="form-control text-center"
                               :class="{
-                                'fail-error': form.produtos[key].msgErrorPer
+                                'fail-error': form.produtos[key].msgErrorPer,
                               }"
                               v-model="item.desconto"
                               :disabled="!item.editing"
@@ -765,6 +800,8 @@
   </div>
 </template>
 <script>
+import * as validators from "vuelidate/lib/validators";
+import { validationMessage } from "vuelidate-messages";
 import HomeFornecedor from "../fornecedores/HomeFornecedor.vue";
 import HomeProduto from "../produto/HomeProduto.vue";
 import HomeCondicaoPagamento from "../condicaoPagamento/HomeCondicaoPagamento.vue";
@@ -773,14 +810,30 @@ import {
   inverterDataPtBR,
   currencyFormat,
   formatarDataParaPtBR,
-  extrairNumero
+  extrairNumero,
 } from "../../rules/filters";
+import Rules from "../../rules/rules";
 import { Decimal } from "decimal.js";
 import { Notyf } from "notyf";
+const formMessages = {
+  required: () => "Campo Obrigatório",
+  required_Parcela: () => "Deve conter no minímo uma Parcela",
+  txtMinLen: ({ $params }) =>
+    `Campo minimo ${$params.txtMinLen.min} characters.`,
+  txtMaxLen: ({ $params }) =>
+    `Campo maximo ${$params.txtMaxLen.max} characters.`,
+  integer: () => "Campo deve ser um Numero inteiro",
+  txtNumeroPositivo: () => "Campo deve ser Positivo/Maior que zero.",
+  txtNumeroisPositivo: () => "Campo deve ser Positivo.",
+  maxValue: () => "Porcentagem deve estar entre 0 e 100",
+  maxValuePorcentagem: () => "Porcentagem máx 100%",
+  minValuePorcentagem: () => "Porcentagem deve estar entre 0 e 100",
+  maxValuePercent: () => "Excedeu 100% da(s) parcelas",
+};
 const notyf = new Notyf({
   position: {
     x: "center",
-    y: "top"
+    y: "top",
   },
   types: [
     {
@@ -789,20 +842,20 @@ const notyf = new Notyf({
       icon: {
         className: "material-icons",
         tagName: "i",
-        text: "warning"
-      }
+        text: "warning",
+      },
     },
     {
       type: "error",
       background: "indianred",
       duration: 5000,
-      dismissible: true
-    }
-  ]
+      dismissible: true,
+    },
+  ],
 });
 export default {
   props: {
-    formulario: { type: Object }
+    formulario: { type: Object },
   },
   components: { HomeFornecedor, HomeProduto, HomeCondicaoPagamento },
   data() {
@@ -844,14 +897,23 @@ export default {
         outras_despesas: "",
         observacao: "",
         produtos: [],
-        condicaopagamento: []
+        condicaopagamento: [],
       },
       maxDate: "", // Define a data máxima como a data atual
       minDate: "", // Define a data mínima como a data atual
       mostrarBlocoProduto: true, // quando for pra adicionar o produto ele vai aparcer quando for visualizar irar sumir
       disabled: false,
       obj_condicao: {},
-      buttonLock: false
+      buttonLock: false,
+      buttonLockProducts: false,
+      validaProdutos: {
+        id_produto: "",
+        produto: "",
+        unidade: "",
+        quantidade: "",
+        valor_unitario: "",
+        desconto: "",
+      },
     };
   },
   beforeCreate() {},
@@ -877,7 +939,7 @@ export default {
         this.form.id_fornecedor !== "" &&
         this.form.fornecedor !== ""
       );
-    }
+    },
     // max_isDateInvalid() {
     //   const data_emissao = new Date(this.data_emissao);
     //   const maxDate = new Date();
@@ -992,7 +1054,7 @@ export default {
         num = currency(num);
         this.setCondicaoPagamento(this.obj_condicao, num);
       }
-    }
+    },
     // max_isDateInvalid(result) {
     //   if (result) {
     //     this.data_emissao = this.obterDataAtual();
@@ -1006,7 +1068,35 @@ export default {
     //   }
     // },
   },
+  validations: {
+    validaProdutos: {
+      id_produto: {
+        required: validators.required,
+      },
+      produto: {
+        required: validators.required,
+      },
+      unidade: {
+        required: validators.required,
+      },
+      quantidade: {
+        required: validators.required,
+        integer: validators.integer
+      },
+      valor_unitario: {
+        required: validators.required,
+      },
+      desconto: {
+        required: validators.required,
+        decimal: validators.decimal,
+        maxValue: validators.maxValue(100),
+        minValuePorcentagem: validators.minValue(0),
+        txtNumeroisPositivo: Rules.isNumber,
+      },
+    },
+  },
   methods: {
+    validationMsg: validationMessage(formMessages),
     closeCompra() {
       //   this.onReset();
       this.$bvModal.hide(this.modal_form_compra);
@@ -1038,10 +1128,10 @@ export default {
         return;
       }
       const precoVenda = obj.row.precoVenda;
-      this.form.id_produto = obj.row.id;
-      this.form.produto = obj.row.produto;
-      this.form.unidade = obj.row.unidade;
-      this.form.valor_unitario = precoVenda.toFixed(2);
+      this.validaProdutos.id_produto = obj.row.id;
+      this.validaProdutos.produto = obj.row.produto;
+      this.validaProdutos.unidade = obj.row.unidade;
+      this.validaProdutos.valor_unitario = precoVenda.toFixed(2);
       this.$bvModal.hide(this.modal_search_Produto);
     },
     changeSearchCondicaoPagamento(obj) {
@@ -1116,57 +1206,65 @@ export default {
       return format;
     },
     addProducts() {
-      var id_produto = "";
-      var produto = "";
-      var unidade = "";
-      var nDesconto = parseFloat(this.form.desconto);
-      var quantidade = 0;
-      var valor_unitario = 0;
-      var Valor_total_produto = 0;
-      var desconto = 0;
-      var valorDesconto = 0;
-      var subTotal = 0;
-      var decimal = new Decimal(this.form.valor_unitario);
-      var f_valor_unitario = 0;
-      id_produto = this.form.id_produto;
-      produto = this.form.produto;
-      unidade = this.form.unidade;
-      quantidade = this.form.quantidade;
-      valor_unitario = parseFloat(this.form.valor_unitario).toFixed(2);
-      f_valor_unitario = parseFloat(decimal);
-      Valor_total_produto = quantidade * valor_unitario;
-      desconto = this.calcPorcentagem(
-        parseFloat(this.form.desconto).toFixed(2)
-      );
-      valorDesconto = Valor_total_produto * desconto;
-      subTotal = Valor_total_produto - valorDesconto;
-      this.form.produtos.push({
-        id_produto: id_produto,
-        produto: { produto: produto },
-        unidade: unidade,
-        qtd_produto: quantidade,
-        valor_unitario: currencyFormat(f_valor_unitario),
-        desconto: currencyFormat(nDesconto),
-        total_produto: currencyFormat(subTotal),
-        desativar: true,
-        editing: false,
-        msgErrorQtd: false,
-        msgErrorPer: false
-      });
-      this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
-      this.form.total_compra = this.form.total_produtos;
-      this.clearInputsListProducts();
+      if (this.$v.validaProdutos.$invalid) {
+        this.$v.validaProdutos.$touch();
+      } else {
+        var id_produto = "";
+        var produto = "";
+        var unidade = "";
+        var nDesconto = parseFloat(this.validaProdutos.desconto);
+        var quantidade = 0;
+        var valor_unitario = 0;
+        var Valor_total_produto = 0;
+        var desconto = 0;
+        var valorDesconto = 0;
+        var subTotal = 0;
+        var decimal = new Decimal(this.validaProdutos.valor_unitario);
+        var f_valor_unitario = 0;
+        id_produto = this.validaProdutos.id_produto;
+        produto = this.validaProdutos.produto;
+        unidade = this.validaProdutos.unidade;
+        quantidade = this.validaProdutos.quantidade;
+        valor_unitario = parseFloat(this.validaProdutos.valor_unitario).toFixed(
+          2
+        );
+        f_valor_unitario = parseFloat(decimal);
+        Valor_total_produto = quantidade * valor_unitario;
+        desconto = this.calcPorcentagem(
+          parseFloat(this.validaProdutos.desconto).toFixed(2)
+        );
+        valorDesconto = Valor_total_produto * desconto;
+        subTotal = Valor_total_produto - valorDesconto;
+        this.form.produtos.push({
+          id_produto: id_produto,
+          produto: { produto: produto },
+          unidade: unidade,
+          qtd_produto: quantidade,
+          valor_unitario: currencyFormat(f_valor_unitario),
+          desconto: currencyFormat(nDesconto),
+          total_produto: currencyFormat(subTotal),
+          desativar: true,
+          editing: false,
+          msgErrorQtd: false,
+          msgErrorPer: false,
+        });
+        this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
+        this.form.total_compra = this.form.total_produtos;
+        this.clearInputsListProducts();
+      }
     },
     calcPorcentagem(porcentagem) {
       return porcentagem / 100;
     },
     clearInputsListProducts() {
-      (this.form.id_produto = ""),
-        (this.form.produto = ""),
-        (this.form.quantidade = ""),
-        (this.form.valor_unitario = ""),
-        (this.form.desconto = ""),
-        (this.form.unidade = "");
+      (this.validaProdutos.id_produto = ""),
+        (this.validaProdutos.produto = ""),
+        (this.validaProdutos.quantidade = ""),
+        (this.validaProdutos.valor_unitario = ""),
+        (this.validaProdutos.desconto = ""),
+        (this.validaProdutos.unidade = "");
+        this.$v.validaProdutos.$reset();
+
     },
     calcTotalProduto(obj) {
       let soma = 0;
@@ -1260,7 +1358,7 @@ export default {
           parcela: obj.parcelas[i].parcela,
           formaPagamento: obj.parcelas[i].formaPagamento[0].forma_pg,
           Vencimento: formatarDataParaPtBR(datavencimento),
-          valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100
+          valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100,
         });
       }
       this.form.condicaopagamento.map(function (c) {
@@ -1350,8 +1448,8 @@ export default {
         notyf.error("Porcentagem deve estar entre 0 e 100");
         this.buttonLock = true;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style>

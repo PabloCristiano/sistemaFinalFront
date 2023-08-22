@@ -1,6 +1,6 @@
 <template>
   <div class="container" style="margin-bottom: -90px">
-    <b-card class="mt-0 mb-5" :header-html="form.headerForm">
+    <b-card class="mt-0 mb-5" :header-html="textCard_Compra">
       <slot name="conteudo">
         <b-form>
           <div class="row mt-2">
@@ -14,8 +14,14 @@
                     id="modelo"
                     type="number"
                     placeholder="Modelo"
-                    v-model="modelo"
+                    v-model="form.modelo"
+                    :class="{
+                      'fail-error': $v.form.modelo.$error
+                    }"
                   ></b-form-input>
+                  <small class="small-msg">
+                    {{ validationMsg($v.form.modelo) }}
+                  </small>
                 </div>
                 <div class="col-md-4 col-sm-4">
                   <label
@@ -25,8 +31,14 @@
                     id="serie"
                     type="number"
                     placeholder="Série"
-                    v-model="serie"
+                    v-model="form.serie"
+                    :class="{
+                      'fail-error': $v.form.serie.$error
+                    }"
                   ></b-form-input>
+                  <small class="small-msg">
+                    {{ validationMsg($v.form.serie) }}
+                  </small>
                 </div>
                 <div class="col-md-4 col-sm-4">
                   <label
@@ -36,9 +48,14 @@
                     id="numero"
                     type="number"
                     placeholder="Número"
-                    v-model="numero"
+                    v-model="form.numero"
+                    :class="{
+                      'fail-error': $v.form.numero.$error
+                    }"
                   ></b-form-input>
-                  <small style="font-size: 11px; color: red"></small>
+                  <small class="small-msg">
+                    {{ validationMsg($v.form.numero) }}
+                  </small>
                 </div>
               </div>
             </div>
@@ -51,10 +68,15 @@
                     id="id_fornecedor"
                     type="number"
                     placeholder="Código"
-                    v-model="id_fornecedor"
-                    :title="id_fornecedor"
+                    v-model="form.id_fornecedor"
+                    :title="form.id_fornecedor"
+                    :class="{
+                      'fail-error': $v.form.id_fornecedor.$error
+                    }"
                   ></b-form-input>
-                  <small style="font-size: 11px; color: red"></small>
+                  <small class="small-msg">
+                    {{ validationMsg($v.form.id_fornecedor) }}
+                  </small>
                 </div>
                 <div class="col-md-9 col-sm-8">
                   <label
@@ -68,8 +90,11 @@
                         id="fornecedor"
                         type="text"
                         placeholder="Fornecedor"
-                        v-model="fornecedor"
-                        :title="fornecedor"
+                        v-model="form.fornecedor"
+                        :title="form.fornecedor"
+                        :class="{
+                          'fail-error': $v.form.fornecedor.$error
+                        }"
                         disabled
                       ></b-form-input>
                       <b-input-group-append>
@@ -84,7 +109,9 @@
                         </b-button>
                       </b-input-group-append>
                     </b-input-group>
-                    <small style="font-size: 11px; color: red"></small>
+                    <small class="small-msg">
+                      {{ validationMsg($v.form.fornecedor) }}
+                    </small>
                   </b-overlay>
                 </div>
               </div>
@@ -94,10 +121,15 @@
                   <b-form-input
                     id="data_emissão"
                     type="date"
-                    v-model="data_emissao"
+                    v-model="form.data_emissao"
                     :max="maxDate"
+                    :class="{
+                      'fail-error': $v.form.data_emissao.$error
+                    }"
                   ></b-form-input>
-                  <small style="font-size: 11px; color: red"></small>
+                  <small class="small-msg">
+                    {{ validationMsg($v.form.data_emissao) }}
+                  </small>
                   <!-- <small
                     v-if="max_isDateInvalid"
                     style="font-size: 11px; color: red"
@@ -109,10 +141,15 @@
                   <b-form-input
                     id="data_chegada"
                     type="date"
-                    v-model="data_chegada"
+                    v-model="form.data_chegada"
+                    :class="{
+                      'fail-error': $v.form.data_chegada.$error
+                    }"
                     :min="minDate"
                   ></b-form-input>
-                  <small style="font-size: 11px; color: red"></small>
+                  <small class="small-msg">
+                    {{ validationMsg($v.form.data_chegada) }}
+                  </small>
                 </div>
               </div>
             </div>
@@ -121,19 +158,30 @@
           <!-- :class="{ card_produto_disabled: !todosParametrosPreenchidos }" -->
           <!-- class="mt-4" -->
           <transition name="slow-motion" appear>
-            <div v-if="todosParametrosPreenchidos" class="slow-motion-div mt-4">
+            <div
+              v-if="todosParametrosPreenchidos"
+              class="slow-motion-div mt-4"
+              :class="{
+                'fail-warning': $v.form.produtos.$error
+              }"
+            >
               <b-card :header-html="textCard_Produto" class="text-start">
                 <div v-if="mostrarBlocoProduto" class="row mt-02">
                   <div class="col-md-2">
                     <label>Código:</label>
                     <b-form-input
                       id="id_produto"
-                      v-model="id_produto"
+                      v-model="validaProdutos.id_produto"
+                      :class="{
+                        'fail-error': $v.validaProdutos.id_produto.$error
+                      }"
                       type="number"
                       placeholder="Código"
                     >
                     </b-form-input>
-                    <small style="font-size: 11px; color: red"> </small>
+                    <small class="small-msg">
+                      {{ validationMsg($v.validaProdutos.id_produto) }}
+                    </small>
                   </div>
                   <div class="col-md-8">
                     <label
@@ -145,9 +193,12 @@
                       <b-input-group>
                         <b-form-input
                           id="produto"
-                          v-model="produto"
+                          v-model="validaProdutos.produto"
                           type="text"
                           placeholder="Produto"
+                          :class="{
+                            'fail-error': $v.validaProdutos.produto.$error
+                          }"
                           disabled
                         >
                         </b-form-input>
@@ -163,19 +214,28 @@
                           </b-button>
                         </b-input-group-append>
                       </b-input-group>
-                      <small style="font-size: 11px; color: red"> </small>
+                      <small class="small-msg"> </small>
                     </b-overlay>
+                    <small class="small-msg">
+                      {{ validationMsg($v.validaProdutos.produto) }}
+                    </small>
                   </div>
                   <div class="col-md-2">
                     <label>Unidade:</label>
                     <b-form-input
                       id="Unidade"
-                      v-model="unidade"
+                      v-model="validaProdutos.unidade"
                       type="text"
                       placeholder="Unidade"
+                      :class="{
+                        'fail-error': $v.validaProdutos.unidade.$error
+                      }"
                       disabled
                     >
                     </b-form-input>
+                    <small class="small-msg">
+                      {{ validationMsg($v.validaProdutos.unidade) }}
+                    </small>
                   </div>
                 </div>
                 <div v-if="mostrarBlocoProduto" class="row mt-2">
@@ -185,10 +245,17 @@
                     </label>
                     <b-form-input
                       id="quantidade"
+                      v-model="validaProdutos.quantidade"
                       type="number"
                       placeholder="Quantidade"
+                      :class="{
+                        'fail-error': $v.validaProdutos.quantidade.$error
+                      }"
                     >
                     </b-form-input>
+                    <small class="small-msg">
+                      {{ validationMsg($v.validaProdutos.quantidade) }}
+                    </small>
                   </div>
                   <div class="col-md-3">
                     <label
@@ -206,11 +273,17 @@
                       <b-form-input
                         id="valor_unitario"
                         type="number"
-                        v-model="valor_unitario"
+                        v-model="validaProdutos.valor_unitario"
                         placeholder="0,00"
+                        :class="{
+                          'fail-error': $v.validaProdutos.valor_unitario.$error
+                        }"
                         disabled
                       ></b-form-input>
                     </b-input-group>
+                    <small class="small-msg">
+                      {{ validationMsg($v.validaProdutos.valor_unitario) }}
+                    </small>
                   </div>
                   <div class="col-md-3">
                     <label
@@ -227,14 +300,38 @@
                       </template>
                       <b-form-input
                         id="desconto"
+                        :class="{
+                          'fail-error': $v.validaProdutos.desconto.$error
+                        }"
+                        v-model="validaProdutos.desconto"
                         type="number"
                         placeholder="0,00"
                       ></b-form-input>
                     </b-input-group>
+                    <small class="small-msg">
+                      {{ validationMsg($v.validaProdutos.desconto) }}
+                    </small>
                   </div>
-                  <div class="col-md-3" style="line-height: 85px">
-                    <b-button class="btn btn-sm" type="button" variant="dark">
+                  <div class="col-md-2" style="line-height: 85px">
+                    <b-button
+                      @click.prevent="addProducts()"
+                      class="btn btn-sm"
+                      type="button"
+                      variant="dark"
+                      :class="{ disabled: buttonLock }"
+                    >
                       Adicionar Produto
+                    </b-button>
+                  </div>
+                  <div class="col-md-1" style="line-height: 85px">
+                    <b-button
+                      class="btn btn-sm"
+                      type="button"
+                      variant="dark"
+                      title="Limpar campos produtos"
+                      @click="clearInputsListProducts()"
+                    >
+                      <i class="bx bx-trash"></i>
                     </b-button>
                   </div>
                 </div>
@@ -260,7 +357,8 @@
                       <tbody>
                         <tr
                           class="text-center"
-                          v-for="(item, key) in produtos"
+                          :class="{ disabled: !form.produtos[key].desativar }"
+                          v-for="(item, key) in form.produtos"
                           :key="key"
                         >
                           <td class="col-md-1 col-sm-1 table_Td" title="10">
@@ -293,10 +391,13 @@
                           <td class="col-md-1 col-sm-1 table_Td">
                             <input
                               id="quantidade"
-                              type="text"
+                              type="number"
                               class="form-control text-center"
-                              :value="item.qtd_produto"
-                              disabled
+                              :class="{
+                                'fail-error': form.produtos[key].msgErrorQtd
+                              }"
+                              v-model="item.qtd_produto"
+                              :disabled="!item.editing"
                             />
                           </td>
                           <td class="col-md-1 col-sm-1 table_Td">
@@ -313,8 +414,11 @@
                               id="desconto"
                               type="text"
                               class="form-control text-center"
-                              :value="item.desconto"
-                              disabled
+                              :class="{
+                                'fail-error': form.produtos[key].msgErrorPer
+                              }"
+                              v-model="item.desconto"
+                              :disabled="!item.editing"
                             />
                           </td>
                           <td class="col-md-1 col-sm-1 table_Td">
@@ -327,11 +431,12 @@
                             />
                           </td>
                           <td class="col-md-1 col-sm-1 table_Td">
-                            <div v-if="true">
+                            <div v-if="!form.produtos[key].editing">
                               <button
                                 class="btn btn-sm me-1 mb-1 mt-1"
                                 type="button"
                                 title="EDITAR"
+                                @click.prevent="toggleEditingProdutos(key)"
                                 style="background-color: rgb(254 255 7 / 56%)"
                               >
                                 <i class="bx bx-edit-alt"></i>
@@ -340,6 +445,7 @@
                                 class="btn btn-sm me-1 mb-1 mt-1"
                                 type="button"
                                 title="EXCLUIR"
+                                @click.prevent="deleteItemProduto(key)"
                                 style="background-color: rgb(235 32 63 / 65%)"
                               >
                                 <i class="bx bx-trash-alt"></i>
@@ -350,17 +456,10 @@
                                 class="btn btn-sm me-1 mb-1 mt-1"
                                 type="button"
                                 title="SALVAR"
+                                @click="saveChangesProdutos(key)"
                                 style="background-color: #28a74563"
                               >
                                 <i class="bx bx-check"></i>
-                              </button>
-                              <button
-                                class="btn btn-sm me-1 mb-1 mt-1"
-                                type="button"
-                                title="EXCLUIR"
-                                style="background-color: rgb(235 32 63 / 65%)"
-                              >
-                                <i class="bx bx-trash-alt"></i>
                               </button>
                             </div>
                           </td>
@@ -369,10 +468,12 @@
                     </table>
                   </div>
                 </div>
-                <template #footer>
+                <div class="row mt-2">
                   <div class="row">
                     <div class="col-md-9 text-end mr-0 centered-text">
-                      <label for="input-default"><b>Total da Compra:</b></label>
+                      <label for="input-default"
+                        ><b>Total dos Produtos:</b></label
+                      >
                     </div>
                     <div class="col-md-3">
                       <b-input-group>
@@ -386,7 +487,64 @@
                           id="total_compra"
                           type="number"
                           placeholder="0,00"
-                          :value="total_compra"
+                          v-model="form.total_produtos"
+                          :value="form.total_produtos"
+                          disabled
+                        ></b-form-input>
+                      </b-input-group>
+                    </div>
+                  </div>
+                </div>
+                <template #footer>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <label>Frete:</label>
+                      <b-form-input
+                        id="frete"
+                        v-model="form.frete"
+                        type="number"
+                        placeholder="0,00"
+                      >
+                      </b-form-input>
+                      <small class="small-msg"> </small>
+                    </div>
+                    <div class="col-md-3">
+                      <label>Seguro:</label>
+                      <b-form-input
+                        id="seguro"
+                        v-model="form.seguro"
+                        type="number"
+                        placeholder="0,00"
+                      >
+                      </b-form-input>
+                      <small class="small-msg"> </small>
+                    </div>
+                    <div class="col-md-3">
+                      <label>Outras Despesas:</label>
+                      <b-form-input
+                        id="outras_despesas"
+                        v-model="form.outras_despesas"
+                        type="number"
+                        placeholder="0,00"
+                      >
+                      </b-form-input>
+                      <small class="small-msg"> </small>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="input-default"><b>Total da Compra:</b></label>
+                      <b-input-group>
+                        <template #prepend>
+                          <b-input-group-text
+                            style="background-color: #212529; color: white"
+                            >R$</b-input-group-text
+                          >
+                        </template>
+                        <b-form-input
+                          id="total_compra"
+                          type="number"
+                          placeholder="0,00"
+                          v-model="form.total_compra"
+                          :value="form.total_compra"
                           disabled
                         ></b-form-input>
                       </b-input-group>
@@ -394,6 +552,15 @@
                   </div>
                 </template>
               </b-card>
+              <div v-if="$v.form.produtos.$error" class="col text-center">
+                <div
+                  class="d-flex justify-content-center align-items-center col-12 mt-2"
+                >
+                  <div class="col-6 alert alert-warning" role="alert">
+                    {{ validationMsg($v.form.produtos) }}
+                  </div>
+                </div>
+              </div>
             </div>
           </transition>
           <!-- card Condição Pagamento -->
@@ -408,11 +575,12 @@
                     <div class="col-md-3 col-sm-4">
                       <label>Código:</label>
                       <b-form-input
-                        id="id_fornecedor"
+                        id="id_condicaopg"
                         type="number"
+                        v-model="form.id_condicaopg"
                         placeholder="Código"
                       ></b-form-input>
-                      <small style="font-size: 11px; color: red"></small>
+                      <small style="font-size: 11px; color: #e46060bb"></small>
                     </div>
                     <div class="col-md-9 col-sm-8">
                       <label
@@ -428,6 +596,7 @@
                             id="fornecedor"
                             type="text"
                             placeholder="Condição de Pagamento"
+                            v-model="form.condicaopg"
                             disabled
                           ></b-form-input>
                           <b-input-group-append>
@@ -436,12 +605,15 @@
                               variant="dark"
                               :disabled="form.disabled"
                               title="Pesquisar Condição de Pagamento"
+                              @click.prevent="showSearchCondicaoPagamento()"
                             >
                               <i class="bx bx-search"></i>
                             </b-button>
                           </b-input-group-append>
                         </b-input-group>
-                        <small style="font-size: 11px; color: red"></small>
+                        <small
+                          style="font-size: 11px; color: #e46060bb"
+                        ></small>
                       </b-overlay>
                     </div>
                   </div>
@@ -468,42 +640,42 @@
                       <tbody>
                         <tr
                           class="text-center"
-                          v-for="(item, key) in condicaopagamento"
+                          v-for="(item, key) in form.condicaopagamento"
                           :key="key"
                         >
                           <td class="col-md-2 table_Td">
                             <input
-                              id="codigo"
+                              id="parcela"
                               type="text"
                               class="form-control text-center"
-                              value="10"
+                              :value="item.parcela"
                               disabled
                             />
                           </td>
-                          <td class="col-md-6 table_Td">
+                          <td class="col-md-4 table_Td">
                             <input
-                              id="produto"
+                              id="formaPagamento"
                               type="text"
-                              class="form-control text-start"
-                              value="Podada Reviver"
+                              class="form-control text-center"
+                              :value="item.formaPagamento"
                               disabled
                             />
                           </td>
-                          <td class="col-md-2 table_Td">
+                          <td class="col-md-3 table_Td">
                             <input
-                              id="unidade"
+                              id="vencimento"
                               type="text"
                               class="form-control text-center"
-                              value="Uni"
+                              :value="item.Vencimento"
                               disabled
                             />
                           </td>
-                          <td class="col-md-2 table_Td">
+                          <td class="col-md-3 table_Td">
                             <input
-                              id="quantidade"
+                              id="valor_parcela"
                               type="text"
                               class="form-control text-center"
-                              value="15"
+                              :value="item.valorParcela"
                               disabled
                             />
                           </td>
@@ -515,8 +687,9 @@
                 <div>
                   <label for="">Observações:</label>
                   <b-form-textarea
-                    id="textarea"
-                    placeholder="Enter something..."
+                    id="observacao"
+                    v-model="form.observacao"
+                    placeholder="Observações"
                     rows="3"
                     max-rows="6"
                   ></b-form-textarea>
@@ -542,11 +715,12 @@
           </b-button>
           <b-button
             class="btn btn-sm me-1"
+            :class="{ disabled: buttonLock }"
             type="button"
             variant="dark"
             @click.prevent="onSubmit()"
           >
-            {{ form.btn }}<i class="bx bx-check"></i>
+            Salvar<i class="bx bx-check"></i>
           </b-button>
         </div>
       </slot>
@@ -637,109 +811,189 @@
         >
       </b-container>
     </b-modal>
+    <!-- Modal HomeCondicão Pagamento -->
+    <b-modal
+      :id="modal_search_condicaoPagamento"
+      size="xl"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+    >
+      <template v-slot:modal-header>
+        <h5>Pesquisar Condição de Pagamento</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="fecharModalSearchCondicaoPagamento()"
+        >
+          X
+        </b-button>
+      </template>
+      <b-container fluid>
+        <HomeCondicaoPagamento
+          :functionCondicao="changeSearchCondicaoPagamento"
+        ></HomeCondicaoPagamento>
+      </b-container>
+      <b-container
+        class="col-sm-12 col-md-12 mt-3"
+        style="text-align: center"
+        footer
+      >
+        <b-button
+          @click="fecharModalSearchCondicaoPagamento()"
+          type="button"
+          id=""
+          class="btn btn-dark btn-sm"
+          >Fechar Pesquisa Condicão de Pagamento</b-button
+        >
+      </b-container>
+    </b-modal>
     <br /><br />
   </div>
 </template>
 <script>
+import * as validators from "vuelidate/lib/validators";
+import { validationMessage } from "vuelidate-messages";
 import HomeFornecedor from "../fornecedores/HomeFornecedor.vue";
 import HomeProduto from "../produto/HomeProduto.vue";
+import HomeCondicaoPagamento from "../condicaoPagamento/HomeCondicaoPagamento.vue";
 import {
   currency,
   inverterDataPtBR,
-  currency_percentual,
+  currencyFormat,
+  formatarDataParaPtBR,
+  extrairNumero
 } from "../../rules/filters";
-// import { Notyf } from "notyf";
-// const notyf = new Notyf({
-//   position: {
-//     x: "center",
-//     y: "top",
-//   },
-//   types: [
-//     {
-//       type: "warning",
-//       background: "orange",
-//       icon: {
-//         className: "material-icons",
-//         tagName: "i",
-//         text: "warning",
-//       },
-//     },
-//     {
-//       type: "error",
-//       background: "indianred",
-//       duration: 5000,
-//       dismissible: true,
-//     },
-//   ],
-// });
+import Rules from "../../rules/rules";
+import { Decimal } from "decimal.js";
+import { Notyf } from "notyf";
+const formMessages = {
+  required: () => "Campo Obrigatório",
+  required_Produto: () => "Deve conter pelo menos um Produto adicionado !",
+  txtMinLen: ({ $params }) =>
+    `Campo minimo ${$params.txtMinLen.min} characters.`,
+  txtMaxLen: ({ $params }) =>
+    `Campo maximo ${$params.txtMaxLen.max} characters.`,
+  integer: () => "Campo deve ser um Numero inteiro",
+  txtNumeroPositivo: () => "Campo deve ser Positivo/Maior que zero.",
+  txtNumeroisPositivo: () => "Campo deve ser Positivo.",
+  maxValue: () => "Porcentagem deve estar entre 0 e 100",
+  maxValuePorcentagem: () => "Porcentagem máx 100%",
+  minValuePorcentagem: () => "Porcentagem deve estar entre 0 e 100",
+  maxValuePercent: () => "Excedeu 100% da(s) parcelas"
+};
+const notyf = new Notyf({
+  position: {
+    x: "center",
+    y: "top"
+  },
+  types: [
+    {
+      type: "warning",
+      background: "orange",
+      icon: {
+        className: "material-icons",
+        tagName: "i",
+        text: "warning"
+      }
+    },
+    {
+      type: "error",
+      background: "indianred",
+      duration: 5000,
+      dismissible: true
+    }
+  ]
+});
 export default {
   props: {
-    formulario: { type: Object },
+    formulario: { type: Object }
   },
-  components: { HomeFornecedor, HomeProduto },
+  components: { HomeFornecedor, HomeProduto, HomeCondicaoPagamento },
   data() {
     return {
       modal_search_fornecedor: "modal_search_fornecedor",
       modal_search_Produto: "modal_search_Produto",
+      modal_search_condicaoPagamento: "modal_search_condicaoPagamento",
       textCard_Produto:
         "<span class='Text-Card-0'><i class='bx bx-cart'></i> Produto</span>",
       textCard_CondicaoPagamento:
         "<span class='Text-Card-0'><i class='bx bx-wallet'></i> Condição de Pagamento</span>",
-      form: this.formulario,
+      textCard_Compra:
+        "<span class='Text-Card-0'><i class='bx bx-spreadsheet'></i> Pedido de Compra</span>",
       headerBgVariant: "dark",
       headerTextVariant: "light",
       customDialogClass: "my-custom-modal-dialog",
       modal_form_compra: "modal_form_compra",
-      modelo: "",
-      serie: "",
-      numero: "",
-      id_fornecedor: "",
-      fornecedor: "",
-      data_emissao: "",
-      data_chegada: "",
-      id_produto: "",
-      produto: "",
-      unidade: "",
-      quantidade: "",
-      valor_unitario: "",
-      desconto: "",
-      items: [
-        { name: "João", age: 30, email: "joao@example.com" },
-        { name: "Maria", age: 28, email: "maria@example.com" },
-        { name: "Pedro", age: 35, email: "pedro@example.com" },
-        // Adicione mais itens ao array conforme necessário
-      ],
-      disabled: false,
-      produtos: [],
-      condicaopagamento: [],
+      form: {
+        modelo: "",
+        serie: "",
+        numero: "",
+        id_fornecedor: "",
+        fornecedor: "",
+        id_condicaopg: "",
+        condicaopg: "",
+        data_emissao: "",
+        data_chegada: "",
+        id_produto: "",
+        produto: "",
+        unidade: "",
+        quantidade: "",
+        valor_unitario: "",
+        desconto: "",
+        total_compra: "",
+        total_produto: "",
+        total_produtos: "",
+        frete: "",
+        seguro: "",
+        outras_despesas: "",
+        observacao: "",
+        produtos: [],
+        condicaopagamento: []
+      },
       maxDate: "", // Define a data máxima como a data atual
       minDate: "", // Define a data mínima como a data atual
       mostrarBlocoProduto: true, // quando for pra adicionar o produto ele vai aparcer quando for visualizar irar sumir
-      total_compra: '',
+      disabled: false,
+      obj_condicao: {},
+      buttonLock: false,
+      buttonLockProducts: false,
+      validaProdutos: {
+        id_produto: "",
+        produto: "",
+        unidade: "",
+        quantidade: "",
+        valor_unitario: "",
+        desconto: ""
+      }
     };
   },
   beforeCreate() {},
   filters: {},
   created() {
-    if (!this.form) {
+    this.form.data_emissao = this.obterDataAtual();
+    this.form.data_chegada = this.obterDataAtual();
+    if (!this.formulario) {
       this.$router.push({ name: "compra" });
+    } else {
+      this.setCompra(this.formulario);
+      this.form.frete = this.form.frete.toFixed(2);
+      this.form.seguro = this.form.seguro.toFixed(2);
+      this.form.outras_despesas = this.form.outras_despesas.toFixed(2);
     }
-    // this.data_emissao = this.obterDataAtual();
-    // this.data_chegada = this.obterDataAtual();
-    // this.maxDate = this.obterDataAtual();
-    // this.minDate = this.obterDataAtual();
-    this.setCompra(this.form);
   },
   computed: {
     todosParametrosPreenchidos() {
       return (
-        this.modelo !== "" &&
-        this.serie !== "" &&
-        this.numero !== "" &&
-        this.id_fornecedor !== "" &&
-        this.fornecedor !== ""
+        this.form.modelo !== "" &&
+        this.form.serie !== "" &&
+        this.form.numero !== "" &&
+        this.form.id_fornecedor !== "" &&
+        this.form.fornecedor !== ""
       );
-    },
+    }
     // max_isDateInvalid() {
     //   const data_emissao = new Date(this.data_emissao);
     //   const maxDate = new Date();
@@ -754,6 +1008,107 @@ export default {
     // },
   },
   watch: {
+    "form.frete"(newValue) {
+      this.form.total_compra = this.calcTotalProduto(this.form.produtos);
+      this.calcularTotalFrete(this.form.total_compra, newValue);
+      if (!newValue) {
+        let soma = 0;
+        let soma1 = 0;
+        let format = 0;
+        if (
+          this.form.seguro !== null &&
+          this.form.seguro !== undefined &&
+          this.form.seguro !== ""
+        ) {
+          soma = soma + parseFloat(this.form.seguro);
+        }
+
+        if (
+          this.form.outras_despesas !== null &&
+          this.form.outras_despesas !== undefined &&
+          this.form.outras_despesas !== ""
+        ) {
+          soma = soma + parseFloat(this.form.outras_despesas);
+        }
+        soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
+        format = soma1 + soma;
+        this.form.total_compra = format.toFixed(2);
+      }
+      if (this.form.condicaopagamento.length > 0) {
+        var num = 0;
+        num = parseFloat(this.form.total_compra);
+        num = currency(num);
+        this.setCondicaoPagamento(this.obj_condicao, num);
+      }
+    },
+    "form.seguro"(newValue) {
+      this.form.total_compra = this.calcTotalProduto(this.form.produtos);
+      this.calcularTotalSeguro(this.form.total_compra, newValue);
+      if (!newValue) {
+        let soma = 0;
+        let soma1 = 0;
+        let format = 0;
+        if (
+          this.form.frete !== null &&
+          this.form.frete !== undefined &&
+          this.form.frete !== ""
+        ) {
+          soma = soma + parseFloat(this.form.frete);
+        }
+
+        if (
+          this.form.outras_despesas !== null &&
+          this.form.outras_despesas !== undefined &&
+          this.form.outras_despesas !== ""
+        ) {
+          soma = soma + parseFloat(this.form.outras_despesas);
+        }
+
+        soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
+        format = soma1 + soma;
+        this.form.total_compra = format.toFixed(2);
+      }
+      if (this.form.condicaopagamento.length > 0) {
+        var num = 0;
+        num = parseFloat(this.form.total_compra);
+        num = currency(num);
+        this.setCondicaoPagamento(this.obj_condicao, num);
+      }
+    },
+    "form.outras_despesas"(newValue) {
+      this.form.total_compra = this.calcTotalProduto(this.form.produtos);
+      this.calcularTotalOutrasDespesas(this.form.total_compra, newValue);
+      if (!newValue) {
+        let soma = 0;
+        let soma1 = 0;
+        let format = 0;
+        if (
+          this.form.frete !== null &&
+          this.form.frete !== undefined &&
+          this.form.frete !== ""
+        ) {
+          soma = soma + parseFloat(this.form.frete);
+        }
+
+        if (
+          this.form.seguro !== null &&
+          this.form.seguro !== undefined &&
+          this.form.seguro !== ""
+        ) {
+          soma = soma + parseFloat(this.form.seguro);
+        }
+
+        soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
+        format = soma1 + soma;
+        this.form.total_compra = format.toFixed(2);
+      }
+      if (this.form.condicaopagamento.length > 0) {
+        var num = 0;
+        num = parseFloat(this.form.total_compra);
+        num = currency(num);
+        this.setCondicaoPagamento(this.obj_condicao, num);
+      }
+    }
     // max_isDateInvalid(result) {
     //   if (result) {
     //     this.data_emissao = this.obterDataAtual();
@@ -767,25 +1122,90 @@ export default {
     //   }
     // },
   },
+  validations: {
+    validaProdutos: {
+      id_produto: {
+        required: validators.required
+      },
+      produto: {
+        required: validators.required
+      },
+      unidade: {
+        required: validators.required
+      },
+      quantidade: {
+        required: validators.required,
+        integer: validators.integer
+      },
+      valor_unitario: {
+        required: validators.required
+      },
+      desconto: {
+        required: validators.required,
+        decimal: validators.decimal,
+        maxValue: validators.maxValue(100),
+        minValuePorcentagem: validators.minValue(0),
+        txtNumeroisPositivo: Rules.isNumber
+      }
+    },
+    form: {
+      modelo: {
+        required: validators.required
+      },
+      serie: {
+        required: validators.required
+      },
+      numero: {
+        required: validators.required
+      },
+      id_fornecedor: {
+        required: validators.required
+      },
+      fornecedor: {
+        required: validators.required
+      },
+      data_emissao: {
+        required: validators.required
+      },
+      data_chegada: {
+        required: validators.required
+      },
+      produtos: {
+        required_Produto: validators.required
+      },
+      condicaopagamento: {
+        required: validators.required
+      }
+    }
+  },
   methods: {
+    validationMsg: validationMessage(formMessages),
     closeCompra() {
       //   this.onReset();
       this.$bvModal.hide(this.modal_form_compra);
       this.$router.push({ name: "compra" });
     },
     onSubmit() {
-      alert("enviar");
+      console.log(this.$v.form.produtos.$error);
+      if (this.$v.form.$invalid) {
+        this.$v.form.$touch();
+      } else {
+        console.log(this.form);
+      }
     },
     changeSearchFornecedor(obj) {
       if (obj.column.field === "btn") {
         return;
       }
-      this.id_fornecedor = obj.row.id;
-      this.fornecedor = obj.row.razaoSocial;
+      this.form.id_fornecedor = obj.row.id;
+      this.form.fornecedor = obj.row.razaoSocial;
       this.$bvModal.hide(this.modal_search_fornecedor);
     },
     showSearchFornecedor() {
       this.$bvModal.show(this.modal_search_fornecedor);
+    },
+    showSearchCondicaoPagamento() {
+      this.$bvModal.show(this.modal_search_condicaoPagamento);
     },
     fecharModalSearchFornecedor() {
       this.$bvModal.hide(this.modal_search_fornecedor);
@@ -794,19 +1214,29 @@ export default {
       if (obj.column.field === "btn") {
         return;
       }
-      console.log(obj);
       const precoVenda = obj.row.precoVenda;
-      this.id_produto = obj.row.id;
-      this.produto = obj.row.produto;
-      this.unidade = obj.row.unidade;
-      this.valor_unitario = precoVenda.toFixed(2);
+      this.validaProdutos.id_produto = obj.row.id;
+      this.validaProdutos.produto = obj.row.produto;
+      this.validaProdutos.unidade = obj.row.unidade;
+      this.validaProdutos.valor_unitario = precoVenda.toFixed(2);
       this.$bvModal.hide(this.modal_search_Produto);
+    },
+    changeSearchCondicaoPagamento(obj) {
+      if (obj.column.field === "btn") {
+        return;
+      }
+      var valor_compra = currency(parseFloat(this.form.total_compra));
+      this.setCondicaoPagamento(obj.row, valor_compra);
+      this.$bvModal.hide(this.modal_search_condicaoPagamento);
     },
     showSearchProduto() {
       this.$bvModal.show(this.modal_search_Produto);
     },
     fecharModalSearchProduto() {
       this.$bvModal.hide(this.modal_search_Produto);
+    },
+    fecharModalSearchCondicaoPagamento() {
+      this.$bvModal.hide(this.modal_search_condicaoPagamento);
     },
     obterDataAtual() {
       const dataAtual = new Date();
@@ -817,36 +1247,295 @@ export default {
       return dataFormatada;
     },
     setCompra(obj) {
-      console.log(obj);
-      let num = 0;
       if (obj) {
-        (this.modelo = obj.modelo),
-          (this.serie = obj.serie),
-          (this.numero = obj.numero_nota),
-          (this.id_fornecedor = obj.fornecedor.id),
-          (this.fornecedor = obj.fornecedor.razaoSocial),
-          (this.data_emissao = inverterDataPtBR(obj.data_emissao)),
-          (this.data_chegada = obj.data_chegada),
-          (this.produtos = obj.produtos),
-          (num = this.somarArrayComForEach(this.produtos)),
-          (this.total_compra = num.toFixed(2)),
-          this.produtos.map(function (produtos) {
-            produtos.valor_unitario = currency(produtos.valor_unitario);
-            produtos.total_produto = currency(produtos.total_produto);
-            produtos.desconto = currency_percentual(produtos.desconto);
+        (this.form.modelo = obj.modelo),
+          (this.form.serie = obj.serie),
+          (this.form.numero = obj.numero_nota),
+          (this.form.id_fornecedor = obj.fornecedor.id),
+          (this.form.fornecedor = obj.fornecedor.razaoSocial),
+          (this.form.data_emissao = inverterDataPtBR(obj.data_emissao)),
+          (this.form.data_chegada = obj.data_chegada),
+          (this.form.produtos = obj.produtos),
+          this.form.produtos.map(function (produtos) {
+            produtos.valor_unitario = currencyFormat(produtos.valor_unitario);
+            produtos.total_produto = currencyFormat(produtos.total_produto);
+            produtos.desconto = currencyFormat(produtos.desconto);
+            produtos.desativar = true;
+            produtos.editing = false;
+            produtos.msgErrorQtd = false;
+            produtos.msgErrorPer = false;
             return produtos;
           }),
+          (this.form.total_produtos = this.calcTotalProduto(
+            this.form.produtos
+          ));
+        (this.form.total_produto = obj.valor_produto),
+          (this.form.frete = obj.frete),
+          (this.form.seguro = obj.seguro),
+          (this.form.outras_despesas = obj.outras_despesas),
           (this.mostrarBlocoProduto = false);
+        this.form.observacao = obj.observacao;
+        this.form.total_compra = obj.valor_compra;
+        this.setCondicaoPagamento(
+          obj.condicao_pagamento,
+          this.form.total_compra
+        );
+        this.form.total_compra = extrairNumero(obj.valor_compra);
       }
     },
-    somarArrayComForEach(array) {
+    calcSomaTotalCompra(array) {
       let soma = 0;
+      let format;
       array.forEach(function (valor) {
         soma += valor.total_produto;
       });
-      return soma;
+      format = currencyFormat(soma);
+      return format;
     },
-  },
+    addProducts() {
+      if (this.$v.validaProdutos.$invalid) {
+        this.$v.validaProdutos.$touch();
+      } else {
+        var id_produto = "";
+        var produto = "";
+        var unidade = "";
+        var nDesconto = parseFloat(this.validaProdutos.desconto);
+        var quantidade = 0;
+        var valor_unitario = 0;
+        var Valor_total_produto = 0;
+        var desconto = 0;
+        var valorDesconto = 0;
+        var subTotal = 0;
+        var decimal = new Decimal(this.validaProdutos.valor_unitario);
+        var f_valor_unitario = 0;
+        id_produto = this.validaProdutos.id_produto;
+        produto = this.validaProdutos.produto;
+        unidade = this.validaProdutos.unidade;
+        quantidade = this.validaProdutos.quantidade;
+        valor_unitario = parseFloat(this.validaProdutos.valor_unitario).toFixed(
+          2
+        );
+        f_valor_unitario = parseFloat(decimal);
+        Valor_total_produto = quantidade * valor_unitario;
+        desconto = this.calcPorcentagem(
+          parseFloat(this.validaProdutos.desconto).toFixed(2)
+        );
+        valorDesconto = Valor_total_produto * desconto;
+        subTotal = Valor_total_produto - valorDesconto;
+        this.form.produtos.push({
+          id_produto: id_produto,
+          produto: { produto: produto },
+          unidade: unidade,
+          qtd_produto: quantidade,
+          valor_unitario: currencyFormat(f_valor_unitario),
+          desconto: currencyFormat(nDesconto),
+          total_produto: currencyFormat(subTotal),
+          desativar: true,
+          editing: false,
+          msgErrorQtd: false,
+          msgErrorPer: false
+        });
+        this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
+        this.form.total_compra = this.form.total_produtos;
+        this.clearInputsListProducts();
+      }
+    },
+    calcPorcentagem(porcentagem) {
+      return porcentagem / 100;
+    },
+    clearInputsListProducts() {
+      (this.validaProdutos.id_produto = ""),
+        (this.validaProdutos.produto = ""),
+        (this.validaProdutos.quantidade = ""),
+        (this.validaProdutos.valor_unitario = ""),
+        (this.validaProdutos.desconto = ""),
+        (this.validaProdutos.unidade = "");
+      this.$v.validaProdutos.$reset();
+    },
+    calcTotalProduto(obj) {
+      let soma = 0;
+      let soma2 = 0;
+      let format = 0;
+      for (let i = 0; i < obj.length; i++) {
+        let decimal = new Decimal(obj[i].total_produto.replace(",", "."));
+        format = decimal;
+        soma2 = parseFloat(format);
+        soma += soma2;
+      }
+      return soma.toFixed(2);
+    },
+    calcularTotalFrete(valorCompra, frete) {
+      let soma;
+      soma = parseFloat(valorCompra) + parseFloat(frete);
+
+      if (
+        this.form.seguro !== null &&
+        this.form.seguro !== undefined &&
+        this.form.seguro !== ""
+      ) {
+        soma = soma + parseFloat(this.form.seguro);
+      }
+      if (
+        this.form.outras_despesas !== null &&
+        this.form.outras_despesas !== undefined &&
+        this.form.outras_despesas !== ""
+      ) {
+        soma = soma + parseFloat(this.form.outras_despesas);
+      }
+
+      this.form.total_compra = soma.toFixed(2);
+    },
+    calcularTotalSeguro(valorCompra, seguro) {
+      let soma;
+      soma = parseFloat(valorCompra) + parseFloat(seguro);
+
+      if (
+        this.form.frete !== null &&
+        this.form.frete !== undefined &&
+        this.form.frete !== ""
+      ) {
+        soma = soma + parseFloat(this.form.frete);
+      }
+      if (
+        this.form.outras_despesas !== null &&
+        this.form.outras_despesas !== undefined &&
+        this.form.outras_despesas !== ""
+      ) {
+        soma = soma + parseFloat(this.form.outras_despesas);
+      }
+
+      this.form.total_compra = soma.toFixed(2);
+    },
+    calcularTotalOutrasDespesas(valorCompra, outras_despesas) {
+      let soma;
+      soma = parseFloat(valorCompra) + parseFloat(outras_despesas);
+
+      if (
+        this.form.frete !== null &&
+        this.form.frete !== undefined &&
+        this.form.frete !== ""
+      ) {
+        soma = soma + parseFloat(this.form.frete);
+      }
+      if (
+        this.form.seguro !== null &&
+        this.form.seguro !== undefined &&
+        this.form.seguro !== ""
+      ) {
+        soma = soma + parseFloat(this.form.seguro);
+      }
+      this.form.total_compra = soma.toFixed(2);
+    },
+    setCondicaoPagamento(obj, valor_compra) {
+      this.obj_condicao = obj;
+      this.form.id_condicaopg = obj.id;
+      this.form.condicaopg = obj.condicao_pagamento;
+      var valorCompra = extrairNumero(valor_compra);
+      this.form.condicaopagamento = [];
+      for (var i = 0; i < obj.qtd_parcela; i++) {
+        var Vencimento = "";
+        var valor_parcela = 0;
+        var datavencimento = "";
+        Vencimento = new Date(this.form.data_emissao);
+        Vencimento.setDate(Vencimento.getDate() + obj.parcelas[i].prazo);
+        datavencimento = Vencimento.toISOString().substr(0, 10);
+        valor_parcela = valorCompra;
+        this.form.condicaopagamento.push({
+          parcela: obj.parcelas[i].parcela,
+          formaPagamento: obj.parcelas[i].formaPagamento[0].forma_pg,
+          Vencimento: formatarDataParaPtBR(datavencimento),
+          valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100
+        });
+      }
+      this.form.condicaopagamento.map(function (c) {
+        c.valorParcela = currency(c.valorParcela);
+      });
+    },
+    deleteItemProduto(index) {
+      this.form.produtos.splice(index, 1);
+      this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
+      this.form.total_compra = this.form.total_produtos;
+
+      if (this.form.condicaopagamento.length > 0) {
+        var num = 0;
+        num = parseFloat(this.form.total_compra);
+        if (num > 0) {
+          num = currency(num);
+          this.setCondicaoPagamento(this.obj_condicao, num);
+        } else {
+          this.form.condicaopagamento = [];
+          this.form.id_condicaopg = "";
+          this.form.condicaopg = "";
+        }
+      }
+    },
+    toggleEditingProdutos(index) {
+      this.form.produtos[index].editing = !this.form.produtos[index].editing;
+      this.buttonLock = true;
+      //desativar linhas na tabela
+      this.form.produtos.forEach((row, rowIndex) => {
+        row.desativar = rowIndex === index; // Ativa ou desativa a linha clicada
+      });
+    },
+    saveChangesProdutos(index) {
+      var quantidade = 0;
+      var valor_unitario = 0;
+      var Valor_total_produto = 0;
+      var desconto = 0;
+      var valorDesconto = 0;
+      var subTotal = 0;
+      quantidade = parseFloat(this.form.produtos[index].qtd_produto);
+      desconto = parseFloat(this.form.produtos[index].desconto);
+      console.log(quantidade, desconto);
+      if (
+        Number.isInteger(quantidade) &&
+        quantidade > 0 &&
+        desconto >= 0 &&
+        desconto <= 100
+      ) {
+        this.form.produtos[index].msgErrorQtd = false;
+        this.form.produtos[index].msgErrorPer = false;
+        valor_unitario = extrairNumero(
+          this.form.produtos[index].valor_unitario
+        );
+        desconto = this.calcPorcentagem(
+          extrairNumero(this.form.produtos[index].desconto)
+        );
+        Valor_total_produto = quantidade * valor_unitario;
+        valorDesconto = desconto * Valor_total_produto;
+        subTotal = Valor_total_produto - valorDesconto;
+        this.form.produtos[index].total_produto = currencyFormat(subTotal);
+        this.form.produtos[index].desconto = currencyFormat(desconto * 100);
+        this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
+        this.form.total_compra = this.form.total_produtos;
+        this.form.produtos[index].editing = false;
+        this.buttonLock = false;
+        //desativar linhas Tabela
+        this.form.produtos.forEach((row) => {
+          row.desativar = true;
+        });
+      }
+
+      if (!Number.isInteger(quantidade) || quantidade <= 0) {
+        this.form.produtos[index].msgErrorQtd = true;
+        notyf.error(
+          "A quantidade precisa ser um número inteiro maior que zero."
+        );
+        this.buttonLock = true;
+      } else {
+        this.form.produtos[index].msgErrorQtd = false;
+        this.buttonLock = false;
+      }
+      if (desconto >= 0 && desconto <= 100) {
+        this.form.produtos[index].msgErrorPer = false;
+        this.buttonLock = false;
+      } else {
+        this.form.produtos[index].msgErrorPer = true;
+        notyf.error("Porcentagem deve estar entre 0 e 100");
+        this.buttonLock = true;
+      }
+    }
+  }
 };
 </script>
 <style>
@@ -886,7 +1575,6 @@ export default {
   font-family: inherit;
   font-weight: 100;
 }
-
 .slow-motion-enter-active,
 .slow-motion-leave-active {
   transition: all 0.3s; /* Ajuste o valor da transição para controlar a velocidade */
@@ -895,5 +1583,21 @@ export default {
 .slow-motion-leave-to {
   opacity: 0;
   transform: scale(0.3); /* Ajuste conforme necessário */
+}
+.disabled {
+  pointer-events: none; /* Impede interações com elementos filhos */
+  opacity: 0.5; /* Opacidade reduzida para indicar desabilitação */
+}
+.fail-error {
+  border: 2px solid #e46060bb !important;
+}
+.fail-warning {
+  border: 7px solid #fff3cd !important;
+}
+.small-msg {
+  font-size: 11px;
+  color: rgba(228, 96, 96, 0.733);
+  font-family: sans-serif;
+  font-weight: 700;
 }
 </style>

@@ -73,7 +73,7 @@
                     :class="{
                       'fail-error': $v.form.id_fornecedor.$error
                     }"
-                    v-debounce:800ms="fornecedorDebounce"
+                    v-debounce:500ms="fornecedorDebounce"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.id_fornecedor) }}
@@ -117,7 +117,7 @@
                 </div>
               </div>
               <div class="row col-md-12 col-sm-12 justify-content-end">
-                <div class="col-md-6 col-sm-6">
+                <div class="col-md-6 col-sm-6 mt-2">
                   <label>Data Emissão:</label>
                   <b-form-input
                     id="data_emissão"
@@ -137,7 +137,7 @@
                     >A data não pode ser maior que a data atual.</small
                   > -->
                 </div>
-                <div class="col-md-6 col-sm-6">
+                <div class="col-md-6 col-sm-6 mt-2">
                   <label>Data Chegada:</label>
                   <b-form-input
                     id="data_chegada"
@@ -1744,7 +1744,14 @@ export default {
           vm.form.fornecedor = "";
           vm.form.id_fornecedor = "";
           this.isLoadingFornecedor = false;
-          notyf.error("Fornecedor não encontrado.");
+          if (
+            this.$v.form.id_fornecedor.$invalid &&
+            this.$v.form.fornecedor.$invalid
+          ) {
+            this.$v.form.id_fornecedor.$touch();
+            this.$v.form.fornecedor.$touch();
+            //notyf.error("Fornecedor não encontrado.");
+          }
         }
       });
     }

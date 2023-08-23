@@ -910,9 +910,9 @@ import { ServiceFornecedor } from "../../services/serviceFornecedor";
 const formMessages = {
   required: () => "Campo Obrigatório",
   required_Produto: () =>
-    "Deve conter pelo menos um Produto adicionado com o Pedido de Compra !",
+    "Deve conter pelo menos um Produto adicionado !",
   required_Condicao: () =>
-    "Deve conter uma Condição de Pagamento cadastrada com o Pedido de Compra !",
+    "Deve conter uma Condição de Pagamento !",
   txtMinLen: ({ $params }) =>
     `Campo minimo ${$params.txtMinLen.min} characters.`,
   txtMaxLen: ({ $params }) =>

@@ -16,7 +16,7 @@
                     placeholder="Modelo"
                     v-model="form.modelo"
                     :class="{
-                      'fail-error': $v.form.modelo.$error,
+                      'fail-error': $v.form.modelo.$error
                     }"
                   ></b-form-input>
                   <small class="small-msg">
@@ -33,7 +33,7 @@
                     placeholder="Série"
                     v-model="form.serie"
                     :class="{
-                      'fail-error': $v.form.serie.$error,
+                      'fail-error': $v.form.serie.$error
                     }"
                   ></b-form-input>
                   <small class="small-msg">
@@ -50,7 +50,7 @@
                     placeholder="Número"
                     v-model="form.numero"
                     :class="{
-                      'fail-error': $v.form.numero.$error,
+                      'fail-error': $v.form.numero.$error
                     }"
                   ></b-form-input>
                   <small class="small-msg">
@@ -71,7 +71,7 @@
                     v-model="form.id_fornecedor"
                     :title="form.id_fornecedor"
                     :class="{
-                      'fail-error': $v.form.id_fornecedor.$error,
+                      'fail-error': $v.form.id_fornecedor.$error
                     }"
                   ></b-form-input>
                   <small class="small-msg">
@@ -93,7 +93,7 @@
                         v-model="form.fornecedor"
                         :title="form.fornecedor"
                         :class="{
-                          'fail-error': $v.form.fornecedor.$error,
+                          'fail-error': $v.form.fornecedor.$error
                         }"
                         disabled
                       ></b-form-input>
@@ -124,7 +124,7 @@
                     v-model="form.data_emissao"
                     :max="maxDate"
                     :class="{
-                      'fail-error': $v.form.data_emissao.$error,
+                      'fail-error': $v.form.data_emissao.$error
                     }"
                   ></b-form-input>
                   <small class="small-msg">
@@ -143,7 +143,7 @@
                     type="date"
                     v-model="form.data_chegada"
                     :class="{
-                      'fail-error': $v.form.data_chegada.$error,
+                      'fail-error': $v.form.data_chegada.$error
                     }"
                     :min="minDate"
                   ></b-form-input>
@@ -171,7 +171,7 @@
                       id="id_produto"
                       v-model="validaProdutos.id_produto"
                       :class="{
-                        'fail-error': $v.validaProdutos.id_produto.$error,
+                        'fail-error': $v.validaProdutos.id_produto.$error
                       }"
                       type="number"
                       placeholder="Código"
@@ -195,7 +195,7 @@
                           type="text"
                           placeholder="Produto"
                           :class="{
-                            'fail-error': $v.validaProdutos.produto.$error,
+                            'fail-error': $v.validaProdutos.produto.$error
                           }"
                           disabled
                         >
@@ -226,7 +226,7 @@
                       type="text"
                       placeholder="Unidade"
                       :class="{
-                        'fail-error': $v.validaProdutos.unidade.$error,
+                        'fail-error': $v.validaProdutos.unidade.$error
                       }"
                       disabled
                     >
@@ -247,7 +247,7 @@
                       type="number"
                       placeholder="Quantidade"
                       :class="{
-                        'fail-error': $v.validaProdutos.quantidade.$error,
+                        'fail-error': $v.validaProdutos.quantidade.$error
                       }"
                     >
                     </b-form-input>
@@ -274,7 +274,7 @@
                         v-model="validaProdutos.valor_unitario"
                         placeholder="0,00"
                         :class="{
-                          'fail-error': $v.validaProdutos.valor_unitario.$error,
+                          'fail-error': $v.validaProdutos.valor_unitario.$error
                         }"
                         disabled
                       ></b-form-input>
@@ -299,7 +299,7 @@
                       <b-form-input
                         id="desconto"
                         :class="{
-                          'fail-error': $v.validaProdutos.desconto.$error,
+                          'fail-error': $v.validaProdutos.desconto.$error
                         }"
                         v-model="validaProdutos.desconto"
                         type="number"
@@ -392,7 +392,7 @@
                               type="number"
                               class="form-control text-center"
                               :class="{
-                                'fail-error': form.produtos[key].msgErrorQtd,
+                                'fail-error': form.produtos[key].msgErrorQtd
                               }"
                               v-model="item.qtd_produto"
                               :disabled="!item.editing"
@@ -413,7 +413,7 @@
                               type="text"
                               class="form-control text-center"
                               :class="{
-                                'fail-error': form.produtos[key].msgErrorPer,
+                                'fail-error': form.produtos[key].msgErrorPer
                               }"
                               v-model="item.desconto"
                               :disabled="!item.editing"
@@ -501,10 +501,15 @@
                         id="frete"
                         v-model="form.frete"
                         type="number"
+                        :class="{
+                          'fail-error': $v.form.frete.$error
+                        }"
                         placeholder="0,00"
                       >
                       </b-form-input>
-                      <small class="small-msg"> </small>
+                      <small class="small-msg">
+                        {{ validationMsg($v.form.frete) }}</small
+                      >
                     </div>
                     <div class="col-md-3">
                       <label>Seguro:</label>
@@ -513,20 +518,30 @@
                         v-model="form.seguro"
                         type="number"
                         placeholder="0,00"
+                        :class="{
+                          'fail-error': $v.form.seguro.$error
+                        }"
                       >
                       </b-form-input>
-                      <small class="small-msg"> </small>
+                      <small class="small-msg">{{
+                        validationMsg($v.form.seguro)
+                      }}</small>
                     </div>
                     <div class="col-md-3">
                       <label>Outras Despesas:</label>
                       <b-form-input
                         id="outras_despesas"
                         v-model="form.outras_despesas"
+                        :class="{
+                          'fail-error': $v.form.outras_despesas.$error
+                        }"
                         type="number"
                         placeholder="0,00"
                       >
                       </b-form-input>
-                      <small class="small-msg"> </small>
+                      <small class="small-msg">{{
+                        validationMsg($v.form.outras_despesas)
+                      }}</small>
                     </div>
                     <div class="col-md-3">
                       <label for="input-default"><b>Total da Compra:</b></label>
@@ -873,7 +888,7 @@ import {
   inverterDataPtBR,
   currencyFormat,
   formatarDataParaPtBR,
-  extrairNumero,
+  extrairNumero
 } from "../../rules/filters";
 import Rules from "../../rules/rules";
 import { Decimal } from "decimal.js";
@@ -887,16 +902,16 @@ const formMessages = {
     `Campo maximo ${$params.txtMaxLen.max} characters.`,
   integer: () => "Campo deve ser um Numero inteiro",
   txtNumeroPositivo: () => "Campo deve ser Positivo/Maior que zero.",
-  txtNumeroisPositivo: () => "Campo deve ser Positivo.",
+  txtNumeroisPositivo: () => "Valores negativos não serão aceitos",
   maxValue: () => "Porcentagem deve estar entre 0 e 100",
   maxValuePorcentagem: () => "Porcentagem máx 100%",
   minValuePorcentagem: () => "Porcentagem deve estar entre 0 e 100",
-  maxValuePercent: () => "Excedeu 100% da(s) parcelas",
+  maxValuePercent: () => "Excedeu 100% da(s) parcelas"
 };
 const notyf = new Notyf({
   position: {
     x: "center",
-    y: "top",
+    y: "top"
   },
   types: [
     {
@@ -905,20 +920,20 @@ const notyf = new Notyf({
       icon: {
         className: "material-icons",
         tagName: "i",
-        text: "warning",
-      },
+        text: "warning"
+      }
     },
     {
       type: "error",
       background: "indianred",
       duration: 5000,
-      dismissible: true,
-    },
-  ],
+      dismissible: true
+    }
+  ]
 });
 export default {
   props: {
-    formulario: { type: Object },
+    formulario: { type: Object }
   },
   components: { HomeFornecedor, HomeProduto, HomeCondicaoPagamento },
   data() {
@@ -960,7 +975,7 @@ export default {
         outras_despesas: "",
         observacao: "",
         produtos: [],
-        condicaopagamento: [],
+        condicaopagamento: []
       },
       maxDate: "", // Define a data máxima como a data atual
       minDate: "", // Define a data mínima como a data atual
@@ -977,8 +992,8 @@ export default {
         unidade: "",
         quantidade: "",
         valor_unitario: "",
-        desconto: "",
-      },
+        desconto: ""
+      }
     };
   },
   beforeCreate() {},
@@ -1004,7 +1019,7 @@ export default {
         this.form.id_fornecedor !== "" &&
         this.form.fornecedor !== ""
       );
-    },
+    }
     // max_isDateInvalid() {
     //   const data_emissao = new Date(this.data_emissao);
     //   const maxDate = new Date();
@@ -1020,106 +1035,124 @@ export default {
   },
   watch: {
     "form.frete"(newValue) {
-      this.form.total_compra = this.calcTotalProduto(this.form.produtos);
-      this.calcularTotalFrete(this.form.total_compra, newValue);
-      if (!newValue) {
-        let soma = 0;
-        let soma1 = 0;
-        let format = 0;
-        if (
-          this.form.seguro !== null &&
-          this.form.seguro !== undefined &&
-          this.form.seguro !== ""
-        ) {
-          soma = soma + parseFloat(this.form.seguro);
-        }
+      if (this.$v.form.frete.$invalid) {
+        this.$v.form.frete.$touch();
+      } else {
+        this.form.total_compra = this.calcTotalProduto(this.form.produtos);
+        this.calcularTotalFrete(this.form.total_compra, newValue);
+        if (!newValue) {
+          let soma = 0;
+          let soma1 = 0;
+          let format = 0;
+          if (
+            this.form.seguro !== null &&
+            this.form.seguro !== undefined &&
+            this.form.seguro !== "" &&
+            !this.$v.form.seguro.$invalid
+          ) {
+            soma = soma + parseFloat(this.form.seguro);
+          }
 
-        if (
-          this.form.outras_despesas !== null &&
-          this.form.outras_despesas !== undefined &&
-          this.form.outras_despesas !== ""
-        ) {
-          soma = soma + parseFloat(this.form.outras_despesas);
+          if (
+            this.form.outras_despesas !== null &&
+            this.form.outras_despesas !== undefined &&
+            this.form.outras_despesas !== "" &&
+            !this.$v.form.outras_despesas.$invalid
+          ) {
+            soma = soma + parseFloat(this.form.outras_despesas);
+          }
+          soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
+          format = soma1 + soma;
+          this.form.total_compra = format.toFixed(2);
         }
-        soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
-        format = soma1 + soma;
-        this.form.total_compra = format.toFixed(2);
-      }
-      if (this.form.condicaopagamento.length > 0) {
-        var num = 0;
-        num = parseFloat(this.form.total_compra);
-        num = currency(num);
-        this.setCondicaoPagamento(this.obj_condicao, num);
+        if (this.form.condicaopagamento.length > 0) {
+          var num = 0;
+          num = parseFloat(this.form.total_compra);
+          num = currency(num);
+          this.setCondicaoPagamento(this.obj_condicao, num);
+        }
       }
     },
     "form.seguro"(newValue) {
-      this.form.total_compra = this.calcTotalProduto(this.form.produtos);
-      this.calcularTotalSeguro(this.form.total_compra, newValue);
-      if (!newValue) {
-        let soma = 0;
-        let soma1 = 0;
-        let format = 0;
-        if (
-          this.form.frete !== null &&
-          this.form.frete !== undefined &&
-          this.form.frete !== ""
-        ) {
-          soma = soma + parseFloat(this.form.frete);
-        }
+      if (this.$v.form.seguro.$invalid) {
+        this.$v.form.seguro.$touch();
+      } else {
+        this.form.total_compra = this.calcTotalProduto(this.form.produtos);
+        this.calcularTotalSeguro(this.form.total_compra, newValue);
+        if (!newValue) {
+          let soma = 0;
+          let soma1 = 0;
+          let format = 0;
+          if (
+            this.form.frete !== null &&
+            this.form.frete !== undefined &&
+            this.form.frete !== "" &&
+            !this.$v.form.frete.$invalid
+          ) {
+            soma = soma + parseFloat(this.form.frete);
+          }
 
-        if (
-          this.form.outras_despesas !== null &&
-          this.form.outras_despesas !== undefined &&
-          this.form.outras_despesas !== ""
-        ) {
-          soma = soma + parseFloat(this.form.outras_despesas);
-        }
+          if (
+            this.form.outras_despesas !== null &&
+            this.form.outras_despesas !== undefined &&
+            this.form.outras_despesas !== "" &&
+            !this.$v.form.outras_despesas.$invalid
+          ) {
+            soma = soma + parseFloat(this.form.outras_despesas);
+          }
 
-        soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
-        format = soma1 + soma;
-        this.form.total_compra = format.toFixed(2);
-      }
-      if (this.form.condicaopagamento.length > 0) {
-        var num = 0;
-        num = parseFloat(this.form.total_compra);
-        num = currency(num);
-        this.setCondicaoPagamento(this.obj_condicao, num);
+          soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
+          format = soma1 + soma;
+          this.form.total_compra = format.toFixed(2);
+        }
+        if (this.form.condicaopagamento.length > 0) {
+          var num = 0;
+          num = parseFloat(this.form.total_compra);
+          num = currency(num);
+          this.setCondicaoPagamento(this.obj_condicao, num);
+        }
       }
     },
     "form.outras_despesas"(newValue) {
-      this.form.total_compra = this.calcTotalProduto(this.form.produtos);
-      this.calcularTotalOutrasDespesas(this.form.total_compra, newValue);
-      if (!newValue) {
-        let soma = 0;
-        let soma1 = 0;
-        let format = 0;
-        if (
-          this.form.frete !== null &&
-          this.form.frete !== undefined &&
-          this.form.frete !== ""
-        ) {
-          soma = soma + parseFloat(this.form.frete);
-        }
+      if (this.$v.form.outras_despesas.$invalid) {
+        this.$v.form.outras_despesas.$touch();
+      } else {
+        this.form.total_compra = this.calcTotalProduto(this.form.produtos);
+        this.calcularTotalOutrasDespesas(this.form.total_compra, newValue);
+        if (!newValue) {
+          let soma = 0;
+          let soma1 = 0;
+          let format = 0;
+          if (
+            this.form.frete !== null &&
+            this.form.frete !== undefined &&
+            this.form.frete !== "" &&
+            !this.$v.form.frete.$invalid
+          ) {
+            soma = soma + parseFloat(this.form.frete);
+          }
 
-        if (
-          this.form.seguro !== null &&
-          this.form.seguro !== undefined &&
-          this.form.seguro !== ""
-        ) {
-          soma = soma + parseFloat(this.form.seguro);
-        }
+          if (
+            this.form.seguro !== null &&
+            this.form.seguro !== undefined &&
+            this.form.seguro !== "" &&
+            !this.$v.form.seguro.$invalid
+          ) {
+            soma = soma + parseFloat(this.form.seguro);
+          }
 
-        soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
-        format = soma1 + soma;
-        this.form.total_compra = format.toFixed(2);
+          soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
+          format = soma1 + soma;
+          this.form.total_compra = format.toFixed(2);
+        }
+        if (this.form.condicaopagamento.length > 0) {
+          var num = 0;
+          num = parseFloat(this.form.total_compra);
+          num = currency(num);
+          this.setCondicaoPagamento(this.obj_condicao, num);
+        }
       }
-      if (this.form.condicaopagamento.length > 0) {
-        var num = 0;
-        num = parseFloat(this.form.total_compra);
-        num = currency(num);
-        this.setCondicaoPagamento(this.obj_condicao, num);
-      }
-    },
+    }
     // max_isDateInvalid(result) {
     //   if (result) {
     //     this.data_emissao = this.obterDataAtual();
@@ -1136,58 +1169,67 @@ export default {
   validations: {
     validaProdutos: {
       id_produto: {
-        required: validators.required,
+        required: validators.required
       },
       produto: {
-        required: validators.required,
+        required: validators.required
       },
       unidade: {
-        required: validators.required,
+        required: validators.required
       },
       quantidade: {
         required: validators.required,
-        integer: validators.integer,
+        integer: validators.integer
       },
       valor_unitario: {
-        required: validators.required,
+        required: validators.required
       },
       desconto: {
         required: validators.required,
         decimal: validators.decimal,
         maxValue: validators.maxValue(100),
         minValuePorcentagem: validators.minValue(0),
-        txtNumeroisPositivo: Rules.isNumber,
-      },
+        txtNumeroisPositivo: Rules.isNumber
+      }
     },
     form: {
       modelo: {
-        required: validators.required,
+        required: validators.required
       },
       serie: {
-        required: validators.required,
+        required: validators.required
       },
       numero: {
-        required: validators.required,
+        required: validators.required
       },
       id_fornecedor: {
-        required: validators.required,
+        required: validators.required
       },
       fornecedor: {
-        required: validators.required,
+        required: validators.required
       },
       data_emissao: {
-        required: validators.required,
+        required: validators.required
       },
       data_chegada: {
-        required: validators.required,
+        required: validators.required
       },
       produtos: {
-        required_Produto: validators.required,
+        required_Produto: validators.required
       },
       condicaopagamento: {
-        required: validators.required,
+        required: validators.required
       },
-    },
+      frete: {
+        txtNumeroisPositivo: Rules.isNumber
+      },
+      seguro: {
+        txtNumeroisPositivo: Rules.isNumber
+      },
+      outras_despesas: {
+        txtNumeroisPositivo: Rules.isNumber
+      }
+    }
   },
   methods: {
     validationMsg: validationMessage(formMessages),
@@ -1197,10 +1239,12 @@ export default {
       this.$router.push({ name: "compra" });
     },
     onSubmit() {
+      console.log(this.$v.form);
       if (this.$v.form.$invalid) {
         this.$v.form.$touch();
       } else {
         console.log(this.form);
+        console.log(this.$v.form);
       }
     },
     changeSearchFornecedor(obj) {
@@ -1343,7 +1387,7 @@ export default {
           desativar: true,
           editing: false,
           msgErrorQtd: false,
-          msgErrorPer: false,
+          msgErrorPer: false
         });
         this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
         this.form.total_compra = this.form.total_produtos;
@@ -1392,14 +1436,16 @@ export default {
       if (
         this.form.seguro !== null &&
         this.form.seguro !== undefined &&
-        this.form.seguro !== ""
+        this.form.seguro !== "" &&
+        !this.$v.form.seguro.$invalid
       ) {
         soma = soma + parseFloat(this.form.seguro);
       }
       if (
         this.form.outras_despesas !== null &&
         this.form.outras_despesas !== undefined &&
-        this.form.outras_despesas !== ""
+        this.form.outras_despesas !== "" &&
+        !this.$v.form.outras_despesas.$invalid
       ) {
         soma = soma + parseFloat(this.form.outras_despesas);
       }
@@ -1413,14 +1459,16 @@ export default {
       if (
         this.form.frete !== null &&
         this.form.frete !== undefined &&
-        this.form.frete !== ""
+        this.form.frete !== "" &&
+        !this.$v.form.frete.$invalid
       ) {
         soma = soma + parseFloat(this.form.frete);
       }
       if (
         this.form.outras_despesas !== null &&
         this.form.outras_despesas !== undefined &&
-        this.form.outras_despesas !== ""
+        this.form.outras_despesas !== "" &&
+        !this.$v.form.outras_despesas.$invalid
       ) {
         soma = soma + parseFloat(this.form.outras_despesas);
       }
@@ -1434,14 +1482,16 @@ export default {
       if (
         this.form.frete !== null &&
         this.form.frete !== undefined &&
-        this.form.frete !== ""
+        this.form.frete !== "" &&
+        !this.$v.form.frete.$invalid
       ) {
         soma = soma + parseFloat(this.form.frete);
       }
       if (
         this.form.seguro !== null &&
         this.form.seguro !== undefined &&
-        this.form.seguro !== ""
+        this.form.seguro !== "" &&
+        !this.$v.form.seguro.$invalid
       ) {
         soma = soma + parseFloat(this.form.seguro);
       }
@@ -1465,7 +1515,7 @@ export default {
           parcela: obj.parcelas[i].parcela,
           formaPagamento: obj.parcelas[i].formaPagamento[0].forma_pg,
           Vencimento: formatarDataParaPtBR(datavencimento),
-          valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100,
+          valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100
         });
       }
       this.form.condicaopagamento.map(function (c) {
@@ -1513,6 +1563,25 @@ export default {
       var subTotal = 0;
       quantidade = parseFloat(this.form.produtos[index].qtd_produto);
       desconto = parseFloat(this.form.produtos[index].desconto);
+      if (!Number.isInteger(quantidade) || quantidade <= 0) {
+        this.form.produtos[index].msgErrorQtd = true;
+        notyf.error(
+          "A quantidade precisa ser um número inteiro maior que zero."
+        );
+        this.buttonLock = true;
+      } else {
+        this.form.produtos[index].msgErrorQtd = false;
+        this.buttonLock = false;
+      }
+      if (desconto >= 0 && desconto <= 100) {
+        this.form.produtos[index].msgErrorPer = false;
+        this.buttonLock = false;
+      } else {
+        this.form.produtos[index].msgErrorPer = true;
+        notyf.error("Porcentagem deve estar entre 0 e 100");
+        this.buttonLock = true;
+      }
+
       if (
         Number.isInteger(quantidade) &&
         quantidade > 0 &&
@@ -1534,28 +1603,84 @@ export default {
         this.form.produtos[index].desconto = currencyFormat(desconto * 100);
         this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
         this.form.total_compra = this.form.total_produtos;
+        var frete = 0;
+        var seguro = 0;
+        var outras_despesas = 0;
+        // if (
+        //   this.form.frete !== null &&
+        //   this.form.frete !== undefined &&
+        //   this.form.frete !== ""
+        // ) {
+        //   frete = parseFloat(this.form.frete);
+        //   this.form.total_compra =
+        //     frete + parseFloat(this.calcTotalProduto(this.form.produtos));
+        //   let format = this.form.total_compra;
+        //   this.form.total_compra = format.toFixed(2);
+        // }
 
-        if (this.form.frete !== "") {
+        if (this.$v.form.frete.$invalid) {
+          this.$v.form.frete.$touch();
+        } else {
+          frete = parseFloat(this.form.frete);
           this.form.total_compra =
-            parseFloat(this.form.frete) +
-            parseFloat(this.calcTotalProduto(this.form.produtos));
+            frete + parseFloat(this.calcTotalProduto(this.form.produtos));
+          let format = this.form.total_compra;
+          this.form.total_compra = format.toFixed(2);
         }
-        if (this.form.seguro !=="") {
+
+        // if (
+        //   this.form.frete !== null &&
+        //   this.form.frete !== undefined &&
+        //   this.form.frete !== ""
+        // ) {
+        //   const freteValue = parseFloat(this.form.frete);
+
+        //   if (!isNaN(freteValue) && freteValue >= 0) {
+        //     this.form.frete = freteValue; // Atualiza o valor do frete
+
+        //     this.form.total_compra =
+        //       freteValue +
+        //       parseFloat(this.calcTotalProduto(this.form.produtos));
+
+        //     let format = this.form.total_compra;
+        //     this.form.total_compra = format.toFixed(2);
+        //   } else {
+        //     notyf.error(
+        //       "A Frete precisa ser um número inteiro maior que zero."
+        //     );
+        //     // Valor de frete inválido (negativo)
+        //     // Você pode adicionar uma lógica aqui para tratar o erro, como exibir uma mensagem para o usuário.
+        //   }
+        // }
+
+        if (
+          this.form.seguro !== null &&
+          this.form.seguro !== undefined &&
+          this.form.seguro !== ""
+        ) {
+          seguro = parseFloat(this.form.seguro);
           this.form.total_compra =
-            parseFloat(this.form.seguro) +
+            frete +
+            seguro +
             parseFloat(this.calcTotalProduto(this.form.produtos));
+          let format = this.form.total_compra;
+          this.form.total_compra = format.toFixed(2);
         }
-        if (this.form.outras_despesas !=="") {
+        if (
+          this.form.outras_despesas !== null &&
+          this.form.outras_despesas !== undefined &&
+          this.form.outras_despesas !== ""
+        ) {
+          outras_despesas = parseFloat(this.form.outras_despesas);
           this.form.total_compra =
-            parseFloat(this.form.outras_despesas) +
+            frete +
+            seguro +
+            outras_despesas +
             parseFloat(this.calcTotalProduto(this.form.produtos));
+          let format = this.form.total_compra;
+          this.form.total_compra = format.toFixed(2);
         }
-        console.log(
-          this.form.frete,
-          this.form.seguro,
-          this.form.outras_despesas,
-          this.form.total_compra
-        );
+
         this.form.produtos[index].editing = false;
         this.buttonLock = false;
         //desativar linhas Tabela
@@ -1563,27 +1688,9 @@ export default {
           row.desativar = true;
         });
       }
-
-      if (!Number.isInteger(quantidade) || quantidade <= 0) {
-        this.form.produtos[index].msgErrorQtd = true;
-        notyf.error(
-          "A quantidade precisa ser um número inteiro maior que zero."
-        );
-        this.buttonLock = true;
-      } else {
-        this.form.produtos[index].msgErrorQtd = false;
-        this.buttonLock = false;
-      }
-      if (desconto >= 0 && desconto <= 100) {
-        this.form.produtos[index].msgErrorPer = false;
-        this.buttonLock = false;
-      } else {
-        this.form.produtos[index].msgErrorPer = true;
-        notyf.error("Porcentagem deve estar entre 0 e 100");
-        this.buttonLock = true;
-      }
-    },
-  },
+      console.log(this.$v.form.frete.$invalid);
+    }
+  }
 };
 </script>
 <style>

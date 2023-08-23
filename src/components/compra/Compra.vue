@@ -4,7 +4,7 @@
       <slot name="conteudo">
         <b-form>
           <div class="row mt-2">
-            <div class="col-md-6">
+            <div class="col-md-6" :class="{ disabled: step1 }">
               <div class="row col-md-12 col-sm-12">
                 <div class="col-md-4 col-sm-4">
                   <label
@@ -16,7 +16,7 @@
                     placeholder="Modelo"
                     v-model="form.modelo"
                     :class="{
-                      'fail-error': $v.form.modelo.$error
+                      'fail-error': $v.form.modelo.$error,
                     }"
                   ></b-form-input>
                   <small class="small-msg">
@@ -33,7 +33,7 @@
                     placeholder="Série"
                     v-model="form.serie"
                     :class="{
-                      'fail-error': $v.form.serie.$error
+                      'fail-error': $v.form.serie.$error,
                     }"
                   ></b-form-input>
                   <small class="small-msg">
@@ -50,7 +50,7 @@
                     placeholder="Número"
                     v-model="form.numero"
                     :class="{
-                      'fail-error': $v.form.numero.$error
+                      'fail-error': $v.form.numero.$error,
                     }"
                   ></b-form-input>
                   <small class="small-msg">
@@ -61,7 +61,7 @@
             </div>
             <!-- d-flex align-items-center -->
             <div class="col-md-6">
-              <div class="row col-md-12 col-sm-12">
+              <div class="row col-md-12 col-sm-12" :class="{ disabled: step1 }">
                 <div class="col-md-3 col-sm-4">
                   <label>Código:</label>
                   <b-form-input
@@ -71,7 +71,7 @@
                     v-model="form.id_fornecedor"
                     :title="form.id_fornecedor"
                     :class="{
-                      'fail-error': $v.form.id_fornecedor.$error
+                      'fail-error': $v.form.id_fornecedor.$error,
                     }"
                   ></b-form-input>
                   <small class="small-msg">
@@ -93,7 +93,7 @@
                         v-model="form.fornecedor"
                         :title="form.fornecedor"
                         :class="{
-                          'fail-error': $v.form.fornecedor.$error
+                          'fail-error': $v.form.fornecedor.$error,
                         }"
                         disabled
                       ></b-form-input>
@@ -124,7 +124,7 @@
                     v-model="form.data_emissao"
                     :max="maxDate"
                     :class="{
-                      'fail-error': $v.form.data_emissao.$error
+                      'fail-error': $v.form.data_emissao.$error,
                     }"
                   ></b-form-input>
                   <small class="small-msg">
@@ -143,7 +143,7 @@
                     type="date"
                     v-model="form.data_chegada"
                     :class="{
-                      'fail-error': $v.form.data_chegada.$error
+                      'fail-error': $v.form.data_chegada.$error,
                     }"
                     :min="minDate"
                   ></b-form-input>
@@ -161,9 +161,7 @@
             <div
               v-if="todosParametrosPreenchidos"
               class="slow-motion-div mt-4"
-              :class="{
-                'fail-warning': $v.form.produtos.$error
-              }"
+              :class="{ disabled: step2 }"
             >
               <b-card :header-html="textCard_Produto" class="text-start">
                 <div v-if="mostrarBlocoProduto" class="row mt-02">
@@ -173,7 +171,7 @@
                       id="id_produto"
                       v-model="validaProdutos.id_produto"
                       :class="{
-                        'fail-error': $v.validaProdutos.id_produto.$error
+                        'fail-error': $v.validaProdutos.id_produto.$error,
                       }"
                       type="number"
                       placeholder="Código"
@@ -197,7 +195,7 @@
                           type="text"
                           placeholder="Produto"
                           :class="{
-                            'fail-error': $v.validaProdutos.produto.$error
+                            'fail-error': $v.validaProdutos.produto.$error,
                           }"
                           disabled
                         >
@@ -228,7 +226,7 @@
                       type="text"
                       placeholder="Unidade"
                       :class="{
-                        'fail-error': $v.validaProdutos.unidade.$error
+                        'fail-error': $v.validaProdutos.unidade.$error,
                       }"
                       disabled
                     >
@@ -249,7 +247,7 @@
                       type="number"
                       placeholder="Quantidade"
                       :class="{
-                        'fail-error': $v.validaProdutos.quantidade.$error
+                        'fail-error': $v.validaProdutos.quantidade.$error,
                       }"
                     >
                     </b-form-input>
@@ -276,7 +274,7 @@
                         v-model="validaProdutos.valor_unitario"
                         placeholder="0,00"
                         :class="{
-                          'fail-error': $v.validaProdutos.valor_unitario.$error
+                          'fail-error': $v.validaProdutos.valor_unitario.$error,
                         }"
                         disabled
                       ></b-form-input>
@@ -301,7 +299,7 @@
                       <b-form-input
                         id="desconto"
                         :class="{
-                          'fail-error': $v.validaProdutos.desconto.$error
+                          'fail-error': $v.validaProdutos.desconto.$error,
                         }"
                         v-model="validaProdutos.desconto"
                         type="number"
@@ -394,7 +392,7 @@
                               type="number"
                               class="form-control text-center"
                               :class="{
-                                'fail-error': form.produtos[key].msgErrorQtd
+                                'fail-error': form.produtos[key].msgErrorQtd,
                               }"
                               v-model="item.qtd_produto"
                               :disabled="!item.editing"
@@ -415,7 +413,7 @@
                               type="text"
                               class="form-control text-center"
                               :class="{
-                                'fail-error': form.produtos[key].msgErrorPer
+                                'fail-error': form.produtos[key].msgErrorPer,
                               }"
                               v-model="item.desconto"
                               :disabled="!item.editing"
@@ -556,7 +554,7 @@
                 <div
                   class="d-flex justify-content-center align-items-center col-12 mt-2"
                 >
-                  <div class="col-6 alert alert-warning" role="alert">
+                  <div class="col-6 alert alert-danger" role="alert">
                     {{ validationMsg($v.form.produtos) }}
                   </div>
                 </div>
@@ -582,7 +580,7 @@
                       ></b-form-input>
                       <small style="font-size: 11px; color: #e46060bb"></small>
                     </div>
-                    <div class="col-md-9 col-sm-8">
+                    <div class="col-md-8 col-sm-8">
                       <label
                         >Condição de Pagamento:<b
                           style="color: rgb(245, 153, 153)"
@@ -615,6 +613,17 @@
                           style="font-size: 11px; color: #e46060bb"
                         ></small>
                       </b-overlay>
+                    </div>
+                    <div class="col-md-1" style="line-height: 85px">
+                      <b-button
+                        class="btn btn-sm"
+                        type="button"
+                        variant="dark"
+                        title="Limpar Condição de Pagamento"
+                        @click="clearListCondicao()"
+                      >
+                        <i class="bx bx-trash"></i>
+                      </b-button>
                     </div>
                   </div>
                 </div>
@@ -864,7 +873,7 @@ import {
   inverterDataPtBR,
   currencyFormat,
   formatarDataParaPtBR,
-  extrairNumero
+  extrairNumero,
 } from "../../rules/filters";
 import Rules from "../../rules/rules";
 import { Decimal } from "decimal.js";
@@ -882,12 +891,12 @@ const formMessages = {
   maxValue: () => "Porcentagem deve estar entre 0 e 100",
   maxValuePorcentagem: () => "Porcentagem máx 100%",
   minValuePorcentagem: () => "Porcentagem deve estar entre 0 e 100",
-  maxValuePercent: () => "Excedeu 100% da(s) parcelas"
+  maxValuePercent: () => "Excedeu 100% da(s) parcelas",
 };
 const notyf = new Notyf({
   position: {
     x: "center",
-    y: "top"
+    y: "top",
   },
   types: [
     {
@@ -896,20 +905,20 @@ const notyf = new Notyf({
       icon: {
         className: "material-icons",
         tagName: "i",
-        text: "warning"
-      }
+        text: "warning",
+      },
     },
     {
       type: "error",
       background: "indianred",
       duration: 5000,
-      dismissible: true
-    }
-  ]
+      dismissible: true,
+    },
+  ],
 });
 export default {
   props: {
-    formulario: { type: Object }
+    formulario: { type: Object },
   },
   components: { HomeFornecedor, HomeProduto, HomeCondicaoPagamento },
   data() {
@@ -951,7 +960,7 @@ export default {
         outras_despesas: "",
         observacao: "",
         produtos: [],
-        condicaopagamento: []
+        condicaopagamento: [],
       },
       maxDate: "", // Define a data máxima como a data atual
       minDate: "", // Define a data mínima como a data atual
@@ -960,14 +969,16 @@ export default {
       obj_condicao: {},
       buttonLock: false,
       buttonLockProducts: false,
+      step1: false,
+      step2: false,
       validaProdutos: {
         id_produto: "",
         produto: "",
         unidade: "",
         quantidade: "",
         valor_unitario: "",
-        desconto: ""
-      }
+        desconto: "",
+      },
     };
   },
   beforeCreate() {},
@@ -993,7 +1004,7 @@ export default {
         this.form.id_fornecedor !== "" &&
         this.form.fornecedor !== ""
       );
-    }
+    },
     // max_isDateInvalid() {
     //   const data_emissao = new Date(this.data_emissao);
     //   const maxDate = new Date();
@@ -1108,7 +1119,7 @@ export default {
         num = currency(num);
         this.setCondicaoPagamento(this.obj_condicao, num);
       }
-    }
+    },
     // max_isDateInvalid(result) {
     //   if (result) {
     //     this.data_emissao = this.obterDataAtual();
@@ -1125,58 +1136,58 @@ export default {
   validations: {
     validaProdutos: {
       id_produto: {
-        required: validators.required
+        required: validators.required,
       },
       produto: {
-        required: validators.required
+        required: validators.required,
       },
       unidade: {
-        required: validators.required
+        required: validators.required,
       },
       quantidade: {
         required: validators.required,
-        integer: validators.integer
+        integer: validators.integer,
       },
       valor_unitario: {
-        required: validators.required
+        required: validators.required,
       },
       desconto: {
         required: validators.required,
         decimal: validators.decimal,
         maxValue: validators.maxValue(100),
         minValuePorcentagem: validators.minValue(0),
-        txtNumeroisPositivo: Rules.isNumber
-      }
+        txtNumeroisPositivo: Rules.isNumber,
+      },
     },
     form: {
       modelo: {
-        required: validators.required
+        required: validators.required,
       },
       serie: {
-        required: validators.required
+        required: validators.required,
       },
       numero: {
-        required: validators.required
+        required: validators.required,
       },
       id_fornecedor: {
-        required: validators.required
+        required: validators.required,
       },
       fornecedor: {
-        required: validators.required
+        required: validators.required,
       },
       data_emissao: {
-        required: validators.required
+        required: validators.required,
       },
       data_chegada: {
-        required: validators.required
+        required: validators.required,
       },
       produtos: {
-        required_Produto: validators.required
+        required_Produto: validators.required,
       },
       condicaopagamento: {
-        required: validators.required
-      }
-    }
+        required: validators.required,
+      },
+    },
   },
   methods: {
     validationMsg: validationMessage(formMessages),
@@ -1186,7 +1197,6 @@ export default {
       this.$router.push({ name: "compra" });
     },
     onSubmit() {
-      console.log(this.$v.form.produtos.$error);
       if (this.$v.form.$invalid) {
         this.$v.form.$touch();
       } else {
@@ -1333,11 +1343,14 @@ export default {
           desativar: true,
           editing: false,
           msgErrorQtd: false,
-          msgErrorPer: false
+          msgErrorPer: false,
         });
         this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
         this.form.total_compra = this.form.total_produtos;
         this.clearInputsListProducts();
+        this.form.produtos.length > 0
+          ? (this.step1 = true)
+          : (this.step1 = false);
       }
     },
     calcPorcentagem(porcentagem) {
@@ -1351,6 +1364,14 @@ export default {
         (this.validaProdutos.desconto = ""),
         (this.validaProdutos.unidade = "");
       this.$v.validaProdutos.$reset();
+    },
+    clearListCondicao() {
+      this.form.id_condicaopg = "";
+      this.form.condicaopg = "";
+      this.form.condicaopagamento = [];
+      this.form.condicaopagamento.length > 0
+        ? (this.step2 = true)
+        : (this.step2 = false);
     },
     calcTotalProduto(obj) {
       let soma = 0;
@@ -1444,12 +1465,15 @@ export default {
           parcela: obj.parcelas[i].parcela,
           formaPagamento: obj.parcelas[i].formaPagamento[0].forma_pg,
           Vencimento: formatarDataParaPtBR(datavencimento),
-          valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100
+          valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100,
         });
       }
       this.form.condicaopagamento.map(function (c) {
         c.valorParcela = currency(c.valorParcela);
       });
+      this.form.condicaopagamento.length > 0
+        ? (this.step2 = true)
+        : (this.step2 = false);
     },
     deleteItemProduto(index) {
       this.form.produtos.splice(index, 1);
@@ -1468,6 +1492,9 @@ export default {
           this.form.condicaopg = "";
         }
       }
+      this.form.produtos.length > 0
+        ? (this.step1 = true)
+        : (this.step1 = false);
     },
     toggleEditingProdutos(index) {
       this.form.produtos[index].editing = !this.form.produtos[index].editing;
@@ -1486,7 +1513,6 @@ export default {
       var subTotal = 0;
       quantidade = parseFloat(this.form.produtos[index].qtd_produto);
       desconto = parseFloat(this.form.produtos[index].desconto);
-      console.log(quantidade, desconto);
       if (
         Number.isInteger(quantidade) &&
         quantidade > 0 &&
@@ -1508,6 +1534,28 @@ export default {
         this.form.produtos[index].desconto = currencyFormat(desconto * 100);
         this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
         this.form.total_compra = this.form.total_produtos;
+
+        if (this.form.frete !== "") {
+          this.form.total_compra =
+            parseFloat(this.form.frete) +
+            parseFloat(this.calcTotalProduto(this.form.produtos));
+        }
+        if (this.form.seguro !=="") {
+          this.form.total_compra =
+            parseFloat(this.form.seguro) +
+            parseFloat(this.calcTotalProduto(this.form.produtos));
+        }
+        if (this.form.outras_despesas !=="") {
+          this.form.total_compra =
+            parseFloat(this.form.outras_despesas) +
+            parseFloat(this.calcTotalProduto(this.form.produtos));
+        }
+        console.log(
+          this.form.frete,
+          this.form.seguro,
+          this.form.outras_despesas,
+          this.form.total_compra
+        );
         this.form.produtos[index].editing = false;
         this.buttonLock = false;
         //desativar linhas Tabela
@@ -1534,8 +1582,8 @@ export default {
         notyf.error("Porcentagem deve estar entre 0 e 100");
         this.buttonLock = true;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style>

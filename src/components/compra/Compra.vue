@@ -569,7 +569,7 @@
                 <div
                   class="d-flex justify-content-center align-items-center col-12 mt-2"
                 >
-                  <div class="col-6 alert alert-danger" role="alert">
+                  <div class="col-8 alert alert-danger" role="alert">
                     {{ validationMsg($v.form.produtos) }}
                   </div>
                 </div>
@@ -719,6 +719,18 @@
                   ></b-form-textarea>
                 </div>
               </b-card>
+              <div
+                v-if="$v.form.condicaopagamento.$error"
+                class="col text-center"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center col-12 mt-2"
+                >
+                  <div class="col-8 alert alert-danger" role="alert">
+                    {{ validationMsg($v.form.condicaopagamento) }}
+                  </div>
+                </div>
+              </div>
             </div>
           </transition>
           <small class="mt-2" style="font-size: 12px"
@@ -895,7 +907,10 @@ import { Decimal } from "decimal.js";
 import { Notyf } from "notyf";
 const formMessages = {
   required: () => "Campo Obrigatório",
-  required_Produto: () => "Deve conter pelo menos um Produto adicionado !",
+  required_Produto: () =>
+    "Deve conter pelo menos um Produto adicionado com o Pedido de Compra !",
+  required_Condicao: () =>
+    "Deve conter uma Condição de Pagamento cadastrada com o Pedido de Compra !",
   txtMinLen: ({ $params }) =>
     `Campo minimo ${$params.txtMinLen.min} characters.`,
   txtMaxLen: ({ $params }) =>
@@ -1013,11 +1028,11 @@ export default {
   computed: {
     todosParametrosPreenchidos() {
       return (
-        this.form.modelo !== "" &&
-        this.form.serie !== "" &&
-        this.form.numero !== "" &&
-        this.form.id_fornecedor !== "" &&
-        this.form.fornecedor !== ""
+        !this.$v.form.modelo.$invalid &&
+        !this.$v.form.serie.$invalid &&
+        !this.$v.form.numero.$invalid &&
+        !this.$v.form.id_fornecedor.$invalid &&
+        !this.$v.form.fornecedor.$invalid
       );
     }
     // max_isDateInvalid() {
@@ -1194,16 +1209,20 @@ export default {
     },
     form: {
       modelo: {
-        required: validators.required
+        required: validators.required,
+        txtNumeroisPositivo: Rules.isNumber
       },
       serie: {
-        required: validators.required
+        required: validators.required,
+        txtNumeroisPositivo: Rules.isNumber
       },
       numero: {
-        required: validators.required
+        required: validators.required,
+        txtNumeroisPositivo: Rules.isNumber
       },
       id_fornecedor: {
-        required: validators.required
+        required: validators.required,
+        txtNumeroisPositivo: Rules.isNumber
       },
       fornecedor: {
         required: validators.required
@@ -1218,7 +1237,7 @@ export default {
         required_Produto: validators.required
       },
       condicaopagamento: {
-        required: validators.required
+        required_Condicao: validators.required
       },
       frete: {
         txtNumeroisPositivo: Rules.isNumber
@@ -1347,54 +1366,68 @@ export default {
       return format;
     },
     addProducts() {
-      if (this.$v.validaProdutos.$invalid) {
-        this.$v.validaProdutos.$touch();
+      if (
+        this.$v.form.modelo.$invalid &&
+        this.$v.form.serie.$invalid &&
+        this.$v.form.numero.$invalid &&
+        this.$v.form.id_fornecedor.$invalid &&
+        this.$v.form.fornecedor.$invalid
+      ) {
+        this.$v.form.modelo.$touch();
+        this.$v.form.serie.$touch();
+        this.$v.form.numero.$touch();
+        this.$v.form.id_fornecedor.$touch();
+        this.$v.form.fornecedor.$touch();
       } else {
-        var id_produto = "";
-        var produto = "";
-        var unidade = "";
-        var nDesconto = parseFloat(this.validaProdutos.desconto);
-        var quantidade = 0;
-        var valor_unitario = 0;
-        var Valor_total_produto = 0;
-        var desconto = 0;
-        var valorDesconto = 0;
-        var subTotal = 0;
-        var decimal = new Decimal(this.validaProdutos.valor_unitario);
-        var f_valor_unitario = 0;
-        id_produto = this.validaProdutos.id_produto;
-        produto = this.validaProdutos.produto;
-        unidade = this.validaProdutos.unidade;
-        quantidade = this.validaProdutos.quantidade;
-        valor_unitario = parseFloat(this.validaProdutos.valor_unitario).toFixed(
-          2
-        );
-        f_valor_unitario = parseFloat(decimal);
-        Valor_total_produto = quantidade * valor_unitario;
-        desconto = this.calcPorcentagem(
-          parseFloat(this.validaProdutos.desconto).toFixed(2)
-        );
-        valorDesconto = Valor_total_produto * desconto;
-        subTotal = Valor_total_produto - valorDesconto;
-        this.form.produtos.push({
-          id_produto: id_produto,
-          produto: { produto: produto },
-          unidade: unidade,
-          qtd_produto: quantidade,
-          valor_unitario: currencyFormat(f_valor_unitario),
-          desconto: currencyFormat(nDesconto),
-          total_produto: currencyFormat(subTotal),
-          desativar: true,
-          editing: false,
-          msgErrorQtd: false,
-          msgErrorPer: false
-        });
-        this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
-        this.form.total_compra = this.form.total_produtos;
-        this.clearInputsListProducts();
-        this.form.produtos.length > 0
-          ? (this.step1 = true)
-          : (this.step1 = false);
+        if (this.$v.validaProdutos.$invalid) {
+          this.$v.validaProdutos.$touch();
+        } else {
+          var id_produto = "";
+          var produto = "";
+          var unidade = "";
+          var nDesconto = parseFloat(this.validaProdutos.desconto);
+          var quantidade = 0;
+          var valor_unitario = 0;
+          var Valor_total_produto = 0;
+          var desconto = 0;
+          var valorDesconto = 0;
+          var subTotal = 0;
+          var decimal = new Decimal(this.validaProdutos.valor_unitario);
+          var f_valor_unitario = 0;
+          id_produto = this.validaProdutos.id_produto;
+          produto = this.validaProdutos.produto;
+          unidade = this.validaProdutos.unidade;
+          quantidade = this.validaProdutos.quantidade;
+          valor_unitario = parseFloat(
+            this.validaProdutos.valor_unitario
+          ).toFixed(2);
+          f_valor_unitario = parseFloat(decimal);
+          Valor_total_produto = quantidade * valor_unitario;
+          desconto = this.calcPorcentagem(
+            parseFloat(this.validaProdutos.desconto).toFixed(2)
+          );
+          valorDesconto = Valor_total_produto * desconto;
+          subTotal = Valor_total_produto - valorDesconto;
+          this.form.produtos.push({
+            id_produto: id_produto,
+            produto: { produto: produto },
+            unidade: unidade,
+            qtd_produto: quantidade,
+            valor_unitario: currencyFormat(f_valor_unitario),
+            desconto: currencyFormat(nDesconto),
+            total_produto: currencyFormat(subTotal),
+            desativar: true,
+            editing: false,
+            msgErrorQtd: false,
+            msgErrorPer: false
+          });
+          this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
+          this.form.total_compra = this.form.total_produtos;
+          this.clearInputsListProducts();
+          this.form.produtos.length > 0
+            ? (this.step1 = true)
+            : (this.step1 = false);
+        }
       }
     },
     calcPorcentagem(porcentagem) {
@@ -1498,32 +1531,50 @@ export default {
       this.form.total_compra = soma.toFixed(2);
     },
     setCondicaoPagamento(obj, valor_compra) {
-      this.obj_condicao = obj;
-      this.form.id_condicaopg = obj.id;
-      this.form.condicaopg = obj.condicao_pagamento;
-      var valorCompra = extrairNumero(valor_compra);
-      this.form.condicaopagamento = [];
-      for (var i = 0; i < obj.qtd_parcela; i++) {
-        var Vencimento = "";
-        var valor_parcela = 0;
-        var datavencimento = "";
-        Vencimento = new Date(this.form.data_emissao);
-        Vencimento.setDate(Vencimento.getDate() + obj.parcelas[i].prazo);
-        datavencimento = Vencimento.toISOString().substr(0, 10);
-        valor_parcela = valorCompra;
-        this.form.condicaopagamento.push({
-          parcela: obj.parcelas[i].parcela,
-          formaPagamento: obj.parcelas[i].formaPagamento[0].forma_pg,
-          Vencimento: formatarDataParaPtBR(datavencimento),
-          valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100
+      console.log(
+        this.$v.form.frete.$invalid,
+        this.$v.form.seguro.$invalid,
+        this.$v.form.outras_despesas.$invalid,
+        this.$v.form.produtos.$invalid
+      );
+      if (
+        !this.$v.form.frete.$invalid &&
+        !this.$v.form.seguro.$invalid &&
+        !this.$v.form.outras_despesas.$invalid &&
+        this.$v.form.produtos.$invalid
+      ) {
+        this.$v.form.frete.$touch();
+        this.$v.form.seguro.$touch();
+        this.$v.form.outras_despesas.$touch();
+        this.$v.form.produtos.$touch();
+      } else {
+        this.obj_condicao = obj;
+        this.form.id_condicaopg = obj.id;
+        this.form.condicaopg = obj.condicao_pagamento;
+        var valorCompra = extrairNumero(valor_compra);
+        this.form.condicaopagamento = [];
+        for (var i = 0; i < obj.qtd_parcela; i++) {
+          var Vencimento = "";
+          var valor_parcela = 0;
+          var datavencimento = "";
+          Vencimento = new Date(this.form.data_emissao);
+          Vencimento.setDate(Vencimento.getDate() + obj.parcelas[i].prazo);
+          datavencimento = Vencimento.toISOString().substr(0, 10);
+          valor_parcela = valorCompra;
+          this.form.condicaopagamento.push({
+            parcela: obj.parcelas[i].parcela,
+            formaPagamento: obj.parcelas[i].formaPagamento[0].forma_pg,
+            Vencimento: formatarDataParaPtBR(datavencimento),
+            valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100
+          });
+        }
+        this.form.condicaopagamento.map(function (c) {
+          c.valorParcela = currency(c.valorParcela);
         });
+        this.form.condicaopagamento.length > 0
+          ? (this.step2 = true)
+          : (this.step2 = false);
       }
-      this.form.condicaopagamento.map(function (c) {
-        c.valorParcela = currency(c.valorParcela);
-      });
-      this.form.condicaopagamento.length > 0
-        ? (this.step2 = true)
-        : (this.step2 = false);
     },
     deleteItemProduto(index) {
       this.form.produtos.splice(index, 1);
@@ -1606,21 +1657,13 @@ export default {
         var frete = 0;
         var seguro = 0;
         var outras_despesas = 0;
-        // if (
-        //   this.form.frete !== null &&
-        //   this.form.frete !== undefined &&
-        //   this.form.frete !== ""
-        // ) {
-        //   frete = parseFloat(this.form.frete);
-        //   this.form.total_compra =
-        //     frete + parseFloat(this.calcTotalProduto(this.form.produtos));
-        //   let format = this.form.total_compra;
-        //   this.form.total_compra = format.toFixed(2);
-        // }
 
-        if (this.$v.form.frete.$invalid) {
-          this.$v.form.frete.$touch();
-        } else {
+        if (
+          this.form.frete !== null &&
+          this.form.frete !== undefined &&
+          this.form.frete !== "" &&
+          !this.$v.form.frete.$invalid
+        ) {
           frete = parseFloat(this.form.frete);
           this.form.total_compra =
             frete + parseFloat(this.calcTotalProduto(this.form.produtos));
@@ -1628,35 +1671,11 @@ export default {
           this.form.total_compra = format.toFixed(2);
         }
 
-        // if (
-        //   this.form.frete !== null &&
-        //   this.form.frete !== undefined &&
-        //   this.form.frete !== ""
-        // ) {
-        //   const freteValue = parseFloat(this.form.frete);
-
-        //   if (!isNaN(freteValue) && freteValue >= 0) {
-        //     this.form.frete = freteValue; // Atualiza o valor do frete
-
-        //     this.form.total_compra =
-        //       freteValue +
-        //       parseFloat(this.calcTotalProduto(this.form.produtos));
-
-        //     let format = this.form.total_compra;
-        //     this.form.total_compra = format.toFixed(2);
-        //   } else {
-        //     notyf.error(
-        //       "A Frete precisa ser um número inteiro maior que zero."
-        //     );
-        //     // Valor de frete inválido (negativo)
-        //     // Você pode adicionar uma lógica aqui para tratar o erro, como exibir uma mensagem para o usuário.
-        //   }
-        // }
-
         if (
           this.form.seguro !== null &&
           this.form.seguro !== undefined &&
-          this.form.seguro !== ""
+          this.form.seguro !== "" &&
+          !this.$v.form.seguro.$invalid
         ) {
           seguro = parseFloat(this.form.seguro);
           this.form.total_compra =
@@ -1669,7 +1688,8 @@ export default {
         if (
           this.form.outras_despesas !== null &&
           this.form.outras_despesas !== undefined &&
-          this.form.outras_despesas !== ""
+          this.form.outras_despesas !== "" &&
+          !this.$v.form.outras_despesas.$invalid
         ) {
           outras_despesas = parseFloat(this.form.outras_despesas);
           this.form.total_compra =

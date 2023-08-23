@@ -1258,12 +1258,10 @@ export default {
       this.$router.push({ name: "compra" });
     },
     onSubmit() {
-      console.log(this.$v.form);
       if (this.$v.form.$invalid) {
         this.$v.form.$touch();
       } else {
         console.log(this.form);
-        console.log(this.$v.form);
       }
     },
     changeSearchFornecedor(obj) {

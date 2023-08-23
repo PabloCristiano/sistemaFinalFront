@@ -80,7 +80,7 @@
                 >
                 <b-form-input
                   id="unidade"
-                  type="text"
+                  type="number"
                   v-model="form.qtdEstoque"
                   placeholder="Qtd Unidade"
                   :disabled="true"
@@ -599,8 +599,8 @@ export default {
                 this.$bvModal.hide(this.modal_form_produto);
                 this.fGetListProduto();
               } else {
-                if (obj.response.data.erro.length > 0) {
-                  notyf.error(obj.response.data.erro[0]);
+                if (obj.response.data.error) {
+                  notyf.error(obj.response.data.error[0]);
                 }
               }
             })

@@ -183,10 +183,10 @@ export default {
       this.form_produto.categoria = "";
       this.form_produto.id_fornecedor = "";
       this.form_produto.fornecedor = "";
-      this.form_produto.qtdEstoque = "";
-      this.form_produto.precoCusto = "";
+      this.form_produto.qtdEstoque = 0;
+      this.form_produto.precoCusto = 0;
       this.form_produto.precoVenda = "";
-      this.form_produto.custoUltCompra = "";
+      this.form_produto.custoUltCompra = 0;
       this.form_produto.dataUltCompra = "";
       this.form_produto.dataUltVenda = "";
       this.form_produto.data_create = "";

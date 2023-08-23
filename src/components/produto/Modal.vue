@@ -82,14 +82,10 @@
                   id="unidade"
                   type="text"
                   v-model="form.qtdEstoque"
-                  :class="{ 'fail-error': $v.form.qtdEstoque.$error }"
                   placeholder="Qtd Unidade"
                   :disabled="true"
                 >
                 </b-form-input>
-                <small style="font-size: 11px; color: red">
-                  {{ validationMsg($v.form.qtdEstoque) }}
-                </small>
               </div>
             </div>
             <div class="row col-12 mt-2">
@@ -227,15 +223,11 @@
                     type="number"
                     v-model="form.custoUltCompra"
                     placeholder="Custo Ultima Compra"
-                    :class="{ 'fail-error': $v.form.custoUltCompra.$error }"
                     :title="form.custoUltCompra"
                     :disabled="true"
                   >
                   </b-form-input>
                 </b-input-group>
-                <small style="font-size: 11px; color: red">
-                  {{ validationMsg($v.form.custoUltCompra) }}
-                </small>
               </div>
               <div class="col-md-4">
                 <label
@@ -249,16 +241,11 @@
                     type="number"
                     v-model="form.precoCusto"
                     placeholder="Preço de Custo"
-                    :class="{ 'fail-error': $v.form.precoCusto.$error }"
                     :title="form.precoCusto"
                     :disabled="true"
                   >
                   </b-form-input>
                 </b-input-group>
-
-                <small style="font-size: 11px; color: red">
-                  {{ validationMsg($v.form.precoCusto) }}
-                </small>
               </div>
               <div class="col-md-4">
                 <label
@@ -446,7 +433,7 @@ import { Notyf } from "notyf";
 const notyf = new Notyf({
   position: {
     x: "center",
-    y: "top"
+    y: "top",
   },
   types: [
     {
@@ -455,16 +442,16 @@ const notyf = new Notyf({
       icon: {
         className: "material-icons",
         tagName: "i",
-        text: "warning"
-      }
+        text: "warning",
+      },
     },
     {
       type: "error",
       background: "indianred",
       duration: 5000,
-      dismissible: true
-    }
-  ]
+      dismissible: true,
+    },
+  ],
 });
 const formMessages = {
   required: () => "Campo Obrigatório",
@@ -473,13 +460,13 @@ const formMessages = {
   txtMaxLen: ({ $params }) =>
     `Campo maximo ${$params.txtMaxLen.max} characters.`,
   integer: () => "Campo deve ser um Numero inteiro",
-  txtNumeroPositivo: () => "Campo deve ser Positivo/Maior que zero."
+  txtNumeroPositivo: () => "Campo deve ser Positivo/Maior que zero.",
 };
 export default {
   props: {
     formulario: { type: Object },
     funcOnReset: { type: Function },
-    functionGetListProduto: { type: Function }
+    functionGetListProduto: { type: Function },
   },
   components: { HomeCategoria, HomeFornecedor },
   data() {
@@ -491,11 +478,11 @@ export default {
       modal_search_categoria: "modal_search_categoria",
       modal_search_fornecedor: "modal_search_fornecedor",
       isLoadingFornecedor: false,
-      isLoadingCategoria: false
+      isLoadingCategoria: false,
     };
   },
   filters: {
-    formataDataTempo
+    formataDataTempo,
   },
   validations() {
     return {
@@ -503,45 +490,33 @@ export default {
         produto: {
           required: validators.required,
           txtMinLen: validators.minLength(3),
-          txtMaxLen: validators.maxLength(50)
+          txtMaxLen: validators.maxLength(50),
         },
         unidade: {
           required: validators.required,
           txtMinLen: validators.minLength(3),
-          txtMaxLen: validators.maxLength(20)
-        },
-        qtdEstoque: {
-          integer: validators.integer,
-          txtNumeroPositivo: Rules.isPositiveNumber
-        },
-        precoCusto: {
-          decimal: validators.decimal,
-          txtNumeroPositivo: Rules.isPositiveNumber
+          txtMaxLen: validators.maxLength(20),
         },
         precoVenda: {
           required: validators.required,
           decimal: validators.decimal,
-          txtNumeroPositivo: Rules.isPositiveNumber
-        },
-        custoUltCompra: {
-          decimal: validators.decimal,
-          txtNumeroPositivo: Rules.isPositiveNumber
+          txtNumeroPositivo: Rules.isPositiveNumber,
         },
         id_categoria: {
           required: validators.required,
-          integer: validators.integer
+          integer: validators.integer,
         },
         categoria: {
-          required: validators.required
+          required: validators.required,
         },
         id_fornecedor: {
           required: validators.required,
-          integer: validators.integer
+          integer: validators.integer,
         },
         fornecedor: {
-          required: validators.required
-        }
-      }
+          required: validators.required,
+        },
+      },
     };
   },
   methods: {
@@ -666,6 +641,7 @@ export default {
       ServiceFornecedor.getById(id).then((response) => {
         if (response.status === 200) {
           vm.form.fornecedor = response.data[0].razaoSocial;
+          vm.form.id_fornecedor = response.data[0].id;
           this.isLoadingFornecedor = false;
         } else {
           vm.form.fornecedor = "";
@@ -681,6 +657,7 @@ export default {
       ServiceCategorias.getById(id).then((response) => {
         if (response.status === 200) {
           vm.form.categoria = response.data[0].categoria;
+          vm.form.id_categoria = response.data[0].id;
           this.isLoadingCategoria = false;
         } else {
           vm.form.categoria = "";
@@ -689,8 +666,8 @@ export default {
           notyf.error("Categoria não encontrada.");
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style>

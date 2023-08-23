@@ -73,6 +73,7 @@
                     :class="{
                       'fail-error': $v.form.id_fornecedor.$error
                     }"
+                    v-debounce:800ms="fornecedorDebounce"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.id_fornecedor) }}
@@ -84,7 +85,7 @@
                       *</b
                     ></label
                   >
-                  <b-overlay :show="false" rounded="sm">
+                  <b-overlay :show="isLoadingFornecedor" rounded="sm">
                     <b-input-group>
                       <b-form-input
                         id="fornecedor"
@@ -905,6 +906,7 @@ import {
 import Rules from "../../rules/rules";
 import { Decimal } from "decimal.js";
 import { Notyf } from "notyf";
+import { ServiceFornecedor } from "../../services/serviceFornecedor";
 const formMessages = {
   required: () => "Campo Obrigatório",
   required_Produto: () =>
@@ -1001,6 +1003,7 @@ export default {
       buttonLockProducts: false,
       step1: false,
       step2: false,
+      isLoadingFornecedor: false,
       validaProdutos: {
         id_produto: "",
         produto: "",
@@ -1729,6 +1732,21 @@ export default {
         });
       }
       console.log(this.$v.form.frete.$invalid);
+    },
+    fornecedorDebounce(id) {
+      this.isLoadingFornecedor = true;
+      let vm = this;
+      ServiceFornecedor.getById(id).then((response) => {
+        if (response.status === 200) {
+          vm.form.fornecedor = response.data[0].razaoSocial;
+          this.isLoadingFornecedor = false;
+        } else {
+          vm.form.fornecedor = "";
+          vm.form.id_fornecedor = "";
+          this.isLoadingFornecedor = false;
+          notyf.error("Fornecedor não encontrado.");
+        }
+      });
     }
   }
 };

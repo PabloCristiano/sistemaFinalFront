@@ -73,7 +73,7 @@
                     :class="{
                       'fail-error': $v.form.id_fornecedor.$error
                     }"
-                    v-debounce:500ms="fornecedorDebounce"
+                    v-debounce:300ms="fornecedorDebounce"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.id_fornecedor) }}

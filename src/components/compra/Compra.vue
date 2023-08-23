@@ -1421,8 +1421,23 @@ export default {
             msgErrorQtd: false,
             msgErrorPer: false
           });
+
           this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
           this.form.total_compra = this.form.total_produtos;
+
+          if (parseFloat(this.form.frete) >= 0) {
+            this.calcularTotalFrete(this.form.total_compra, this.form.frete);
+          }
+          if (parseFloat(this.form.seguro) >= 0) {
+            this.calcularTotalSeguro(this.form.total_compra, this.form.seguro);
+          }
+          if (parseFloat(this.form.outras_despesas) >= 0) {
+            this.calcularTotalOutrasDespesas(
+              this.form.total_compra,
+              this.form.outras_despesas
+            );
+          }
+
           this.clearInputsListProducts();
           this.form.produtos.length > 0
             ? (this.step1 = true)
@@ -1531,17 +1546,11 @@ export default {
       this.form.total_compra = soma.toFixed(2);
     },
     setCondicaoPagamento(obj, valor_compra) {
-      console.log(
-        this.$v.form.frete.$invalid,
-        this.$v.form.seguro.$invalid,
-        this.$v.form.outras_despesas.$invalid,
-        this.$v.form.produtos.$invalid
-      );
       if (
-        !this.$v.form.frete.$invalid &&
-        !this.$v.form.seguro.$invalid &&
-        !this.$v.form.outras_despesas.$invalid &&
-        this.$v.form.produtos.$invalid
+        this.$v.form.produtos.$invalid ||
+        this.$v.form.frete.$invalid ||
+        this.$v.form.seguro.$invalid ||
+        this.$v.form.outras_despesas.$invalid
       ) {
         this.$v.form.frete.$touch();
         this.$v.form.seguro.$touch();
@@ -1580,6 +1589,19 @@ export default {
       this.form.produtos.splice(index, 1);
       this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
       this.form.total_compra = this.form.total_produtos;
+
+      if (parseFloat(this.form.frete) >= 0) {
+        this.calcularTotalFrete(this.form.total_compra, this.form.frete);
+      }
+      if (parseFloat(this.form.seguro) >= 0) {
+        this.calcularTotalSeguro(this.form.total_compra, this.form.seguro);
+      }
+      if (parseFloat(this.form.outras_despesas) >= 0) {
+        this.calcularTotalOutrasDespesas(
+          this.form.total_compra,
+          this.form.outras_despesas
+        );
+      }
 
       if (this.form.condicaopagamento.length > 0) {
         var num = 0;

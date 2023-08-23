@@ -84,7 +84,7 @@
                   v-model="form.qtdEstoque"
                   :class="{ 'fail-error': $v.form.qtdEstoque.$error }"
                   placeholder="Qtd Unidade"
-                  :disabled="form.disabled"
+                  :disabled="true"
                 >
                 </b-form-input>
                 <small style="font-size: 11px; color: red">
@@ -217,6 +217,28 @@
             <div class="row col-12 mt-2">
               <div class="col-md-4">
                 <label
+                  >Custo Ult Compra:<b style="color: rgb(245, 153, 153)">
+                    *</b
+                  ></label
+                >
+                <b-input-group prepend="R$">
+                  <b-form-input
+                    id="custoUltCompra"
+                    type="number"
+                    v-model="form.custoUltCompra"
+                    placeholder="Custo Ultima Compra"
+                    :class="{ 'fail-error': $v.form.custoUltCompra.$error }"
+                    :title="form.custoUltCompra"
+                    :disabled="true"
+                  >
+                  </b-form-input>
+                </b-input-group>
+                <small style="font-size: 11px; color: red">
+                  {{ validationMsg($v.form.custoUltCompra) }}
+                </small>
+              </div>
+              <div class="col-md-4">
+                <label
                   >Preço Custo:<b style="color: rgb(245, 153, 153)">
                     *</b
                   ></label
@@ -229,7 +251,7 @@
                     placeholder="Preço de Custo"
                     :class="{ 'fail-error': $v.form.precoCusto.$error }"
                     :title="form.precoCusto"
-                    :disabled="form.disabled"
+                    :disabled="true"
                   >
                   </b-form-input>
                 </b-input-group>
@@ -259,28 +281,6 @@
 
                 <small style="font-size: 11px; color: red">
                   {{ validationMsg($v.form.precoVenda) }}
-                </small>
-              </div>
-              <div class="col-md-4">
-                <label
-                  >Custo Ult Compra:<b style="color: rgb(245, 153, 153)">
-                    *</b
-                  ></label
-                >
-                <b-input-group prepend="R$">
-                  <b-form-input
-                    id="custoUltCompra"
-                    type="number"
-                    v-model="form.custoUltCompra"
-                    placeholder="Custo Ultima Compra"
-                    :class="{ 'fail-error': $v.form.custoUltCompra.$error }"
-                    :title="form.custoUltCompra"
-                    :disabled="form.disabled"
-                  >
-                  </b-form-input>
-                </b-input-group>
-                <small style="font-size: 11px; color: red">
-                  {{ validationMsg($v.form.custoUltCompra) }}
                 </small>
               </div>
             </div>
@@ -446,7 +446,7 @@ import { Notyf } from "notyf";
 const notyf = new Notyf({
   position: {
     x: "center",
-    y: "top",
+    y: "top"
   },
   types: [
     {
@@ -455,16 +455,16 @@ const notyf = new Notyf({
       icon: {
         className: "material-icons",
         tagName: "i",
-        text: "warning",
-      },
+        text: "warning"
+      }
     },
     {
       type: "error",
       background: "indianred",
       duration: 5000,
-      dismissible: true,
-    },
-  ],
+      dismissible: true
+    }
+  ]
 });
 const formMessages = {
   required: () => "Campo Obrigatório",
@@ -473,13 +473,13 @@ const formMessages = {
   txtMaxLen: ({ $params }) =>
     `Campo maximo ${$params.txtMaxLen.max} characters.`,
   integer: () => "Campo deve ser um Numero inteiro",
-  txtNumeroPositivo: () => "Campo deve ser Positivo/Maior que zero.",
+  txtNumeroPositivo: () => "Campo deve ser Positivo/Maior que zero."
 };
 export default {
   props: {
     formulario: { type: Object },
     funcOnReset: { type: Function },
-    functionGetListProduto: { type: Function },
+    functionGetListProduto: { type: Function }
   },
   components: { HomeCategoria, HomeFornecedor },
   data() {
@@ -491,11 +491,11 @@ export default {
       modal_search_categoria: "modal_search_categoria",
       modal_search_fornecedor: "modal_search_fornecedor",
       isLoadingFornecedor: false,
-      isLoadingCategoria: false,
+      isLoadingCategoria: false
     };
   },
   filters: {
-    formataDataTempo,
+    formataDataTempo
   },
   validations() {
     return {
@@ -503,48 +503,45 @@ export default {
         produto: {
           required: validators.required,
           txtMinLen: validators.minLength(3),
-          txtMaxLen: validators.maxLength(50),
+          txtMaxLen: validators.maxLength(50)
         },
         unidade: {
           required: validators.required,
           txtMinLen: validators.minLength(3),
-          txtMaxLen: validators.maxLength(20),
+          txtMaxLen: validators.maxLength(20)
         },
         qtdEstoque: {
-          required: validators.required,
           integer: validators.integer,
-          txtNumeroPositivo: Rules.isPositiveNumber,
+          txtNumeroPositivo: Rules.isPositiveNumber
         },
         precoCusto: {
-          required: validators.required,
           decimal: validators.decimal,
-          txtNumeroPositivo: Rules.isPositiveNumber,
+          txtNumeroPositivo: Rules.isPositiveNumber
         },
         precoVenda: {
           required: validators.required,
           decimal: validators.decimal,
-          txtNumeroPositivo: Rules.isPositiveNumber,
+          txtNumeroPositivo: Rules.isPositiveNumber
         },
         custoUltCompra: {
-          required: validators.required,
           decimal: validators.decimal,
-          txtNumeroPositivo: Rules.isPositiveNumber,
+          txtNumeroPositivo: Rules.isPositiveNumber
         },
         id_categoria: {
           required: validators.required,
-          integer: validators.integer,
+          integer: validators.integer
         },
         categoria: {
-          required: validators.required,
+          required: validators.required
         },
         id_fornecedor: {
           required: validators.required,
-          integer: validators.integer,
+          integer: validators.integer
         },
         fornecedor: {
-          required: validators.required,
-        },
-      },
+          required: validators.required
+        }
+      }
     };
   },
   methods: {
@@ -692,8 +689,8 @@ export default {
           notyf.error("Categoria não encontrada.");
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 <style>

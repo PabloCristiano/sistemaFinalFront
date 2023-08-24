@@ -950,7 +950,7 @@ const formMessages = {
   minValuePorcentagem: () => "Porcentagem deve estar entre 0 e 100",
   maxValuePercent: () => "Excedeu 100% da(s) parcelas",
   textDataEmissao: () => "Data Posterior a Data Atual",
-  textDataChegada: () => "Data anterior a Data de Emissão",
+  textDataChegada: () => "Data anterior a Data de Emissão"
 };
 export default {
   props: {

@@ -42,7 +42,7 @@
                 </div>
                 <div class="col-md-4 col-sm-4">
                   <label
-                    >Numero:<b style="color: rgb(245, 153, 153)"> *</b></label
+                    >Número:<b style="color: rgb(245, 153, 153)"> *</b></label
                   >
                   <b-form-input
                     id="numero"
@@ -250,6 +250,8 @@
                       :class="{
                         'fail-error': $v.validaProdutos.quantidade.$error,
                       }"
+                      ref="input1"
+                      @keydown.enter.prevent="moveFocus"
                     >
                     </b-form-input>
                     <small class="small-msg">
@@ -277,6 +279,8 @@
                         :class="{
                           'fail-error': $v.validaProdutos.valor_unitario.$error,
                         }"
+                        ref="input2"
+                        @keydown.enter.prevent="moveFocus"
                       ></b-form-input>
                     </b-input-group>
                     <small class="small-msg">
@@ -304,6 +308,7 @@
                         v-model="validaProdutos.desconto"
                         type="number"
                         placeholder="0,00"
+                        @keydown.enter.prevent="moveFocus"
                       ></b-form-input>
                     </b-input-group>
                     <small class="small-msg">
@@ -397,15 +402,29 @@
                               v-model="item.qtd_produto"
                               :disabled="!item.editing"
                             />
+                            <small
+                              class="small-msg"
+                              v-if="form.produtos[key].msgErrorQtd"
+                            >
+                              Quantidade maior que zero/positivo!
+                            </small>
                           </td>
                           <td class="col-md-1 col-sm-1 table_Td">
                             <input
                               id="valor_unitario"
                               type="text"
                               class="form-control text-center"
-                              :value="item.valor_unitario"
+                              :class="{
+                                'fail-error': form.produtos[key].msgErrorvl,
+                              }"
+                              v-model="item.valor_unitario"
                               :disabled="!item.editing"
                             />
+                            <small
+                              class="small-msg"
+                              v-if="form.produtos[key].msgErrorvl"
+                              >Valores negativos/zero não serão aceitos!</small
+                            >
                           </td>
                           <td class="col-md-1 col-sm-1 table_Td">
                             <input
@@ -418,6 +437,11 @@
                               v-model="item.desconto"
                               :disabled="!item.editing"
                             />
+                            <small
+                              class="small-msg"
+                              v-if="form.produtos[key].msgErrorPer"
+                              >Porcentagem deve estar entre 0 e 100!</small
+                            >
                           </td>
                           <td class="col-md-1 col-sm-1 table_Td">
                             <input
@@ -904,7 +928,6 @@ import {
 } from "../../rules/filters";
 import Rules from "../../rules/rules";
 import { Decimal } from "decimal.js";
-import { Notyf } from "notyf";
 import { ServiceFornecedor } from "../../services/serviceFornecedor";
 const formMessages = {
   required: () => "Campo Obrigatório",
@@ -922,29 +945,6 @@ const formMessages = {
   minValuePorcentagem: () => "Porcentagem deve estar entre 0 e 100",
   maxValuePercent: () => "Excedeu 100% da(s) parcelas",
 };
-const notyf = new Notyf({
-  position: {
-    x: "center",
-    y: "top",
-  },
-  types: [
-    {
-      type: "warning",
-      background: "orange",
-      icon: {
-        className: "material-icons",
-        tagName: "i",
-        text: "warning",
-      },
-    },
-    {
-      type: "error",
-      background: "indianred",
-      duration: 5000,
-      dismissible: true,
-    },
-  ],
-});
 export default {
   props: {
     formulario: { type: Object },
@@ -1418,6 +1418,7 @@ export default {
             editing: false,
             msgErrorQtd: false,
             msgErrorPer: false,
+            msgErrorvl: false,
           });
 
           this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
@@ -1626,53 +1627,72 @@ export default {
       });
     },
     saveChangesProdutos(index) {
-      var quantidade = 0;
       var valor_unitario = 0;
       var Valor_total_produto = 0;
-      var desconto = 0;
       var valorDesconto = 0;
       var subTotal = 0;
-      quantidade = parseFloat(this.form.produtos[index].qtd_produto);
-      desconto = parseFloat(this.form.produtos[index].desconto);
+      var quantidade = parseFloat(this.form.produtos[index].qtd_produto);
+      var desconto = extrairNumero(this.form.produtos[index].desconto);
+      valor_unitario = extrairNumero(this.form.produtos[index].valor_unitario);
+      if (valor_unitario === null) {
+        valor_unitario = parseFloat(this.form.produtos[index].valor_unitario);
+      }
+      if (desconto === null) {
+        desconto = parseFloat(this.form.produtos[index].desconto);
+      }
       if (!Number.isInteger(quantidade) || quantidade <= 0) {
         this.form.produtos[index].msgErrorQtd = true;
-        notyf.error(
-          "A quantidade precisa ser um número inteiro maior que zero."
-        );
         this.buttonLock = true;
+        return false;
       } else {
         this.form.produtos[index].msgErrorQtd = false;
-        this.buttonLock = false;
       }
 
-      if (desconto >= 0 && desconto <= 100) {
-        this.form.produtos[index].msgErrorPer = false;
-        this.buttonLock = false;
-      } else {
-        this.form.produtos[index].msgErrorPer = true;
-        notyf.error("Porcentagem deve estar entre 0 e 100");
+      if (valor_unitario <= 0) {
+        this.form.produtos[index].msgErrorvl = true;
         this.buttonLock = true;
+        return false;
+      } else {
+        this.form.produtos[index].msgErrorvl = false;
       }
+
+      if (desconto < 0 || desconto > 100) {
+        this.form.produtos[index].msgErrorPer = true;
+        this.buttonLock = true;
+        return false;
+      } else {
+        this.form.produtos[index].msgErrorPer = false;
+      }
+
+      this.buttonLock = false;
 
       if (
         Number.isInteger(quantidade) &&
         quantidade > 0 &&
         desconto >= 0 &&
-        desconto <= 100
+        desconto <= 100 &&
+        valor_unitario > 0
       ) {
         this.form.produtos[index].msgErrorQtd = false;
         this.form.produtos[index].msgErrorPer = false;
         valor_unitario = extrairNumero(
           this.form.produtos[index].valor_unitario
         );
-        desconto = this.calcPorcentagem(
-          extrairNumero(this.form.produtos[index].desconto)
-        );
+        if (valor_unitario === null) {
+          valor_unitario = parseFloat(this.form.produtos[index].valor_unitario);
+        }
+        desconto = extrairNumero(this.form.produtos[index].desconto);
+        if (desconto === null) {
+          desconto = parseFloat(this.form.produtos[index].desconto);
+        }
+        desconto = this.calcPorcentagem(desconto);
         Valor_total_produto = quantidade * valor_unitario;
         valorDesconto = desconto * Valor_total_produto;
         subTotal = Valor_total_produto - valorDesconto;
         this.form.produtos[index].total_produto = currencyFormat(subTotal);
         this.form.produtos[index].desconto = currencyFormat(desconto * 100);
+        this.form.produtos[index].valor_unitario =
+          currencyFormat(valor_unitario);
         this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
         this.form.total_compra = this.form.total_produtos;
         var frete = 0;
@@ -1751,6 +1771,21 @@ export default {
           }
         }
       });
+    },
+    moveFocus(event) {
+      console.log(event);
+      const currentInputRef = event.target;
+      const inputs = [
+        this.$refs.input1,
+        this.$refs.input2,
+        this.$refs.input3,
+        // ... mais referências de input ...
+      ];
+
+      const currentIndex = inputs.indexOf(currentInputRef);
+      if (currentIndex !== -1 && currentIndex < inputs.length - 1) {
+        inputs[currentIndex + 1].focus();
+      }
     },
   },
 };

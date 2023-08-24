@@ -176,6 +176,8 @@
                       }"
                       type="number"
                       placeholder="Código"
+                      ref="input1"
+                      @keydown.enter.prevent="moveFocus(1)"
                     >
                     </b-form-input>
                     <small class="small-msg">
@@ -250,8 +252,8 @@
                       :class="{
                         'fail-error': $v.validaProdutos.quantidade.$error,
                       }"
-                      ref="input1"
-                      @keydown.enter.prevent="moveFocus"
+                      ref="input2"
+                      @keydown.enter.prevent="moveFocus(2)"
                     >
                     </b-form-input>
                     <small class="small-msg">
@@ -279,8 +281,8 @@
                         :class="{
                           'fail-error': $v.validaProdutos.valor_unitario.$error,
                         }"
-                        ref="input2"
-                        @keydown.enter.prevent="moveFocus"
+                        ref="input3"
+                        @keydown.enter.prevent="moveFocus(3)"
                       ></b-form-input>
                     </b-input-group>
                     <small class="small-msg">
@@ -308,7 +310,8 @@
                         v-model="validaProdutos.desconto"
                         type="number"
                         placeholder="0,00"
-                        @keydown.enter.prevent="moveFocus"
+                        ref="input4"
+                        @keydown.enter.prevent="moveFocus(4)"
                       ></b-form-input>
                     </b-input-group>
                     <small class="small-msg">
@@ -322,6 +325,8 @@
                       type="button"
                       variant="dark"
                       :class="{ disabled: buttonLock }"
+                      ref="input5"
+                      @keydown.enter.prevent="moveFocus(5)"
                     >
                       Adicionar Produto
                     </b-button>
@@ -1647,7 +1652,6 @@ export default {
       } else {
         this.form.produtos[index].msgErrorQtd = false;
       }
-      console.log(valor_unitario);
       if (valor_unitario <= 0 || isNaN(valor_unitario)) {
         this.form.produtos[index].msgErrorvl = true;
         this.buttonLock = true;
@@ -1655,7 +1659,6 @@ export default {
       } else {
         this.form.produtos[index].msgErrorvl = false;
       }
-
       if (desconto < 0 || desconto > 100 || isNaN(desconto)) {
         this.form.produtos[index].msgErrorPer = true;
         this.buttonLock = true;
@@ -1772,19 +1775,18 @@ export default {
         }
       });
     },
-    moveFocus(event) {
-      console.log(event);
-      const currentInputRef = event.target;
+    moveFocus(nextIndex) {
       const inputs = [
         this.$refs.input1,
         this.$refs.input2,
         this.$refs.input3,
-        // ... mais referências de input ...
+        this.$refs.input4,
+        this.$refs.input5,
+        // ... mais referências de b-form-input ...
       ];
 
-      const currentIndex = inputs.indexOf(currentInputRef);
-      if (currentIndex !== -1 && currentIndex < inputs.length - 1) {
-        inputs[currentIndex + 1].focus();
+      if (nextIndex >= 0 && nextIndex < inputs.length) {
+        inputs[nextIndex].focus();
       }
     },
   },

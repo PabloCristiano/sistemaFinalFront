@@ -1644,7 +1644,7 @@ export default {
         this.form.produtos[index].msgErrorQtd = false;
         this.buttonLock = false;
       }
-      
+
       if (desconto >= 0 && desconto <= 100) {
         this.form.produtos[index].msgErrorPer = false;
         this.buttonLock = false;
@@ -1729,7 +1729,6 @@ export default {
           row.desativar = true;
         });
       }
-      console.log(this.$v.form.frete.$invalid);
     },
     fornecedorDebounce(id) {
       this.isLoadingFornecedor = true;

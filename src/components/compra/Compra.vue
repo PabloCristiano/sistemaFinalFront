@@ -1647,8 +1647,8 @@ export default {
       } else {
         this.form.produtos[index].msgErrorQtd = false;
       }
-
-      if (valor_unitario <= 0) {
+      console.log(valor_unitario);
+      if (valor_unitario <= 0 || isNaN(valor_unitario)) {
         this.form.produtos[index].msgErrorvl = true;
         this.buttonLock = true;
         return false;
@@ -1656,7 +1656,7 @@ export default {
         this.form.produtos[index].msgErrorvl = false;
       }
 
-      if (desconto < 0 || desconto > 100) {
+      if (desconto < 0 || desconto > 100 || isNaN(desconto)) {
         this.form.produtos[index].msgErrorPer = true;
         this.buttonLock = true;
         return false;

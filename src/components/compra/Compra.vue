@@ -16,7 +16,7 @@
                     placeholder="Modelo"
                     v-model="form.modelo"
                     :class="{
-                      'fail-error': $v.form.modelo.$error
+                      'fail-error': $v.form.modelo.$error,
                     }"
                   ></b-form-input>
                   <small class="small-msg">
@@ -33,7 +33,7 @@
                     placeholder="Série"
                     v-model="form.serie"
                     :class="{
-                      'fail-error': $v.form.serie.$error
+                      'fail-error': $v.form.serie.$error,
                     }"
                   ></b-form-input>
                   <small class="small-msg">
@@ -50,7 +50,7 @@
                     placeholder="Número"
                     v-model="form.numero"
                     :class="{
-                      'fail-error': $v.form.numero.$error
+                      'fail-error': $v.form.numero.$error,
                     }"
                   ></b-form-input>
                   <small class="small-msg">
@@ -71,7 +71,7 @@
                     v-model="form.id_fornecedor"
                     :title="form.id_fornecedor"
                     :class="{
-                      'fail-error': $v.form.id_fornecedor.$error
+                      'fail-error': $v.form.id_fornecedor.$error,
                     }"
                     v-debounce:300ms="fornecedorDebounce"
                   ></b-form-input>
@@ -94,7 +94,7 @@
                         v-model="form.fornecedor"
                         :title="form.fornecedor"
                         :class="{
-                          'fail-error': $v.form.fornecedor.$error
+                          'fail-error': $v.form.fornecedor.$error,
                         }"
                         disabled
                       ></b-form-input>
@@ -125,7 +125,7 @@
                     v-model="form.data_emissao"
                     :max="maxDate"
                     :class="{
-                      'fail-error': $v.form.data_emissao.$error
+                      'fail-error': $v.form.data_emissao.$error,
                     }"
                   ></b-form-input>
                   <small class="small-msg">
@@ -144,7 +144,7 @@
                     type="date"
                     v-model="form.data_chegada"
                     :class="{
-                      'fail-error': $v.form.data_chegada.$error
+                      'fail-error': $v.form.data_chegada.$error,
                     }"
                     :min="minDate"
                   ></b-form-input>
@@ -172,12 +172,13 @@
                       id="id_produto"
                       v-model="validaProdutos.id_produto"
                       :class="{
-                        'fail-error': $v.validaProdutos.id_produto.$error
+                        'fail-error': $v.validaProdutos.id_produto.$error,
                       }"
                       type="number"
                       placeholder="Código"
                       ref="input1"
                       @keydown.enter.prevent="moveFocus(1)"
+                      v-debounce:300ms="produtoDebounce"
                     >
                     </b-form-input>
                     <small class="small-msg">
@@ -190,7 +191,7 @@
                         *</b
                       ></label
                     >
-                    <b-overlay :show="false" rounded="sm">
+                    <b-overlay :show="isLoadingProduto" rounded="sm">
                       <b-input-group>
                         <b-form-input
                           id="produto"
@@ -198,7 +199,7 @@
                           type="text"
                           placeholder="Produto"
                           :class="{
-                            'fail-error': $v.validaProdutos.produto.$error
+                            'fail-error': $v.validaProdutos.produto.$error,
                           }"
                           disabled
                         >
@@ -229,7 +230,7 @@
                       type="text"
                       placeholder="Unidade"
                       :class="{
-                        'fail-error': $v.validaProdutos.unidade.$error
+                        'fail-error': $v.validaProdutos.unidade.$error,
                       }"
                       disabled
                     >
@@ -250,7 +251,7 @@
                       type="number"
                       placeholder="Quantidade"
                       :class="{
-                        'fail-error': $v.validaProdutos.quantidade.$error
+                        'fail-error': $v.validaProdutos.quantidade.$error,
                       }"
                       ref="input2"
                       @keydown.enter.prevent="moveFocus(2)"
@@ -279,7 +280,7 @@
                         v-model="validaProdutos.valor_unitario"
                         placeholder="0,00"
                         :class="{
-                          'fail-error': $v.validaProdutos.valor_unitario.$error
+                          'fail-error': $v.validaProdutos.valor_unitario.$error,
                         }"
                         ref="input3"
                         @keydown.enter.prevent="moveFocus(3)"
@@ -305,7 +306,7 @@
                       <b-form-input
                         id="desconto"
                         :class="{
-                          'fail-error': $v.validaProdutos.desconto.$error
+                          'fail-error': $v.validaProdutos.desconto.$error,
                         }"
                         v-model="validaProdutos.desconto"
                         type="number"
@@ -402,7 +403,7 @@
                               type="number"
                               class="form-control text-center"
                               :class="{
-                                'fail-error': form.produtos[key].msgErrorQtd
+                                'fail-error': form.produtos[key].msgErrorQtd,
                               }"
                               v-model="item.qtd_produto"
                               :disabled="!item.editing"
@@ -420,7 +421,7 @@
                               type="text"
                               class="form-control text-center"
                               :class="{
-                                'fail-error': form.produtos[key].msgErrorvl
+                                'fail-error': form.produtos[key].msgErrorvl,
                               }"
                               v-model="item.valor_unitario"
                               :disabled="!item.editing"
@@ -437,7 +438,7 @@
                               type="text"
                               class="form-control text-center"
                               :class="{
-                                'fail-error': form.produtos[key].msgErrorPer
+                                'fail-error': form.produtos[key].msgErrorPer,
                               }"
                               v-model="item.desconto"
                               :disabled="!item.editing"
@@ -531,7 +532,7 @@
                         v-model="form.frete"
                         type="number"
                         :class="{
-                          'fail-error': $v.form.frete.$error
+                          'fail-error': $v.form.frete.$error,
                         }"
                         placeholder="0,00"
                       >
@@ -548,7 +549,7 @@
                         type="number"
                         placeholder="0,00"
                         :class="{
-                          'fail-error': $v.form.seguro.$error
+                          'fail-error': $v.form.seguro.$error,
                         }"
                       >
                       </b-form-input>
@@ -562,7 +563,7 @@
                         id="outras_despesas"
                         v-model="form.outras_despesas"
                         :class="{
-                          'fail-error': $v.form.outras_despesas.$error
+                          'fail-error': $v.form.outras_despesas.$error,
                         }"
                         type="number"
                         placeholder="0,00"
@@ -929,11 +930,12 @@ import {
   inverterDataPtBR,
   currencyFormat,
   formatarDataParaPtBR,
-  extrairNumero
+  extrairNumero,
 } from "../../rules/filters";
 import Rules from "../../rules/rules";
 import { Decimal } from "decimal.js";
 import { ServiceFornecedor } from "../../services/serviceFornecedor";
+import { ServiceProduto } from "../../services/serviceProduto";
 const formMessages = {
   required: () => "Campo Obrigatório",
   required_Produto: () => "Deve conter pelo menos um Produto adicionado !",
@@ -950,11 +952,11 @@ const formMessages = {
   minValuePorcentagem: () => "Porcentagem deve estar entre 0 e 100",
   maxValuePercent: () => "Excedeu 100% da(s) parcelas",
   textDataEmissao: () => "Data Posterior a Data Atual",
-  textDataChegada: () => "Data anterior a Data de Emissão"
+  textDataChegada: () => "Data anterior a Data de Emissão",
 };
 export default {
   props: {
-    formulario: { type: Object }
+    formulario: { type: Object },
   },
   components: { HomeFornecedor, HomeProduto, HomeCondicaoPagamento },
   data() {
@@ -996,7 +998,7 @@ export default {
         outras_despesas: "",
         observacao: "",
         produtos: [],
-        condicaopagamento: []
+        condicaopagamento: [],
       },
       maxDate: "", // Define a data máxima como a data atual
       minDate: "", // Define a data mínima como a data atual
@@ -1008,14 +1010,15 @@ export default {
       step1: false,
       step2: false,
       isLoadingFornecedor: false,
+      isLoadingProduto: false,
       validaProdutos: {
         id_produto: "",
         produto: "",
         unidade: "",
         quantidade: "",
         valor_unitario: "",
-        desconto: ""
-      }
+        desconto: "",
+      },
     };
   },
   beforeCreate() {},
@@ -1041,7 +1044,7 @@ export default {
         !this.$v.form.id_fornecedor.$invalid &&
         !this.$v.form.fornecedor.$invalid
       );
-    }
+    },
     // max_isDateInvalid() {
     //   const data_emissao = new Date(this.data_emissao);
     //   const maxDate = new Date();
@@ -1174,7 +1177,7 @@ export default {
           this.setCondicaoPagamento(this.obj_condicao, num);
         }
       }
-    }
+    },
     // max_isDateInvalid(result) {
     //   if (result) {
     //     this.data_emissao = this.obterDataAtual();
@@ -1191,77 +1194,77 @@ export default {
   validations: {
     validaProdutos: {
       id_produto: {
-        required: validators.required
+        required: validators.required,
       },
       produto: {
-        required: validators.required
+        required: validators.required,
       },
       unidade: {
-        required: validators.required
+        required: validators.required,
       },
       quantidade: {
         required: validators.required,
-        integer: validators.integer
+        integer: validators.integer,
       },
       valor_unitario: {
         required: validators.required,
         txtNumeroisPositivo: Rules.isNumber,
-        decimal: validators.decimal
+        decimal: validators.decimal,
       },
       desconto: {
         required: validators.required,
         decimal: validators.decimal,
         maxValue: validators.maxValue(100),
         minValuePorcentagem: validators.minValue(0),
-        txtNumeroisPositivo: Rules.isNumber
-      }
+        txtNumeroisPositivo: Rules.isNumber,
+      },
     },
     form: {
       modelo: {
         required: validators.required,
-        txtNumeroisPositivo: Rules.isNumber
+        txtNumeroisPositivo: Rules.isNumber,
       },
       serie: {
         required: validators.required,
-        txtNumeroisPositivo: Rules.isNumber
+        txtNumeroisPositivo: Rules.isNumber,
       },
       numero: {
         required: validators.required,
-        txtNumeroisPositivo: Rules.isNumber
+        txtNumeroisPositivo: Rules.isNumber,
       },
       id_fornecedor: {
         required: validators.required,
-        txtNumeroisPositivo: Rules.isNumber
+        txtNumeroisPositivo: Rules.isNumber,
       },
       fornecedor: {
-        required: validators.required
+        required: validators.required,
       },
       data_emissao: {
         required: validators.required,
-        textDataEmissao: Rules.validardataEmissao
+        textDataEmissao: Rules.validardataEmissao,
       },
       data_chegada: {
         required: validators.required,
         textDataChegada: function ValidaData(value) {
           return Rules.validarDataEmissao(value, this.form.data_emissao);
-        }
+        },
       },
       produtos: {
-        required_Produto: validators.required
+        required_Produto: validators.required,
       },
       condicaopagamento: {
-        required_Condicao: validators.required
+        required_Condicao: validators.required,
       },
       frete: {
-        txtNumeroisPositivo: Rules.isNumber
+        txtNumeroisPositivo: Rules.isNumber,
       },
       seguro: {
-        txtNumeroisPositivo: Rules.isNumber
+        txtNumeroisPositivo: Rules.isNumber,
       },
       outras_despesas: {
-        txtNumeroisPositivo: Rules.isNumber
-      }
-    }
+        txtNumeroisPositivo: Rules.isNumber,
+      },
+    },
   },
   methods: {
     validationMsg: validationMessage(formMessages),
@@ -1429,7 +1432,7 @@ export default {
             editing: false,
             msgErrorQtd: false,
             msgErrorPer: false,
-            msgErrorvl: false
+            msgErrorvl: false,
           });
 
           this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
@@ -1584,7 +1587,7 @@ export default {
             parcela: obj.parcelas[i].parcela,
             formaPagamento: obj.parcelas[i].formaPagamento[0].forma_pg,
             Vencimento: formatarDataParaPtBR(datavencimento),
-            valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100
+            valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100,
           });
         }
         this.form.condicaopagamento.map(function (c) {
@@ -1780,21 +1783,47 @@ export default {
         }
       });
     },
+    produtoDebounce(id) {
+      this.isLoadingProduto = true;
+      let vm = this;
+      ServiceProduto.getById(id).then((response) => {
+        if (response.status === 200) {
+          vm.validaProdutos.id_produto = response.data[0].id;
+          vm.validaProdutos.produto = response.data[0].produto;
+          vm.validaProdutos.unidade = response.data[0].unidade;
+          this.isLoadingProduto = false;
+        } else {
+          vm.validaProdutos.id_produto = "";
+          vm.validaProdutos.produto = "";
+          vm.validaProdutos.unidade = "";
+          this.isLoadingProduto = false;
+          if (
+            this.$v.validaProdutos.id_produto.$invalid &&
+            this.$v.validaProdutos.produto.$invalid &&
+            this.$v.validaProdutos.unidade.$invalid
+          ) {
+            this.$v.validaProdutos.id_produto.$touch();
+            this.$v.validaProdutos.produto.$touch();
+            this.$v.validaProdutos.unidade.$touch();
+          }
+        }
+      });
+    },
     moveFocus(nextIndex) {
       const inputs = [
         this.$refs.input1,
         this.$refs.input2,
         this.$refs.input3,
         this.$refs.input4,
-        this.$refs.input5
+        this.$refs.input5,
         // ... mais referências de b-form-input ...
       ];
 
       if (nextIndex >= 0 && nextIndex < inputs.length) {
         inputs[nextIndex].focus();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style>

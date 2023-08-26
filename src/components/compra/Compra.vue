@@ -61,31 +61,35 @@
             </div>
             <!-- d-flex align-items-center -->
             <div class="col-md-6">
-              <div class="row col-md-12 col-sm-12" :class="{ disabled: step1 }">
-                <div class="col-md-3 col-sm-4">
-                  <label>Código:</label>
-                  <b-form-input
-                    id="id_fornecedor"
-                    type="number"
-                    placeholder="Código"
-                    v-model="form.id_fornecedor"
-                    :title="form.id_fornecedor"
-                    :class="{
-                      'fail-error': $v.form.id_fornecedor.$error,
-                    }"
-                    v-debounce:300ms="fornecedorDebounce"
-                  ></b-form-input>
-                  <small class="small-msg">
-                    {{ validationMsg($v.form.id_fornecedor) }}
-                  </small>
-                </div>
-                <div class="col-md-9 col-sm-8">
-                  <label
-                    >Fornecedor:<b style="color: rgb(245, 153, 153)">
-                      *</b
-                    ></label
-                  >
-                  <b-overlay :show="isLoadingFornecedor" rounded="sm">
+              <b-overlay :show="isLoadingFornecedor" rounded="sm">
+                <div
+                  class="row col-md-12 col-sm-12"
+                  :class="{ disabled: step1 }"
+                >
+                  <div class="col-md-3 col-sm-4">
+                    <label>Código:</label>
+                    <b-form-input
+                      id="id_fornecedor"
+                      type="number"
+                      placeholder="Código"
+                      v-model="form.id_fornecedor"
+                      :title="form.id_fornecedor"
+                      :class="{
+                        'fail-error': $v.form.id_fornecedor.$error,
+                      }"
+                      v-debounce:300ms="fornecedorDebounce"
+                    ></b-form-input>
+                    <small class="small-msg">
+                      {{ validationMsg($v.form.id_fornecedor) }}
+                    </small>
+                  </div>
+                  <div class="col-md-9 col-sm-8">
+                    <label
+                      >Fornecedor:<b style="color: rgb(245, 153, 153)">
+                        *</b
+                      ></label
+                    >
+
                     <b-input-group>
                       <b-form-input
                         id="fornecedor"
@@ -113,9 +117,9 @@
                     <small class="small-msg">
                       {{ validationMsg($v.form.fornecedor) }}
                     </small>
-                  </b-overlay>
+                  </div>
                 </div>
-              </div>
+              </b-overlay>
               <div class="row col-md-12 col-sm-12 justify-content-end">
                 <div class="col-md-6 col-sm-6 mt-2">
                   <label>Data Emissão:</label>
@@ -617,12 +621,14 @@
                   <div class="row col-md-12 col-sm-12">
                     <div class="col-md-3 col-sm-4">
                       <label>Código:</label>
-                      <b-form-input
-                        id="id_condicaopg"
-                        type="number"
-                        v-model="form.id_condicaopg"
-                        placeholder="Código"
-                      ></b-form-input>
+                      <b-overlay :show="false" rounded="sm">
+                        <b-form-input
+                          id="id_condicaopg"
+                          type="number"
+                          v-model="form.id_condicaopg"
+                          placeholder="Código"
+                        ></b-form-input>
+                      </b-overlay>
                       <small style="font-size: 11px; color: #e46060bb"></small>
                     </div>
                     <div class="col-md-8 col-sm-8">
@@ -953,6 +959,7 @@ const formMessages = {
   maxValuePercent: () => "Excedeu 100% da(s) parcelas",
   textDataEmissao: () => "Data Posterior a Data Atual",
   textDataChegada: () => "Data anterior a Data de Emissão",
+  inputZero: () => "Valores como '0' não serão aceitos",
 };
 export default {
   props: {
@@ -1222,15 +1229,21 @@ export default {
     form: {
       modelo: {
         required: validators.required,
+        integer: validators.integer,
         txtNumeroisPositivo: Rules.isNumber,
+        inputZero: Rules.isPositiveNumber,
       },
       serie: {
         required: validators.required,
+        integer: validators.integer,
         txtNumeroisPositivo: Rules.isNumber,
+        inputZero: Rules.isPositiveNumber,
       },
       numero: {
         required: validators.required,
+        integer: validators.integer,
         txtNumeroisPositivo: Rules.isNumber,
+        inputZero: Rules.isPositiveNumber,
       },
       id_fornecedor: {
         required: validators.required,

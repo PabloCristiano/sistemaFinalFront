@@ -1654,6 +1654,7 @@ export default {
           valor_parcela = valorCompra;
           this.form.condicaopagamento.push({
             parcela: obj.parcelas[i].parcela,
+            id_formaPagamento:obj.parcelas[i].formaPagamento[0].id,
             formaPagamento: obj.parcelas[i].formaPagamento[0].forma_pg,
             Vencimento: formatarDataParaPtBR(datavencimento),
             valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100,

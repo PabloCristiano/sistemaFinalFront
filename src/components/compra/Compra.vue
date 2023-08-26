@@ -18,6 +18,8 @@
                     :class="{
                       'fail-error': $v.form.modelo.$error,
                     }"
+                    ref="modelo"
+                    @keydown.enter.prevent="moveFocus(1)"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.modelo) }}
@@ -35,6 +37,8 @@
                     :class="{
                       'fail-error': $v.form.serie.$error,
                     }"
+                    ref="serie"
+                    @keydown.enter.prevent="moveFocus(2)"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.serie) }}
@@ -52,6 +56,8 @@
                     :class="{
                       'fail-error': $v.form.numero.$error,
                     }"
+                    ref="numero"
+                    @keydown.enter.prevent="moveFocus(3)"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.numero) }}
@@ -61,35 +67,34 @@
             </div>
             <!-- d-flex align-items-center -->
             <div class="col-md-6">
-              <b-overlay :show="isLoadingFornecedor" rounded="sm">
-                <div
-                  class="row col-md-12 col-sm-12"
-                  :class="{ disabled: step1 }"
-                >
-                  <div class="col-md-3 col-sm-4">
-                    <label>Código:</label>
-                    <b-form-input
-                      id="id_fornecedor"
-                      type="number"
-                      placeholder="Código"
-                      v-model="form.id_fornecedor"
-                      :title="form.id_fornecedor"
-                      :class="{
-                        'fail-error': $v.form.id_fornecedor.$error,
-                      }"
-                      v-debounce:300ms="fornecedorDebounce"
-                    ></b-form-input>
-                    <small class="small-msg">
-                      {{ validationMsg($v.form.id_fornecedor) }}
-                    </small>
-                  </div>
-                  <div class="col-md-9 col-sm-8">
-                    <label
-                      >Fornecedor:<b style="color: rgb(245, 153, 153)">
-                        *</b
-                      ></label
-                    >
-
+              <div class="row col-md-12 col-sm-12" :class="{ disabled: step1 }">
+                <div class="col-md-3 col-sm-4">
+                  <label>Código:</label>
+                  <b-form-input
+                    id="id_fornecedor"
+                    type="number"
+                    placeholder="Código"
+                    v-model="form.id_fornecedor"
+                    :title="form.id_fornecedor"
+                    :class="{
+                      'fail-error': $v.form.id_fornecedor.$error,
+                    }"
+                    v-debounce:300ms="fornecedorDebounce"
+                    :disabled="isLoadingFornecedor"
+                    ref="id_fornecedor"
+                    @keydown.enter.prevent="moveFocus(4)"
+                  ></b-form-input>
+                  <small class="small-msg">
+                    {{ validationMsg($v.form.id_fornecedor) }}
+                  </small>
+                </div>
+                <div class="col-md-9 col-sm-8">
+                  <label
+                    >Fornecedor:<b style="color: rgb(245, 153, 153)">
+                      *</b
+                    ></label
+                  >
+                  <b-overlay :show="isLoadingFornecedor" rounded="sm">
                     <b-input-group>
                       <b-form-input
                         id="fornecedor"
@@ -117,9 +122,9 @@
                     <small class="small-msg">
                       {{ validationMsg($v.form.fornecedor) }}
                     </small>
-                  </div>
+                  </b-overlay>
                 </div>
-              </b-overlay>
+              </div>
               <div class="row col-md-12 col-sm-12 justify-content-end">
                 <div class="col-md-6 col-sm-6 mt-2">
                   <label>Data Emissão:</label>
@@ -180,9 +185,10 @@
                       }"
                       type="number"
                       placeholder="Código"
-                      ref="input1"
-                      @keydown.enter.prevent="moveFocus(1)"
+                      ref="id_produto"
+                      @keydown.enter.prevent="moveFocus(5)"
                       v-debounce:300ms="produtoDebounce"
+                      :disabled="isLoadingProduto"
                     >
                     </b-form-input>
                     <small class="small-msg">
@@ -257,8 +263,8 @@
                       :class="{
                         'fail-error': $v.validaProdutos.quantidade.$error,
                       }"
-                      ref="input2"
-                      @keydown.enter.prevent="moveFocus(2)"
+                      ref="quantidade"
+                      @keydown.enter.prevent="moveFocus(6)"
                     >
                     </b-form-input>
                     <small class="small-msg">
@@ -286,8 +292,8 @@
                         :class="{
                           'fail-error': $v.validaProdutos.valor_unitario.$error,
                         }"
-                        ref="input3"
-                        @keydown.enter.prevent="moveFocus(3)"
+                        ref="valor_unitario"
+                        @keydown.enter.prevent="moveFocus(7)"
                       ></b-form-input>
                     </b-input-group>
                     <small class="small-msg">
@@ -315,8 +321,8 @@
                         v-model="validaProdutos.desconto"
                         type="number"
                         placeholder="0,00"
-                        ref="input4"
-                        @keydown.enter.prevent="moveFocus(4)"
+                        ref="desconto"
+                        @keydown.enter.prevent="moveFocus(8)"
                       ></b-form-input>
                     </b-input-group>
                     <small class="small-msg">
@@ -326,12 +332,13 @@
                   <div class="col-md-2" style="line-height: 85px">
                     <b-button
                       @click.prevent="addProducts()"
+                      id="btnAddProdutos"
                       class="btn btn-sm"
                       type="button"
                       variant="dark"
                       :class="{ disabled: buttonLock }"
-                      ref="input5"
-                      @keydown.enter.prevent="moveFocus(5)"
+                      ref="btnAddProdutos"
+                      @keydown.enter.prevent="moveFocus(9)"
                     >
                       Adicionar Produto
                     </b-button>
@@ -539,6 +546,8 @@
                           'fail-error': $v.form.frete.$error,
                         }"
                         placeholder="0,00"
+                        ref="frete"
+                        @keydown.enter.prevent="moveFocus(10)"
                       >
                       </b-form-input>
                       <small class="small-msg">
@@ -555,6 +564,8 @@
                         :class="{
                           'fail-error': $v.form.seguro.$error,
                         }"
+                        ref="seguro"
+                        @keydown.enter.prevent="moveFocus(11)"
                       >
                       </b-form-input>
                       <small class="small-msg">{{
@@ -571,6 +582,8 @@
                         }"
                         type="number"
                         placeholder="0,00"
+                        ref="outras_despesas"
+                        @keydown.enter.prevent="moveFocus(12)"
                       >
                       </b-form-input>
                       <small class="small-msg">{{
@@ -621,15 +634,22 @@
                   <div class="row col-md-12 col-sm-12">
                     <div class="col-md-3 col-sm-4">
                       <label>Código:</label>
-                      <b-overlay :show="false" rounded="sm">
-                        <b-form-input
-                          id="id_condicaopg"
-                          type="number"
-                          v-model="form.id_condicaopg"
-                          placeholder="Código"
-                        ></b-form-input>
-                      </b-overlay>
-                      <small style="font-size: 11px; color: #e46060bb"></small>
+                      <b-form-input
+                        id="id_condicaopg"
+                        type="number"
+                        :class="{
+                          'fail-error': $v.form.id_condicaopg.$error,
+                        }"
+                        v-model="form.id_condicaopg"
+                        placeholder="Código"
+                        ref="id_condicaopg"
+                        v-debounce:300ms="condicaoPagamentoDebounce"
+                        @keydown.enter.prevent="moveFocus(13)"
+                        :disabled="isLoadingCondicao"
+                      ></b-form-input>
+                      <small class="small-msg">
+                        {{ validationMsg($v.form.id_condicaopg) }}
+                      </small>
                     </div>
                     <div class="col-md-8 col-sm-8">
                       <label
@@ -639,11 +659,14 @@
                           *</b
                         ></label
                       >
-                      <b-overlay :show="false" rounded="sm">
+                      <b-overlay :show="isLoadingCondicao" rounded="sm">
                         <b-input-group>
                           <b-form-input
                             id="fornecedor"
                             type="text"
+                            :class="{
+                              'fail-error': $v.form.id_condicaopg.$error,
+                            }"
                             placeholder="Condição de Pagamento"
                             v-model="form.condicaopg"
                             disabled
@@ -660,9 +683,9 @@
                             </b-button>
                           </b-input-group-append>
                         </b-input-group>
-                        <small
-                          style="font-size: 11px; color: #e46060bb"
-                        ></small>
+                        <small class="small-msg">
+                          {{ validationMsg($v.form.condicaopg) }}
+                        </small>
                       </b-overlay>
                     </div>
                     <div class="col-md-1" style="line-height: 85px">
@@ -769,6 +792,7 @@
               </div>
             </div>
           </transition>
+
           <small class="mt-2" style="font-size: 12px"
             >Campos com <b style="color: rgb(245, 153, 153)">*</b> são
             obrigatórios !</small
@@ -942,6 +966,7 @@ import Rules from "../../rules/rules";
 import { Decimal } from "decimal.js";
 import { ServiceFornecedor } from "../../services/serviceFornecedor";
 import { ServiceProduto } from "../../services/serviceProduto";
+import { ServiceCondicaoPagamento } from "../../services/serviceCondicaoPagamento";
 const formMessages = {
   required: () => "Campo Obrigatório",
   required_Produto: () => "Deve conter pelo menos um Produto adicionado !",
@@ -961,6 +986,30 @@ const formMessages = {
   textDataChegada: () => "Data anterior a Data de Emissão",
   inputZero: () => "Valores como '0' não serão aceitos",
 };
+import { Notyf } from "notyf";
+const notyf = new Notyf({
+  position: {
+    x: "center",
+    y: "top",
+  },
+  types: [
+    {
+      type: "warning",
+      background: "orange",
+      icon: {
+        className: "material-icons",
+        tagName: "i",
+        text: "warning",
+      },
+    },
+    {
+      type: "error",
+      background: "indianred",
+      duration: 5000,
+      dismissible: true,
+    },
+  ],
+});
 export default {
   props: {
     formulario: { type: Object },
@@ -1018,6 +1067,7 @@ export default {
       step2: false,
       isLoadingFornecedor: false,
       isLoadingProduto: false,
+      isLoadingCondicao: false,
       validaProdutos: {
         id_produto: "",
         produto: "",
@@ -1052,18 +1102,6 @@ export default {
         !this.$v.form.fornecedor.$invalid
       );
     },
-    // max_isDateInvalid() {
-    //   const data_emissao = new Date(this.data_emissao);
-    //   const maxDate = new Date();
-    //   maxDate.setHours(0, 0, 0, 0); // Zera o horário da data atual para comparar apenas as datas
-    //   return data_emissao > maxDate;
-    // },
-    // min_isDateInvalid() {
-    //   const selectedDate = new Date(this.data_chegada);
-    //   const currentDate = new Date();
-    //   currentDate.setHours(0, 0, 0, 0); // Zera o horário da data atual para comparar apenas as datas
-    //   return selectedDate < currentDate;
-    // },
   },
   watch: {
     "form.frete"(newValue) {
@@ -1212,9 +1250,11 @@ export default {
       quantidade: {
         required: validators.required,
         integer: validators.integer,
+        inputZero: Rules.isPositiveNumber,
       },
       valor_unitario: {
         required: validators.required,
+        inputZero: Rules.isPositiveNumber,
         txtNumeroisPositivo: Rules.isNumber,
         decimal: validators.decimal,
       },
@@ -1262,6 +1302,12 @@ export default {
           return Rules.validarDataEmissao(value, this.form.data_emissao);
         },
       },
+      id_condicaopg: {
+        required: validators.required,
+      },
+      condicaopg: {
+        required: validators.required,
+      },
       produtos: {
         required_Produto: validators.required,
       },
@@ -1289,6 +1335,7 @@ export default {
     onSubmit() {
       if (this.$v.form.$invalid) {
         this.$v.form.$touch();
+        notyf.error("Compra está enfrentando uma irregularidade.!");
       } else {
         console.log(this.form);
       }
@@ -1406,6 +1453,7 @@ export default {
       } else {
         if (this.$v.validaProdutos.$invalid) {
           this.$v.validaProdutos.$touch();
+          notyf.error("Produto está enfrentando uma irregularidade.!");
         } else {
           var id_produto = "";
           var produto = "";
@@ -1463,7 +1511,9 @@ export default {
               this.form.outras_despesas
             );
           }
-
+          this.$nextTick(() => {
+            this.$refs.id_produto.focus();
+          });
           this.clearInputsListProducts();
           this.form.produtos.length > 0
             ? (this.step1 = true)
@@ -1486,6 +1536,9 @@ export default {
     clearListCondicao() {
       this.form.id_condicaopg = "";
       this.form.condicaopg = "";
+      this.$v.form.id_condicaopg.$reset();
+      this.$v.form.condicaopg.$reset();
+      this.$v.form.condicaopagamento.$reset();
       this.form.condicaopagamento = [];
       this.form.condicaopagamento.length > 0
         ? (this.step2 = true)
@@ -1582,7 +1635,10 @@ export default {
         this.$v.form.seguro.$touch();
         this.$v.form.outras_despesas.$touch();
         this.$v.form.produtos.$touch();
+        notyf.error("Produto está enfrentando uma irregularidade.!");
       } else {
+        this.form.id_condicaopg = obj.id;
+        this.form.condicaopg = obj.condicao_pagamento;
         this.obj_condicao = obj;
         this.form.id_condicaopg = obj.id;
         this.form.condicaopg = obj.condicao_pagamento;
@@ -1782,10 +1838,16 @@ export default {
         if (response.status === 200) {
           vm.form.fornecedor = response.data[0].razaoSocial;
           this.isLoadingFornecedor = false;
+          this.$nextTick(() => {
+            this.$refs.id_fornecedor.focus();
+          });
         } else {
           vm.form.fornecedor = "";
           vm.form.id_fornecedor = "";
           this.isLoadingFornecedor = false;
+          this.$nextTick(() => {
+            this.$refs.id_fornecedor.focus();
+          });
           if (
             this.$v.form.id_fornecedor.$invalid &&
             this.$v.form.fornecedor.$invalid
@@ -1805,11 +1867,17 @@ export default {
           vm.validaProdutos.produto = response.data[0].produto;
           vm.validaProdutos.unidade = response.data[0].unidade;
           this.isLoadingProduto = false;
+          this.$nextTick(() => {
+            this.$refs.id_produto.focus();
+          });
         } else {
           vm.validaProdutos.id_produto = "";
           vm.validaProdutos.produto = "";
           vm.validaProdutos.unidade = "";
           this.isLoadingProduto = false;
+          this.$nextTick(() => {
+            this.$refs.id_produto.focus();
+          });
           if (
             this.$v.validaProdutos.id_produto.$invalid &&
             this.$v.validaProdutos.produto.$invalid &&
@@ -1822,13 +1890,48 @@ export default {
         }
       });
     },
+    condicaoPagamentoDebounce(id) {
+      this.isLoadingCondicao = true;
+      ServiceCondicaoPagamento.getById(id).then((response) => {
+        if (response.status === 200) {
+          console.log(response);
+          this.form.id_condicaopg = "";
+          this.form.condicaopg = "";
+          var valor_compra = currency(parseFloat(this.form.total_compra));
+          this.setCondicaoPagamento(response.data[0], valor_compra);
+          this.isLoadingCondicao = false;
+          this.$nextTick(() => {
+            this.$refs.id_condicaopg.focus();
+          });
+          return;
+        } else {
+          this.isLoadingCondicao = false;
+          this.clearListCondicao();
+          this.$v.form.id_condicaopg.$touch();
+          this.$v.form.condicaopg.$touch();
+          this.$nextTick(() => {
+            this.$refs.id_condicaopg.focus();
+          });
+          return;
+        }
+      });
+      this.clearListCondicao();
+    },
     moveFocus(nextIndex) {
       const inputs = [
-        this.$refs.input1,
-        this.$refs.input2,
-        this.$refs.input3,
-        this.$refs.input4,
-        this.$refs.input5,
+        this.$refs.modelo,
+        this.$refs.serie,
+        this.$refs.numero,
+        this.$refs.id_fornecedor,
+        this.$refs.id_produto,
+        this.$refs.quantidade,
+        this.$refs.valor_unitario,
+        this.$refs.desconto,
+        this.$refs.btnAddProdutos,
+        this.$refs.frete,
+        this.$refs.seguro,
+        this.$refs.outras_despesas,
+        this.$refs.id_condicaopg,
         // ... mais referências de b-form-input ...
       ];
 
@@ -1887,7 +1990,7 @@ export default {
 }
 .disabled {
   pointer-events: none; /* Impede interações com elementos filhos */
-  opacity: 0.5; /* Opacidade reduzida para indicar desabilitação */
+  opacity: 0.6; /* Opacidade reduzida para indicar desabilitação */
 }
 .fail-error {
   border: 2px solid #e46060bb !important;

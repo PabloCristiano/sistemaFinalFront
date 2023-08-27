@@ -49,18 +49,18 @@
                     >Número:<b style="color: rgb(245, 153, 153)"> *</b></label
                   >
                   <b-form-input
-                    id="numero"
+                    id="numero_nota"
                     type="number"
                     placeholder="Número"
-                    v-model="form.numero"
+                    v-model="form.numero_nota"
                     :class="{
-                      'fail-error': $v.form.numero.$error,
+                      'fail-error': $v.form.numero_nota.$error,
                     }"
-                    ref="numero"
+                    ref="numero_nota"
                     @keydown.enter.prevent="moveFocus(3)"
                   ></b-form-input>
                   <small class="small-msg">
-                    {{ validationMsg($v.form.numero) }}
+                    {{ validationMsg($v.form.numero_nota) }}
                   </small>
                 </div>
               </div>
@@ -1033,7 +1033,7 @@ export default {
       form: {
         modelo: "",
         serie: "",
-        numero: "",
+        numero_nota: "",
         id_fornecedor: "",
         fornecedor: "",
         id_condicaopg: "",
@@ -1087,9 +1087,9 @@ export default {
       this.$router.push({ name: "compra" });
     } else {
       this.setCompra(this.formulario);
-      this.form.frete = this.form.frete.toFixed(2);
+      this.form.frete = this.form.frete.toFixed(5);
       this.form.seguro = this.form.seguro.toFixed(2);
-      this.form.outras_despesas = this.form.outras_despesas.toFixed(2);
+      this.form.outras_despesas = this.form.outras_despesas.toFixed(5);
     }
   },
   computed: {
@@ -1097,7 +1097,7 @@ export default {
       return (
         !this.$v.form.modelo.$invalid &&
         !this.$v.form.serie.$invalid &&
-        !this.$v.form.numero.$invalid &&
+        !this.$v.form.numero_nota.$invalid &&
         !this.$v.form.id_fornecedor.$invalid &&
         !this.$v.form.fornecedor.$invalid
       );
@@ -1133,7 +1133,7 @@ export default {
           }
           soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
           format = soma1 + soma;
-          this.form.total_compra = format.toFixed(2);
+          this.form.total_compra = format.toFixed(5);
         }
         if (this.form.condicaopagamento.length > 0) {
           var num = 0;
@@ -1173,7 +1173,7 @@ export default {
 
           soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
           format = soma1 + soma;
-          this.form.total_compra = format.toFixed(2);
+          this.form.total_compra = format.toFixed(5);
         }
         if (this.form.condicaopagamento.length > 0) {
           var num = 0;
@@ -1213,7 +1213,7 @@ export default {
 
           soma1 = parseFloat(this.calcTotalProduto(this.form.produtos));
           format = soma1 + soma;
-          this.form.total_compra = format.toFixed(2);
+          this.form.total_compra = format.toFixed(5);
         }
         if (this.form.condicaopagamento.length > 0) {
           var num = 0;
@@ -1279,7 +1279,7 @@ export default {
         txtNumeroisPositivo: Rules.isNumber,
         inputZero: Rules.isPositiveNumber,
       },
-      numero: {
+      numero_nota: {
         required: validators.required,
         integer: validators.integer,
         txtNumeroisPositivo: Rules.isNumber,
@@ -1337,6 +1337,7 @@ export default {
         this.$v.form.$touch();
         notyf.error("Compra está enfrentando uma irregularidade.!");
       } else {
+        this.convertPayLoad(this.form);
         console.log(this.form);
       }
     },
@@ -1395,7 +1396,7 @@ export default {
       if (obj) {
         (this.form.modelo = obj.modelo),
           (this.form.serie = obj.serie),
-          (this.form.numero = obj.numero_nota),
+          (this.form.numero_nota = obj.numero_nota),
           (this.form.id_fornecedor = obj.fornecedor.id),
           (this.form.fornecedor = obj.fornecedor.razaoSocial),
           (this.form.data_emissao = inverterDataPtBR(obj.data_emissao)),
@@ -1441,13 +1442,13 @@ export default {
       if (
         this.$v.form.modelo.$invalid &&
         this.$v.form.serie.$invalid &&
-        this.$v.form.numero.$invalid &&
+        this.$v.form.numero_nota.$invalid &&
         this.$v.form.id_fornecedor.$invalid &&
         this.$v.form.fornecedor.$invalid
       ) {
         this.$v.form.modelo.$touch();
         this.$v.form.serie.$touch();
-        this.$v.form.numero.$touch();
+        this.$v.form.numero_nota.$touch();
         this.$v.form.id_fornecedor.$touch();
         this.$v.form.fornecedor.$touch();
       } else {
@@ -1473,11 +1474,11 @@ export default {
           quantidade = this.validaProdutos.quantidade;
           valor_unitario = parseFloat(
             this.validaProdutos.valor_unitario
-          ).toFixed(2);
+          ).toFixed(5);
           f_valor_unitario = parseFloat(decimal);
           Valor_total_produto = quantidade * valor_unitario;
           desconto = this.calcPorcentagem(
-            parseFloat(this.validaProdutos.desconto).toFixed(2)
+            parseFloat(this.validaProdutos.desconto).toFixed(5)
           );
           valorDesconto = Valor_total_produto * desconto;
           subTotal = Valor_total_produto - valorDesconto;
@@ -1554,7 +1555,7 @@ export default {
         soma2 = parseFloat(format);
         soma += soma2;
       }
-      return soma.toFixed(2);
+      return soma.toFixed(5);
     },
     calcularTotalFrete(valorCompra, frete) {
       let soma;
@@ -1577,7 +1578,7 @@ export default {
         soma = soma + parseFloat(this.form.outras_despesas);
       }
 
-      this.form.total_compra = soma.toFixed(2);
+      this.form.total_compra = soma.toFixed(5);
     },
     calcularTotalSeguro(valorCompra, seguro) {
       let soma;
@@ -1600,7 +1601,7 @@ export default {
         soma = soma + parseFloat(this.form.outras_despesas);
       }
 
-      this.form.total_compra = soma.toFixed(2);
+      this.form.total_compra = soma.toFixed(5);
     },
     calcularTotalOutrasDespesas(valorCompra, outras_despesas) {
       let soma;
@@ -1622,7 +1623,7 @@ export default {
       ) {
         soma = soma + parseFloat(this.form.seguro);
       }
-      this.form.total_compra = soma.toFixed(2);
+      this.form.total_compra = soma.toFixed(5);
     },
     setCondicaoPagamento(obj, valor_compra) {
       if (
@@ -1654,7 +1655,7 @@ export default {
           valor_parcela = valorCompra;
           this.form.condicaopagamento.push({
             parcela: obj.parcelas[i].parcela,
-            id_formaPagamento:obj.parcelas[i].formaPagamento[0].id,
+            id_formaPagamento: obj.parcelas[i].formaPagamento[0].id,
             formaPagamento: obj.parcelas[i].formaPagamento[0].forma_pg,
             Vencimento: formatarDataParaPtBR(datavencimento),
             valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100,
@@ -1791,7 +1792,7 @@ export default {
           this.form.total_compra =
             frete + parseFloat(this.calcTotalProduto(this.form.produtos));
           let format = this.form.total_compra;
-          this.form.total_compra = format.toFixed(2);
+          this.form.total_compra = format.toFixed(5);
         }
 
         if (
@@ -1806,7 +1807,7 @@ export default {
             seguro +
             parseFloat(this.calcTotalProduto(this.form.produtos));
           let format = this.form.total_compra;
-          this.form.total_compra = format.toFixed(2);
+          this.form.total_compra = format.toFixed(5);
         }
         if (
           this.form.outras_despesas !== null &&
@@ -1821,7 +1822,7 @@ export default {
             outras_despesas +
             parseFloat(this.calcTotalProduto(this.form.produtos));
           let format = this.form.total_compra;
-          this.form.total_compra = format.toFixed(2);
+          this.form.total_compra = format.toFixed(5);
         }
 
         this.form.produtos[index].editing = false;
@@ -1922,7 +1923,7 @@ export default {
       const inputs = [
         this.$refs.modelo,
         this.$refs.serie,
-        this.$refs.numero,
+        this.$refs.numero_nota,
         this.$refs.id_fornecedor,
         this.$refs.id_produto,
         this.$refs.quantidade,
@@ -1939,6 +1940,52 @@ export default {
       if (nextIndex >= 0 && nextIndex < inputs.length) {
         inputs[nextIndex].focus();
       }
+    },
+    convertPayLoad(obj) {
+      let produtos = obj.produtos;
+      produtos.map((produto) => {
+        produto.produto = produto.produto.produto;
+        produto.desconto = extrairNumero(produto.desconto);
+        produto.qtd_produto = parseInt(produto.qtd_produto);
+        produto.total_produto = extrairNumero(produto.total_produto);
+        produto.valor_unitario = extrairNumero(produto.valor_unitario);
+        return produto;
+      });
+
+      let condicaopagamento = obj.condicaopagamento;
+      condicaopagamento.map((condicaopagamento) => {
+        condicaopagamento.valorParcela = extrairNumero(
+          condicaopagamento.valorParcela
+        );
+        return condicaopagamento;
+      });
+      obj.id_fornecedor = parseInt(obj.id_fornecedor);
+
+      obj.total_produtos = parseFloat(obj.total_produtos);
+      obj.total_compra = parseFloat(obj.total_compra);
+      
+      if (obj.frete === "" || obj.frete === isNaN(obj.frete)) {
+        obj.frete = "";
+      } else {
+        obj.frete = parseFloat(obj.frete);
+      }
+
+      if (obj.seguro === "" || obj.seguro === isNaN(obj.seguro)) {
+        obj.seguro = "";
+      } else {
+        obj.seguro = parseFloat(obj.seguro);
+      }
+
+      if (
+        obj.outras_despesas === "" ||
+        obj.outras_despesas === isNaN(obj.outras_despesas)
+      ) {
+        obj.outras_despesas = "";
+      } else {
+        obj.outras_despesas = parseFloat(obj.outras_despesas);
+      }
+
+      console.log(obj);
     },
   },
 };

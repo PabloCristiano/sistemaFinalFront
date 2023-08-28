@@ -731,7 +731,7 @@
                               id="parcela"
                               type="text"
                               class="form-control text-center"
-                              :value="item.parcela"
+                              :value="item.numero_parcela"
                               disabled
                             />
                           </td>
@@ -746,10 +746,10 @@
                           </td>
                           <td class="col-md-3 table_Td">
                             <input
-                              id="vencimento"
+                              id="data_vecimento"
                               type="text"
                               class="form-control text-center"
-                              :value="item.Vencimento"
+                              :value="item.data_vecimento"
                               disabled
                             />
                           </td>
@@ -758,7 +758,7 @@
                               id="valor_parcela"
                               type="text"
                               class="form-control text-center"
-                              :value="item.valorParcela"
+                              :value="item.valor_parcela"
                               disabled
                             />
                           </td>
@@ -1337,9 +1337,9 @@ export default {
         this.$v.form.$touch();
         notyf.error("Compra está enfrentando uma irregularidade.!");
       } else {
-       let payLoad =  this.convertPayLoad(this.form);
-        console.log('obj Original', this.form);
-        console.log('obj Clone',payLoad);
+        let payLoad = this.convertPayLoad(this.form);
+        console.log("obj Original", this.form);
+        console.log("obj Clone", payLoad);
       }
     },
     changeSearchFornecedor(obj) {
@@ -1655,15 +1655,15 @@ export default {
           datavencimento = Vencimento.toISOString().substr(0, 10);
           valor_parcela = valorCompra;
           this.form.condicaopagamento.push({
-            parcela: obj.parcelas[i].parcela,
-            id_formaPagamento: obj.parcelas[i].formaPagamento[0].id,
+            numero_parcela: obj.parcelas[i].parcela,
+            id_formapagamento: obj.parcelas[i].formaPagamento[0].id,
             formaPagamento: obj.parcelas[i].formaPagamento[0].forma_pg,
-            Vencimento: formatarDataParaPtBR(datavencimento),
-            valorParcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100
+            data_vecimento: formatarDataParaPtBR(datavencimento),
+            valor_parcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100
           });
         }
         this.form.condicaopagamento.map(function (c) {
-          c.valorParcela = currency(c.valorParcela);
+          c.valor_parcela = currency(c.valor_parcela);
         });
         this.form.condicaopagamento.length > 0
           ? (this.step2 = true)
@@ -1954,12 +1954,13 @@ export default {
         return produto;
       });
 
+
       let condicaopagamento = clonedObj.condicaopagamento;
       condicaopagamento.map((condicaopagamento) => {
-        condicaopagamento.valorParcela = extrairNumero(
-          condicaopagamento.valorParcela,
-          (condicaopagamento.Vencimento = inverterDataPtBR(
-            condicaopagamento.Vencimento
+        condicaopagamento.valor_parcela = extrairNumero(
+          condicaopagamento.valor_parcela,
+          (condicaopagamento.data_vecimento = inverterDataPtBR(
+            condicaopagamento.data_vecimento
           ))
         );
         return condicaopagamento;
@@ -1969,13 +1970,19 @@ export default {
       clonedObj.total_produtos = parseFloat(clonedObj.total_produtos);
       clonedObj.total_compra = parseFloat(clonedObj.total_compra);
 
-      if (clonedObj.frete === "" || clonedObj.frete === isNaN(clonedObj.frete)) {
+      if (
+        clonedObj.frete === "" ||
+        clonedObj.frete === isNaN(clonedObj.frete)
+      ) {
         clonedObj.frete = "";
       } else {
         clonedObj.frete = parseFloat(clonedObj.frete);
       }
 
-      if (clonedObj.seguro === "" || clonedObj.seguro === isNaN(clonedObj.seguro)) {
+      if (
+        clonedObj.seguro === "" ||
+        clonedObj.seguro === isNaN(clonedObj.seguro)
+      ) {
         clonedObj.seguro = "";
       } else {
         clonedObj.seguro = parseFloat(clonedObj.seguro);

@@ -1997,7 +1997,8 @@ export default {
       } else {
         clonedObj.outras_despesas = parseFloat(clonedObj.outras_despesas);
       }
-
+      const id_profissional = localStorage.getItem("User_id");
+      clonedObj.id_profissional = parseInt(id_profissional);
       return clonedObj;
     },
   },

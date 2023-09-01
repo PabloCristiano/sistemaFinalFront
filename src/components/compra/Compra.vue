@@ -967,6 +967,7 @@ import { Decimal } from "decimal.js";
 import { ServiceFornecedor } from "../../services/serviceFornecedor";
 import { ServiceProduto } from "../../services/serviceProduto";
 import { ServiceCondicaoPagamento } from "../../services/serviceCondicaoPagamento";
+import { ServiceCompra } from "../../services/serviceCompra";
 const formMessages = {
   required: () => "Campo Obrigatório",
   required_Produto: () => "Deve conter pelo menos um Produto adicionado !",
@@ -1329,7 +1330,6 @@ export default {
     validationMsg: validationMessage(formMessages),
     closeCompra() {
       //   this.onReset();
-      this.$bvModal.hide(this.modal_form_compra);
       this.$router.push({ name: "compra" });
     },
     onSubmit() {
@@ -1337,9 +1337,27 @@ export default {
         this.$v.form.$touch();
         notyf.error("Compra está enfrentando uma irregularidade.!");
       } else {
+        //clone
         let payLoad = this.convertPayLoad(this.form);
-        console.log("obj Original", this.form);
-        console.log("obj Clone", payLoad);
+        ServiceCompra.storeCompra(payLoad)
+          .then((response) => {
+            if (response.status === 200) {
+              this.$router.push({ name: "compra" });
+              notyf.success(response.data.original.message);
+              this.function_getListCondicaoPagamento();
+            } else {
+              if (response.response.data.errors != null) {
+                Object.keys(response.response.data.errors).forEach(function (
+                  key
+                ) {
+                  notyf.error(response.response.data.errors[key][0]);
+                });
+              }
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     },
     changeSearchFornecedor(obj) {

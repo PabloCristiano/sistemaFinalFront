@@ -14,17 +14,17 @@ export function formataDataTempo(d) {
 
 export function currency(value, currencySymbol = "R$ ") {
   if (isNaN(value)) return "";
-  return currencySymbol + value.toFixed(2).replace(".", ",");
+  return currencySymbol + value.toFixed(5).replace(".", ",");
 }
 
 export function currencyFormat(value) {
   if (isNaN(value)) return "";
-  return value.toFixed(2).replace(".", ",");
+  return value.toFixed(5).replace(".", ",");
 }
 
 export function currency_percentual(value, currencySymbol = "%") {
   if (isNaN(value)) return "";
-  return value.toFixed(2).replace(".", ",") + currencySymbol;
+  return value.toFixed(5).replace(".", ",") + currencySymbol;
 }
 
 export function Min(value, currencySymbol = " minutos") {
@@ -68,4 +68,14 @@ export function extrairNumero(str) {
   } else {
     return null; // Retorna null se não encontrar nenhum número correspondente
   }
+}
+
+export function formatarData(dataString) {
+  const data = new Date(dataString);
+
+  const dia = data.getDate().toString().padStart(2, "0");
+  const mes = (data.getMonth() + 1).toString().padStart(2, "0");
+  const ano = data.getFullYear().toString();
+
+  return `${ano}-${mes}-${dia}`;
 }

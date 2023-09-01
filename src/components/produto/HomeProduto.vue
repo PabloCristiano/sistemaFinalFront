@@ -80,6 +80,7 @@
 import { VueGoodTable } from "vue-good-table";
 import Modal from "./Modal.vue";
 import { ServiceProduto } from "../../services/serviceProduto";
+import { formatarData } from "../../rules/filters";
 export default {
   components: { VueGoodTable, Modal },
   props: {
@@ -122,10 +123,10 @@ export default {
         categoria: "",
         id_fornecedor: "",
         fornecedor: "",
-        qtdEstoque: "",
-        precoCusto: "",
+        qtdEstoque: 0,
+        precoCusto: 0,
         precoVenda: "",
-        custoUltCompra: "",
+        custoUltCompra: 0,
         dataUltCompra: "",
         dataUltVenda: "",
         data_create: "",
@@ -183,10 +184,10 @@ export default {
       this.form_produto.categoria = "";
       this.form_produto.id_fornecedor = "";
       this.form_produto.fornecedor = "";
-      this.form_produto.qtdEstoque = "";
-      this.form_produto.precoCusto = "";
+      this.form_produto.qtdEstoque = 0;
+      this.form_produto.precoCusto = 0;
       this.form_produto.precoVenda = "";
-      this.form_produto.custoUltCompra = "";
+      this.form_produto.custoUltCompra = 0;
       this.form_produto.dataUltCompra = "";
       this.form_produto.dataUltVenda = "";
       this.form_produto.data_create = "";
@@ -211,7 +212,7 @@ export default {
           this.form_produto.precoCusto = precoCusto.toFixed(2);
           this.form_produto.precoVenda = precoVenda.toFixed(2);
           this.form_produto.custoUltCompra = custoUltCompra.toFixed(2);
-          this.form_produto.dataUltCompra = obj.data[0].dataUltCompra;
+          this.form_produto.dataUltCompra = formatarData(obj.data[0].dataUltCompra);
           this.form_produto.dataUltVenda = obj.data[0].dataUltVenda;
 
           this.form_produto.data_create = obj.data[0].data_create;

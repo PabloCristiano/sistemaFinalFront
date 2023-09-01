@@ -80,16 +80,12 @@
                 >
                 <b-form-input
                   id="unidade"
-                  type="text"
+                  type="number"
                   v-model="form.qtdEstoque"
-                  :class="{ 'fail-error': $v.form.qtdEstoque.$error }"
                   placeholder="Qtd Unidade"
-                  :disabled="form.disabled"
+                  :disabled="true"
                 >
                 </b-form-input>
-                <small style="font-size: 11px; color: red">
-                  {{ validationMsg($v.form.qtdEstoque) }}
-                </small>
               </div>
             </div>
             <div class="row col-12 mt-2">
@@ -217,6 +213,24 @@
             <div class="row col-12 mt-2">
               <div class="col-md-4">
                 <label
+                  >Custo Ult Compra:<b style="color: rgb(245, 153, 153)">
+                    *</b
+                  ></label
+                >
+                <b-input-group prepend="R$">
+                  <b-form-input
+                    id="custoUltCompra"
+                    type="number"
+                    v-model="form.custoUltCompra"
+                    placeholder="Custo Ultima Compra"
+                    :title="form.custoUltCompra"
+                    :disabled="true"
+                  >
+                  </b-form-input>
+                </b-input-group>
+              </div>
+              <div class="col-md-4">
+                <label
                   >Preço Custo:<b style="color: rgb(245, 153, 153)">
                     *</b
                   ></label
@@ -227,16 +241,11 @@
                     type="number"
                     v-model="form.precoCusto"
                     placeholder="Preço de Custo"
-                    :class="{ 'fail-error': $v.form.precoCusto.$error }"
                     :title="form.precoCusto"
-                    :disabled="form.disabled"
+                    :disabled="true"
                   >
                   </b-form-input>
                 </b-input-group>
-
-                <small style="font-size: 11px; color: red">
-                  {{ validationMsg($v.form.precoCusto) }}
-                </small>
               </div>
               <div class="col-md-4">
                 <label
@@ -259,28 +268,6 @@
 
                 <small style="font-size: 11px; color: red">
                   {{ validationMsg($v.form.precoVenda) }}
-                </small>
-              </div>
-              <div class="col-md-4">
-                <label
-                  >Custo Ult Compra:<b style="color: rgb(245, 153, 153)">
-                    *</b
-                  ></label
-                >
-                <b-input-group prepend="R$">
-                  <b-form-input
-                    id="custoUltCompra"
-                    type="number"
-                    v-model="form.custoUltCompra"
-                    placeholder="Custo Ultima Compra"
-                    :class="{ 'fail-error': $v.form.custoUltCompra.$error }"
-                    :title="form.custoUltCompra"
-                    :disabled="form.disabled"
-                  >
-                  </b-form-input>
-                </b-input-group>
-                <small style="font-size: 11px; color: red">
-                  {{ validationMsg($v.form.custoUltCompra) }}
                 </small>
               </div>
             </div>
@@ -510,22 +497,7 @@ export default {
           txtMinLen: validators.minLength(3),
           txtMaxLen: validators.maxLength(20),
         },
-        qtdEstoque: {
-          required: validators.required,
-          integer: validators.integer,
-          txtNumeroPositivo: Rules.isPositiveNumber,
-        },
-        precoCusto: {
-          required: validators.required,
-          decimal: validators.decimal,
-          txtNumeroPositivo: Rules.isPositiveNumber,
-        },
         precoVenda: {
-          required: validators.required,
-          decimal: validators.decimal,
-          txtNumeroPositivo: Rules.isPositiveNumber,
-        },
-        custoUltCompra: {
           required: validators.required,
           decimal: validators.decimal,
           txtNumeroPositivo: Rules.isPositiveNumber,
@@ -627,8 +599,8 @@ export default {
                 this.$bvModal.hide(this.modal_form_produto);
                 this.fGetListProduto();
               } else {
-                if (obj.response.data.erro.length > 0) {
-                  notyf.error(obj.response.data.erro[0]);
+                if (obj.response.data.error) {
+                  notyf.error(obj.response.data.error[0]);
                 }
               }
             })
@@ -669,6 +641,7 @@ export default {
       ServiceFornecedor.getById(id).then((response) => {
         if (response.status === 200) {
           vm.form.fornecedor = response.data[0].razaoSocial;
+          vm.form.id_fornecedor = response.data[0].id;
           this.isLoadingFornecedor = false;
         } else {
           vm.form.fornecedor = "";
@@ -684,6 +657,7 @@ export default {
       ServiceCategorias.getById(id).then((response) => {
         if (response.status === 200) {
           vm.form.categoria = response.data[0].categoria;
+          vm.form.id_categoria = response.data[0].id;
           this.isLoadingCategoria = false;
         } else {
           vm.form.categoria = "";

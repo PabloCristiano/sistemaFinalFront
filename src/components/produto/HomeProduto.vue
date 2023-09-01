@@ -80,6 +80,7 @@
 import { VueGoodTable } from "vue-good-table";
 import Modal from "./Modal.vue";
 import { ServiceProduto } from "../../services/serviceProduto";
+import { formatarData } from "../../rules/filters";
 export default {
   components: { VueGoodTable, Modal },
   props: {
@@ -211,7 +212,7 @@ export default {
           this.form_produto.precoCusto = precoCusto.toFixed(2);
           this.form_produto.precoVenda = precoVenda.toFixed(2);
           this.form_produto.custoUltCompra = custoUltCompra.toFixed(2);
-          this.form_produto.dataUltCompra = obj.data[0].dataUltCompra;
+          this.form_produto.dataUltCompra = formatarData(obj.data[0].dataUltCompra);
           this.form_produto.dataUltVenda = obj.data[0].dataUltVenda;
 
           this.form_produto.data_create = obj.data[0].data_create;

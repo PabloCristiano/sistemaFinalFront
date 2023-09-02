@@ -4,7 +4,7 @@
       <slot name="conteudo">
         <b-form>
           <div class="row mt-2">
-            <div class="col-md-6" :class="{ disabled: step1 }">
+            <div class="col-md-6">
               <div class="row col-md-12 col-sm-12">
                 <div class="col-md-4 col-sm-4">
                   <label
@@ -20,6 +20,7 @@
                     }"
                     ref="modelo"
                     @keydown.enter.prevent="moveFocus(1)"
+                    :disabled="form.desabilita_step1"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.modelo) }}
@@ -39,6 +40,7 @@
                     }"
                     ref="serie"
                     @keydown.enter.prevent="moveFocus(2)"
+                    :disabled="form.desabilita_step1"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.serie) }}
@@ -58,6 +60,7 @@
                     }"
                     ref="numero_nota"
                     @keydown.enter.prevent="moveFocus(3)"
+                    :disabled="form.desabilita_step1"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.numero_nota) }}
@@ -67,7 +70,7 @@
             </div>
             <!-- d-flex align-items-center -->
             <div class="col-md-6">
-              <div class="row col-md-12 col-sm-12" :class="{ disabled: step1 }">
+              <div class="row col-md-12 col-sm-12">
                 <div class="col-md-3 col-sm-4">
                   <label>Código:</label>
                   <b-form-input
@@ -79,10 +82,12 @@
                     :class="{
                       'fail-error': $v.form.id_fornecedor.$error,
                     }"
-                    v-debounce:300ms="fornecedorDebounce"
-                    :disabled="isLoadingFornecedor"
+                    :disabled="form.desabilita_step1"
                     ref="id_fornecedor"
-                    @keydown.enter.prevent="moveFocus(4)"
+                    @keydown.enter.prevent="
+                      fornecedorDebounce(form.id_fornecedor)
+                    "
+                    @keydown.backspace="handleBackspace_fornecedor"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.id_fornecedor) }}
@@ -111,7 +116,7 @@
                         <b-button
                           text="Button"
                           variant="dark"
-                          :disabled="form.disabled"
+                          :disabled="form.desabilita_step1"
                           @click="showSearchFornecedor()"
                           title="Pesquisar Fornecedor"
                         >
@@ -136,15 +141,11 @@
                     :class="{
                       'fail-error': $v.form.data_emissao.$error,
                     }"
+                    :disabled="form.desabilita_step1"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.data_emissao) }}
                   </small>
-                  <!-- <small
-                    v-if="max_isDateInvalid"
-                    style="font-size: 11px; color: red"
-                    >A data não pode ser maior que a data atual.</small
-                  > -->
                 </div>
                 <div class="col-md-6 col-sm-6 mt-2">
                   <label>Data Chegada:</label>
@@ -156,6 +157,7 @@
                       'fail-error': $v.form.data_chegada.$error,
                     }"
                     :min="minDate"
+                    :disabled="form.desabilita_step1"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.data_chegada) }}
@@ -169,9 +171,9 @@
           <!-- class="mt-4" -->
           <transition name="slow-motion" appear>
             <div
-              v-if="todosParametrosPreenchidos"
+              v-if="true"
               class="slow-motion-div mt-4"
-              :class="{ disabled: step2 }"
+              :class="{ card_produto_disabled: !todosParametrosPreenchidos }"
             >
               <b-card :header-html="textCard_Produto" class="text-start">
                 <div v-if="mostrarBlocoProduto" class="row mt-02">
@@ -186,9 +188,11 @@
                       type="number"
                       placeholder="Código"
                       ref="id_produto"
-                      @keydown.enter.prevent="moveFocus(5)"
-                      v-debounce:300ms="produtoDebounce"
-                      :disabled="isLoadingProduto"
+                      :disabled="form.desabilita_step2"
+                      @keydown.enter.prevent="
+                        produtoDebounce(validaProdutos.id_produto)
+                      "
+                      @keydown.backspace="handleBackspace_produto"
                     >
                     </b-form-input>
                     <small class="small-msg">
@@ -218,7 +222,7 @@
                           <b-button
                             text="Button"
                             variant="dark"
-                            :disabled="form.disabled"
+                            :disabled="form.desabilita_step2"
                             title="Pesquisar Produto"
                             @click="showSearchProduto()"
                           >
@@ -265,6 +269,7 @@
                       }"
                       ref="quantidade"
                       @keydown.enter.prevent="moveFocus(6)"
+                      :disabled="form.desabilita_step2"
                     >
                     </b-form-input>
                     <small class="small-msg">
@@ -294,6 +299,7 @@
                         }"
                         ref="valor_unitario"
                         @keydown.enter.prevent="moveFocus(7)"
+                        :disabled="form.desabilita_step2"
                       ></b-form-input>
                     </b-input-group>
                     <small class="small-msg">
@@ -323,6 +329,7 @@
                         placeholder="0,00"
                         ref="desconto"
                         @keydown.enter.prevent="moveFocus(8)"
+                        :disabled="form.desabilita_step2"
                       ></b-form-input>
                     </b-input-group>
                     <small class="small-msg">
@@ -339,6 +346,7 @@
                       :class="{ disabled: buttonLock }"
                       ref="btnAddProdutos"
                       @keydown.enter.prevent="moveFocus(9)"
+                      :disabled="form.desabilita_step2"
                     >
                       Adicionar Produto
                     </b-button>
@@ -350,6 +358,7 @@
                       variant="dark"
                       title="Limpar campos produtos"
                       @click="clearInputsListProducts()"
+                      :disabled="form.desabilita_step2"
                     >
                       <i class="bx bx-trash"></i>
                     </b-button>
@@ -469,7 +478,10 @@
                               disabled
                             />
                           </td>
-                          <td class="col-md-1 col-sm-1 table_Td">
+                          <td
+                            class="col-md-1 col-sm-1 table_Td"
+                            :class="{ disabled: form.desabilita_step2 }"
+                          >
                             <div v-if="!form.produtos[key].editing">
                               <button
                                 class="btn btn-sm me-1 mb-1 mt-1"
@@ -548,6 +560,7 @@
                         placeholder="0,00"
                         ref="frete"
                         @keydown.enter.prevent="moveFocus(10)"
+                        :disabled="form.desabilita_step2"
                       >
                       </b-form-input>
                       <small class="small-msg">
@@ -566,6 +579,7 @@
                         }"
                         ref="seguro"
                         @keydown.enter.prevent="moveFocus(11)"
+                        :disabled="form.desabilita_step2"
                       >
                       </b-form-input>
                       <small class="small-msg">{{
@@ -584,6 +598,7 @@
                         placeholder="0,00"
                         ref="outras_despesas"
                         @keydown.enter.prevent="moveFocus(12)"
+                        :disabled="form.desabilita_step2"
                       >
                       </b-form-input>
                       <small class="small-msg">{{
@@ -625,7 +640,11 @@
           </transition>
           <!-- card Condição Pagamento -->
           <transition name="slow-motion" appear>
-            <div v-if="todosParametrosPreenchidos" class="slow-motion-div mt-4">
+            <div
+              v-if="true"
+              class="slow-motion-div mt-4"
+              :class="{ card_produto_disabled: !produtosPreenchidos }"
+            >
               <b-card
                 :header-html="textCard_CondicaoPagamento"
                 class="text-start"
@@ -643,9 +662,13 @@
                         v-model="form.id_condicaopg"
                         placeholder="Código"
                         ref="id_condicaopg"
-                        v-debounce:300ms="condicaoPagamentoDebounce"
-                        @keydown.enter.prevent="moveFocus(13)"
-                        :disabled="isLoadingCondicao"
+                        :disabled="form.desabilita_step3"
+                        @keydown.enter.prevent="
+                          condicaoPagamentoDebounce(form.id_condicaopg)
+                        "
+                        @keydown.backspace="
+                          handleBackspace_condicaoPagamentoDebounce
+                        "
                       ></b-form-input>
                       <small class="small-msg">
                         {{ validationMsg($v.form.id_condicaopg) }}
@@ -675,7 +698,7 @@
                             <b-button
                               text="Button"
                               variant="dark"
-                              :disabled="form.disabled"
+                              :disabled="form.desabilita_step3"
                               title="Pesquisar Condição de Pagamento"
                               @click.prevent="showSearchCondicaoPagamento()"
                             >
@@ -695,6 +718,7 @@
                         variant="dark"
                         title="Limpar Condição de Pagamento"
                         @click="clearListCondicao()"
+                        :disabled="form.desabilita_step3"
                       >
                         <i class="bx bx-trash"></i>
                       </b-button>
@@ -775,6 +799,7 @@
                     placeholder="Observações"
                     rows="3"
                     max-rows="6"
+                    :disabled="form.desabilita_step3"
                   ></b-form-textarea>
                 </div>
               </b-card>
@@ -809,15 +834,17 @@
           >
             Cancelar
           </b-button>
-          <b-button
-            class="btn btn-sm me-1"
-            :class="{ disabled: buttonLock }"
-            type="button"
-            variant="dark"
-            @click.prevent="onSubmit()"
-          >
-            Salvar<i class="bx bx-check"></i>
-          </b-button>
+          <div v-if="!form.desabilita_step3">
+            <b-button
+              class="btn btn-sm me-1"
+              :class="{ disabled: buttonLock }"
+              type="button"
+              variant="dark"
+              @click.prevent="onSubmit()"
+            >
+              Salvar<i class="bx bx-check"></i>
+            </b-button>
+          </div>
         </div>
       </slot>
       <slot name="rodape">
@@ -1056,6 +1083,9 @@ export default {
         observacao: "",
         produtos: [],
         condicaopagamento: [],
+        desabilita_step1: false,
+        desabilita_step2: false,
+        desabilita_step3: false,
       },
       maxDate: "", // Define a data máxima como a data atual
       minDate: "", // Define a data mínima como a data atual
@@ -1089,7 +1119,7 @@ export default {
     } else {
       this.setCompra(this.formulario);
       this.form.frete = this.form.frete.toFixed(5);
-      this.form.seguro = this.form.seguro.toFixed(2);
+      this.form.seguro = this.form.seguro.toFixed(5);
       this.form.outras_despesas = this.form.outras_despesas.toFixed(5);
     }
   },
@@ -1102,6 +1132,9 @@ export default {
         !this.$v.form.id_fornecedor.$invalid &&
         !this.$v.form.fornecedor.$invalid
       );
+    },
+    produtosPreenchidos() {
+      return !this.$v.form.produtos.$invalid;
     },
   },
   watch: {
@@ -1224,23 +1257,12 @@ export default {
         }
       }
     },
-    // max_isDateInvalid(result) {
-    //   if (result) {
-    //     this.data_emissao = this.obterDataAtual();
-    //     notyf.error("A Data Emissão não pode ser maior que a data atual");
-    //   }
-    // },
-    // min_isDateInvalid(result) {
-    //   if (result) {
-    //     this.data_chegada = this.obterDataAtual();
-    //     notyf.error("A Data Chegada não pode ser menor que a data atual");
-    //   }
-    // },
   },
   validations: {
     validaProdutos: {
       id_produto: {
         required: validators.required,
+        integer: validators.integer,
       },
       produto: {
         required: validators.required,
@@ -1288,6 +1310,7 @@ export default {
       },
       id_fornecedor: {
         required: validators.required,
+        integer: validators.integer,
         txtNumeroisPositivo: Rules.isNumber,
       },
       fornecedor: {
@@ -1339,6 +1362,7 @@ export default {
       } else {
         //clone
         let payLoad = this.convertPayLoad(this.form);
+        console.log(payLoad);
         ServiceCompra.storeCompra(payLoad)
           .then((response) => {
             if (response.status === 200) {
@@ -1413,24 +1437,28 @@ export default {
     },
     setCompra(obj) {
       if (obj) {
-        (this.form.modelo = obj.modelo),
+        console.log(obj),
+          (this.form.desabilita_step1 = obj.desabilita_step1),
+          (this.form.desabilita_step2 = obj.desabilita_step2),
+          (this.form.desabilita_step3 = obj.desabilita_step3),
+          (this.form.modelo = obj.modelo),
           (this.form.serie = obj.serie),
           (this.form.numero_nota = obj.numero_nota),
           (this.form.id_fornecedor = obj.fornecedor.id),
           (this.form.fornecedor = obj.fornecedor.razaoSocial),
           (this.form.data_emissao = inverterDataPtBR(obj.data_emissao)),
-          (this.form.data_chegada = obj.data_chegada),
-          (this.form.produtos = obj.produtos),
-          this.form.produtos.map(function (produtos) {
-            produtos.valor_unitario = currencyFormat(produtos.valor_unitario);
-            produtos.total_produto = currencyFormat(produtos.total_produto);
-            produtos.desconto = currencyFormat(produtos.desconto);
-            produtos.desativar = true;
-            produtos.editing = false;
-            produtos.msgErrorQtd = false;
-            produtos.msgErrorPer = false;
-            return produtos;
-          }),
+          (this.form.data_chegada = obj.data_chegada);
+        this.form.produtos = obj.produtos;
+        this.form.produtos.map(function (produtos) {
+          produtos.valor_unitario = currencyFormat(produtos.valor_unitario);
+          produtos.total_produto = currencyFormat(produtos.total_produto);
+          produtos.desconto = currencyFormat(produtos.desconto);
+          produtos.desativar = true;
+          produtos.editing = false;
+          produtos.msgErrorQtd = false;
+          produtos.msgErrorPer = false;
+          return produtos;
+        }),
           (this.form.total_produtos = this.calcTotalProduto(
             this.form.produtos
           ));
@@ -1536,8 +1564,8 @@ export default {
           });
           this.clearInputsListProducts();
           this.form.produtos.length > 0
-            ? (this.step1 = true)
-            : (this.step1 = false);
+            ? (this.form.desabilita_step1 = true)
+            : (this.form.desabilita_step1 = false);
         }
       }
     },
@@ -1561,8 +1589,8 @@ export default {
       this.$v.form.condicaopagamento.$reset();
       this.form.condicaopagamento = [];
       this.form.condicaopagamento.length > 0
-        ? (this.step2 = true)
-        : (this.step2 = false);
+        ? (this.form.desabilita_step2 = true)
+        : (this.form.desabilita_step2 = false);
     },
     calcTotalProduto(obj) {
       let soma = 0;
@@ -1684,8 +1712,11 @@ export default {
           c.valor_parcela = currency(c.valor_parcela);
         });
         this.form.condicaopagamento.length > 0
-          ? (this.step2 = true)
-          : (this.step2 = false);
+          ? (this.form.desabilita_step2 = true)
+          : (this.form.desabilita_step2 = false);
+        this.form.condicaopagamento.length > 0
+          ? (this.form.desabilita_step2 = true)
+          : (this.form.desabilita_step2 = false);
       }
     },
     deleteItemProduto(index) {
@@ -1719,8 +1750,8 @@ export default {
         }
       }
       this.form.produtos.length > 0
-        ? (this.step1 = true)
-        : (this.step1 = false);
+        ? (this.form.desabilita_step1 = true)
+        : (this.form.desabilita_step1 = false);
     },
     toggleEditingProdutos(index) {
       this.form.produtos[index].editing = !this.form.produtos[index].editing;
@@ -1857,11 +1888,16 @@ export default {
       let vm = this;
       ServiceFornecedor.getById(id).then((response) => {
         if (response.status === 200) {
+          vm.form.id_fornecedor = "";
+          vm.form.fornecedor = "";
+          vm.form.id_fornecedor = response.data[0].id;
           vm.form.fornecedor = response.data[0].razaoSocial;
           this.isLoadingFornecedor = false;
-          this.$nextTick(() => {
-            this.$refs.id_fornecedor.focus();
-          });
+          if (this.todosParametrosPreenchidos) {
+            this.$nextTick(() => {
+              this.$refs.id_produto.focus();
+            });
+          }
         } else {
           vm.form.fornecedor = "";
           vm.form.id_fornecedor = "";
@@ -1889,7 +1925,7 @@ export default {
           vm.validaProdutos.unidade = response.data[0].unidade;
           this.isLoadingProduto = false;
           this.$nextTick(() => {
-            this.$refs.id_produto.focus();
+            this.$refs.quantidade.focus();
           });
         } else {
           vm.validaProdutos.id_produto = "";
@@ -1915,7 +1951,6 @@ export default {
       this.isLoadingCondicao = true;
       ServiceCondicaoPagamento.getById(id).then((response) => {
         if (response.status === 200) {
-          console.log(response);
           this.form.id_condicaopg = "";
           this.form.condicaopg = "";
           var valor_compra = currency(parseFloat(this.form.total_compra));
@@ -2018,6 +2053,21 @@ export default {
       const id_profissional = localStorage.getItem("User_id");
       clonedObj.id_profissional = parseInt(id_profissional);
       return clonedObj;
+    },
+    handleBackspace_fornecedor(event) {
+      if (event.keyCode === 8) {
+        this.fornecedorDebounce(0);
+      }
+    },
+    handleBackspace_produto(event) {
+      if (event.keyCode === 8) {
+        this.produtoDebounce(0);
+      }
+    },
+    handleBackspace_condicaoPagamentoDebounce(event) {
+      if (event.keyCode === 8) {
+        this.condicaoPagamentoDebounce(0);
+      }
     },
   },
 };

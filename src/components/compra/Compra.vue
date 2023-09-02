@@ -170,7 +170,11 @@
           <!-- :class="{ card_produto_disabled: !todosParametrosPreenchidos }" -->
           <!-- class="mt-4" -->
           <transition name="slow-motion" appear>
-            <div v-if="todosParametrosPreenchidos" class="slow-motion-div mt-4">
+            <div
+              v-if="true"
+              class="slow-motion-div mt-4"
+              :class="{ card_produto_disabled: !todosParametrosPreenchidos }"
+            >
               <b-card :header-html="textCard_Produto" class="text-start">
                 <div v-if="mostrarBlocoProduto" class="row mt-02">
                   <div class="col-md-2">
@@ -636,7 +640,7 @@
           </transition>
           <!-- card Condição Pagamento -->
           <transition name="slow-motion" appear>
-            <div v-if="todosParametrosPreenchidos" class="slow-motion-div mt-4">
+            <div v-if="true" class="slow-motion-div mt-4" :class="{ card_produto_disabled: !produtosPreenchidos }">
               <b-card
                 :header-html="textCard_CondicaoPagamento"
                 class="text-start"
@@ -1124,6 +1128,9 @@ export default {
         !this.$v.form.id_fornecedor.$invalid &&
         !this.$v.form.fornecedor.$invalid
       );
+    },
+    produtosPreenchidos() {
+      return !this.$v.form.produtos.$invalid;
     },
   },
   watch: {

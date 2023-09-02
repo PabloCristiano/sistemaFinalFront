@@ -170,10 +170,7 @@
           <!-- :class="{ card_produto_disabled: !todosParametrosPreenchidos }" -->
           <!-- class="mt-4" -->
           <transition name="slow-motion" appear>
-            <div
-              v-if="todosParametrosPreenchidos"
-              class="slow-motion-div mt-4"
-            >
+            <div v-if="todosParametrosPreenchidos" class="slow-motion-div mt-4">
               <b-card :header-html="textCard_Produto" class="text-start">
                 <div v-if="mostrarBlocoProduto" class="row mt-02">
                   <div class="col-md-2">
@@ -477,8 +474,11 @@
                               disabled
                             />
                           </td>
-                          <td  class="col-md-1 col-sm-1 table_Td" :class="{ disabled: form.desabilita_step2 }">
-                            <div v-if="!form.produtos[key].editing" >
+                          <td
+                            class="col-md-1 col-sm-1 table_Td"
+                            :class="{ disabled: form.desabilita_step2 }"
+                          >
+                            <div v-if="!form.produtos[key].editing">
                               <button
                                 class="btn btn-sm me-1 mb-1 mt-1"
                                 type="button"
@@ -791,6 +791,7 @@
                     placeholder="Observações"
                     rows="3"
                     max-rows="6"
+                    :disabled="form.desabilita_step3"
                   ></b-form-textarea>
                 </div>
               </b-card>
@@ -825,15 +826,17 @@
           >
             Cancelar
           </b-button>
-          <b-button
-            class="btn btn-sm me-1"
-            :class="{ disabled: buttonLock }"
-            type="button"
-            variant="dark"
-            @click.prevent="onSubmit()"
-          >
-            Salvar<i class="bx bx-check"></i>
-          </b-button>
+          <div v-if="!form.desabilita_step3">
+            <b-button
+              class="btn btn-sm me-1"
+              :class="{ disabled: buttonLock }"
+              type="button"
+              variant="dark"
+              @click.prevent="onSubmit()"
+            >
+              Salvar<i class="bx bx-check"></i>
+            </b-button>
+          </div>
         </div>
       </slot>
       <slot name="rodape">

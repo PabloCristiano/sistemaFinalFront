@@ -79,3 +79,8 @@ export function formatarData(dataString) {
 
   return `${ano}-${mes}-${dia}`;
 }
+
+export function currency_t(value, currencySymbol = "R$ ") {
+  if (isNaN(value)) return "";
+  return currencySymbol + value.toFixed(2).replace(".", ",");
+}

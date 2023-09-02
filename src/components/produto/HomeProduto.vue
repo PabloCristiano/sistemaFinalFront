@@ -80,7 +80,7 @@
 import { VueGoodTable } from "vue-good-table";
 import Modal from "./Modal.vue";
 import { ServiceProduto } from "../../services/serviceProduto";
-import { formatarData } from "../../rules/filters";
+import { formatarData,currency_t } from "../../rules/filters";
 export default {
   components: { VueGoodTable, Modal },
   props: {
@@ -101,8 +101,32 @@ export default {
           tdClass: "text-center",
         },
         {
+          label: "Categoria",
+          field: "categoria.categoria",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
           label: "Produto",
           field: "produto",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
+          label: "Preco de Venda",
+          field: "precoVenda",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
+          label: "Quantidade",
+          field: "qtdEstoque",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
+          label: "Tipo",
+          field: "unidade",
           thClass: "text-center",
           tdClass: "text-center",
         },
@@ -146,6 +170,10 @@ export default {
       ServiceProduto.getAll()
         .then((obj) => {
           if (obj) {
+            console.log(obj)
+            obj.map((produto)=>{
+             produto.precoVenda = currency_t(produto.precoVenda)
+            });
             this.produtos = obj;
           }
           this.isLoading = false;

@@ -144,7 +144,9 @@ export default {
               obj.map(function (obj) {
                 obj.valor_compra = currency(obj.valor_compra);
                 obj.data_emissao = formatarDataParaPtBR(obj.data_emissao);
-                obj.desabilita_alterar = false;
+                obj.desabilita_step1 = false;
+                obj.desabilita_step2 = false;
+                obj.desabilita_step3 = false;
                 return obj;
               });
             }
@@ -162,7 +164,9 @@ export default {
       }
     },
     showCompra(row) {
-      row.desabilita_alterar = true;
+      row.desabilita_step1 = true;
+      row.desabilita_step2 = true;
+      row.desabilita_step3 = true;
       this.$router.push({
         name: "adicionarCompra",
         params: { formulario: row },

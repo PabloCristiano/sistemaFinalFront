@@ -1362,6 +1362,7 @@ export default {
       } else {
         //clone
         let payLoad = this.convertPayLoad(this.form);
+        console.log(payLoad);
         ServiceCompra.storeCompra(payLoad)
           .then((response) => {
             if (response.status === 200) {
@@ -1887,11 +1888,16 @@ export default {
       let vm = this;
       ServiceFornecedor.getById(id).then((response) => {
         if (response.status === 200) {
+          vm.form.id_fornecedor = "";
+          vm.form.fornecedor = "";
+          vm.form.id_fornecedor = response.data[0].id;
           vm.form.fornecedor = response.data[0].razaoSocial;
           this.isLoadingFornecedor = false;
-          this.$nextTick(() => {
-            this.$refs.id_produto.focus();
-          });
+          if (this.todosParametrosPreenchidos) {
+            this.$nextTick(() => {
+              this.$refs.id_produto.focus();
+            });
+          }
         } else {
           vm.form.fornecedor = "";
           vm.form.id_fornecedor = "";

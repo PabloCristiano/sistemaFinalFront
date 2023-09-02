@@ -640,7 +640,11 @@
           </transition>
           <!-- card Condição Pagamento -->
           <transition name="slow-motion" appear>
-            <div v-if="true" class="slow-motion-div mt-4" :class="{ card_produto_disabled: !produtosPreenchidos }">
+            <div
+              v-if="true"
+              class="slow-motion-div mt-4"
+              :class="{ card_produto_disabled: !produtosPreenchidos }"
+            >
               <b-card
                 :header-html="textCard_CondicaoPagamento"
                 class="text-start"
@@ -1442,18 +1446,18 @@ export default {
           (this.form.id_fornecedor = obj.fornecedor.id),
           (this.form.fornecedor = obj.fornecedor.razaoSocial),
           (this.form.data_emissao = inverterDataPtBR(obj.data_emissao)),
-          (this.form.data_chegada = obj.data_chegada),
-          (this.form.produtos = obj.produtos),
-          this.form.produtos.map(function (produtos) {
-            produtos.valor_unitario = currencyFormat(produtos.valor_unitario);
-            produtos.total_produto = currencyFormat(produtos.total_produto);
-            produtos.desconto = currencyFormat(produtos.desconto);
-            produtos.desativar = true;
-            produtos.editing = false;
-            produtos.msgErrorQtd = false;
-            produtos.msgErrorPer = false;
-            return produtos;
-          }),
+          (this.form.data_chegada = obj.data_chegada);
+        this.form.produtos = obj.produtos;
+        this.form.produtos.map(function (produtos) {
+          produtos.valor_unitario = currencyFormat(produtos.valor_unitario);
+          produtos.total_produto = currencyFormat(produtos.total_produto);
+          produtos.desconto = currencyFormat(produtos.desconto);
+          produtos.desativar = true;
+          produtos.editing = false;
+          produtos.msgErrorQtd = false;
+          produtos.msgErrorPer = false;
+          return produtos;
+        }),
           (this.form.total_produtos = this.calcTotalProduto(
             this.form.produtos
           ));

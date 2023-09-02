@@ -24,12 +24,14 @@
             </div>
             <form class="form" action="" method="post">
               <div class="form-group">
-                <label for="username">E-mail:</label>
+                <label for="jj">E-mail:</label>
                 <input
                   type="text"
                   class="form-control"
                   id="username"
                   v-model="form.email"
+                  ref="username"
+                  @keydown.enter.prevent="moveFocus(1)"
                 />
               </div>
               <div class="form-group mb-3">
@@ -38,10 +40,18 @@
                   type="password"
                   class="form-control"
                   id="password"
+                  ref="password"
+                  @keydown.enter.prevent="moveFocus(2)"
                   v-model="form.password"
                 />
               </div>
-              <div v-if="msg" class="alert alert-danger text-center" role="alert"><span>{{ msg }}</span></div>
+              <div
+                v-if="msg"
+                class="alert alert-danger text-center"
+                role="alert"
+              >
+                <span>{{ msg }}</span>
+              </div>
               <div class="text-center">
                 <input
                   type="button"
@@ -53,6 +63,9 @@
                     color: black;
                     border-color: white;
                   "
+                  ref="button"
+                  @keydown.enter.prevent="moveFocus(3)"
+                  @keyup.enter="login()"
                   @click="login()"
                 />
               </div>
@@ -82,15 +95,15 @@ export default {
       isLoading: false,
       form: {
         email: "",
-        password: ""
+        password: "",
       },
-      msg:'',
+      msg: "",
     };
   },
   methods: {
     async login() {
       this.isLoading = true;
-      this.msg = '';
+      this.msg = "";
       try {
         const response = await UserService.login(
           this.form.email,
@@ -104,8 +117,20 @@ export default {
         console.log(e);
         this.isLoading = false;
       }
-    }
-  }
+    },
+    moveFocus(nextIndex) {
+      const inputs = [
+        this.$refs.username,
+        this.$refs.password,
+        this.$refs.button,
+        // ... mais referências de b-form-input ...
+      ];
+
+      if (nextIndex >= 0 && nextIndex < inputs.length) {
+        inputs[nextIndex].focus();
+      }
+    },
+  },
 };
 </script>
 <style :scoped>

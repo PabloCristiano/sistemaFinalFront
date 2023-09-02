@@ -67,10 +67,7 @@
 import { VueGoodTable } from "vue-good-table";
 // import Modal from "./Modal.vue";
 import { ServiceCompra } from "@/services/serviceCompra";
-import {
-  currency,
-  formatarDataParaPtBR,
-} from "../../rules/filters";
+import { currency, formatarDataParaPtBR } from "../../rules/filters";
 export default {
   components: { VueGoodTable },
   data() {
@@ -129,6 +126,8 @@ export default {
         headerForm: "",
         btn: "",
         disabled: false,
+        desabilita_alterar: false,
+        produtos: ["", "", "", "", "", "", ""],
       },
     };
   },
@@ -145,6 +144,7 @@ export default {
               obj.map(function (obj) {
                 obj.valor_compra = currency(obj.valor_compra);
                 obj.data_emissao = formatarDataParaPtBR(obj.data_emissao);
+                obj.desabilita_alterar = false;
                 return obj;
               });
             }
@@ -162,6 +162,7 @@ export default {
       }
     },
     showCompra(row) {
+      row.desabilita_alterar = true;
       this.$router.push({
         name: "adicionarCompra",
         params: { formulario: row },
@@ -173,17 +174,11 @@ export default {
       //   this.funcGetById(id, titulo, btn, disabled);
     },
     ShowModalFormCompra() {
-      // this.onReset();
-      //this.form_cliente.id_condicaopg = '487';
-      //this.form_cliente.condicaopg = '30/60/90';
-      // <i class='bx bx-cart Text-Card'></i>
-      // Modal
       this.form_compra.titulo = "Cadastrar Nova Compra";
       this.form_compra.headerForm =
         "<span class='Text-Card'>Nova Compra</span>";
       this.form_compra.disabled = false;
       this.form_compra.btn = "Salvar";
-      //this.$bvModal.show(this.modal_form_compra);
       this.$router.push({
         name: "adicionarCompra",
         params: { formulario: this.form_compra },

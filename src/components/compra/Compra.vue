@@ -20,6 +20,7 @@
                     }"
                     ref="modelo"
                     @keydown.enter.prevent="moveFocus(1)"
+                    :disabled="form.desabilita_alterar"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.modelo) }}
@@ -39,6 +40,7 @@
                     }"
                     ref="serie"
                     @keydown.enter.prevent="moveFocus(2)"
+                    :disabled="form.desabilita_alterar"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.serie) }}
@@ -58,6 +60,7 @@
                     }"
                     ref="numero_nota"
                     @keydown.enter.prevent="moveFocus(3)"
+                    :disabled="form.desabilita_alterar"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.numero_nota) }}
@@ -79,10 +82,12 @@
                     :class="{
                       'fail-error': $v.form.id_fornecedor.$error,
                     }"
-                    v-debounce:300ms="fornecedorDebounce"
                     :disabled="isLoadingFornecedor"
                     ref="id_fornecedor"
-                    @keydown.enter.prevent="moveFocus(4)"
+                    @keydown.enter.prevent="
+                      fornecedorDebounce(form.id_fornecedor)
+                    "
+                    @keydown.backspace="handleBackspace_fornecedor"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.id_fornecedor) }}
@@ -111,7 +116,7 @@
                         <b-button
                           text="Button"
                           variant="dark"
-                          :disabled="form.disabled"
+                          :disabled="form.desabilita_alterar"
                           @click="showSearchFornecedor()"
                           title="Pesquisar Fornecedor"
                         >
@@ -136,15 +141,11 @@
                     :class="{
                       'fail-error': $v.form.data_emissao.$error,
                     }"
+                    :disabled="form.desabilita_alterar"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.data_emissao) }}
                   </small>
-                  <!-- <small
-                    v-if="max_isDateInvalid"
-                    style="font-size: 11px; color: red"
-                    >A data não pode ser maior que a data atual.</small
-                  > -->
                 </div>
                 <div class="col-md-6 col-sm-6 mt-2">
                   <label>Data Chegada:</label>
@@ -156,6 +157,7 @@
                       'fail-error': $v.form.data_chegada.$error,
                     }"
                     :min="minDate"
+                    :disabled="form.desabilita_alterar"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.data_chegada) }}
@@ -1056,6 +1058,7 @@ export default {
         observacao: "",
         produtos: [],
         condicaopagamento: [],
+        desabilita_alterar: false,
       },
       maxDate: "", // Define a data máxima como a data atual
       minDate: "", // Define a data mínima como a data atual
@@ -1224,18 +1227,12 @@ export default {
         }
       }
     },
-    // max_isDateInvalid(result) {
-    //   if (result) {
-    //     this.data_emissao = this.obterDataAtual();
-    //     notyf.error("A Data Emissão não pode ser maior que a data atual");
-    //   }
-    // },
-    // min_isDateInvalid(result) {
-    //   if (result) {
-    //     this.data_chegada = this.obterDataAtual();
-    //     notyf.error("A Data Chegada não pode ser menor que a data atual");
-    //   }
-    // },
+    "form.id_fornecedor"(newValue) {
+      if (!newValue) {
+        this.form.fornecedor = "";
+        return;
+      }
+    },
   },
   validations: {
     validaProdutos: {
@@ -1413,7 +1410,9 @@ export default {
     },
     setCompra(obj) {
       if (obj) {
-        (this.form.modelo = obj.modelo),
+        console.log(obj),
+          (this.form.desabilita_alterar = obj.desabilita_alterar),
+          (this.form.modelo = obj.modelo),
           (this.form.serie = obj.serie),
           (this.form.numero_nota = obj.numero_nota),
           (this.form.id_fornecedor = obj.fornecedor.id),
@@ -1860,7 +1859,7 @@ export default {
           vm.form.fornecedor = response.data[0].razaoSocial;
           this.isLoadingFornecedor = false;
           this.$nextTick(() => {
-            this.$refs.id_fornecedor.focus();
+            this.$refs.id_produto.focus();
           });
         } else {
           vm.form.fornecedor = "";
@@ -1915,7 +1914,6 @@ export default {
       this.isLoadingCondicao = true;
       ServiceCondicaoPagamento.getById(id).then((response) => {
         if (response.status === 200) {
-          console.log(response);
           this.form.id_condicaopg = "";
           this.form.condicaopg = "";
           var valor_compra = currency(parseFloat(this.form.total_compra));
@@ -2018,6 +2016,11 @@ export default {
       const id_profissional = localStorage.getItem("User_id");
       clonedObj.id_profissional = parseInt(id_profissional);
       return clonedObj;
+    },
+    handleBackspace_fornecedor(event) {
+      if (event.keyCode === 8) {
+        this.fornecedorDebounce();
+      }
     },
   },
 };

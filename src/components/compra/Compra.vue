@@ -1885,13 +1885,14 @@ export default {
     },
     fornecedorDebounce(id) {
       this.isLoadingFornecedor = true;
-      let vm = this;
+      this.form.id_fornecedor = "";
+      this.form.fornecedor = "";
       ServiceFornecedor.getById(id).then((response) => {
         if (response.status === 200) {
-          vm.form.id_fornecedor = "";
-          vm.form.fornecedor = "";
-          vm.form.id_fornecedor = response.data[0].id;
-          vm.form.fornecedor = response.data[0].razaoSocial;
+          this.form.id_fornecedor = "";
+          this.form.fornecedor = "";
+          this.form.id_fornecedor = response.data[0].id;
+          this.form.fornecedor = response.data[0].razaoSocial;
           this.isLoadingFornecedor = false;
           if (this.todosParametrosPreenchidos) {
             this.$nextTick(() => {
@@ -1899,8 +1900,8 @@ export default {
             });
           }
         } else {
-          vm.form.fornecedor = "";
-          vm.form.id_fornecedor = "";
+          this.form.fornecedor = "";
+          this.form.id_fornecedor = "";
           this.isLoadingFornecedor = false;
           this.$nextTick(() => {
             this.$refs.id_fornecedor.focus();
@@ -1917,20 +1918,22 @@ export default {
     },
     produtoDebounce(id) {
       this.isLoadingProduto = true;
-      let vm = this;
+      this.validaProdutos.id_produto = "";
+      this.validaProdutos.produto = "";
+      this.validaProdutos.unidade = "";
       ServiceProduto.getById(id).then((response) => {
         if (response.status === 200) {
-          vm.validaProdutos.id_produto = response.data[0].id;
-          vm.validaProdutos.produto = response.data[0].produto;
-          vm.validaProdutos.unidade = response.data[0].unidade;
+          this.validaProdutos.id_produto = response.data[0].id;
+          this.validaProdutos.produto = response.data[0].produto;
+          this.validaProdutos.unidade = response.data[0].unidade;
           this.isLoadingProduto = false;
           this.$nextTick(() => {
             this.$refs.quantidade.focus();
           });
         } else {
-          vm.validaProdutos.id_produto = "";
-          vm.validaProdutos.produto = "";
-          vm.validaProdutos.unidade = "";
+          this.validaProdutos.id_produto = "";
+          this.validaProdutos.produto = "";
+          this.validaProdutos.unidade = "";
           this.isLoadingProduto = false;
           this.$nextTick(() => {
             this.$refs.id_produto.focus();

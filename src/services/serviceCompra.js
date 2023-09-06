@@ -11,10 +11,7 @@ class ServiceCompra {
           Accept: "application/json",
         },
       };
-      const response = await axios.get(
-        ApiService.url + "v1/compra",
-        config
-      );
+      const response = await axios.get(ApiService.url + "v1/compra", config);
       if (response) {
         return response.data;
       }
@@ -28,7 +25,7 @@ class ServiceCompra {
       ApiService.setHeader();
       let config = {
         headers: {
-         // "Content-Type": "multipart/form-data",
+          // "Content-Type": "multipart/form-data",
           Accept: "application/json",
         },
       };
@@ -98,6 +95,27 @@ class ServiceCompra {
       };
       const response = await axios.delete(
         ApiService.url + "v1/compra/" + `${id}`,
+        config
+      );
+      if (response) {
+        return response;
+      }
+    } catch (error) {
+      return error;
+    }
+  }
+  async validaNumNota(id) {
+    try {
+      ApiService.setHeader();
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Accept: "application/json",
+        },
+      };
+      const response = await axios.post(
+        ApiService.url + "v1/compra/validaNumNota/" + `${id}`,
+        { numero_nota: id },
         config
       );
       if (response) {

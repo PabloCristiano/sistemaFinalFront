@@ -20,6 +20,7 @@
                     }"
                     ref="modelo"
                     @keydown.enter.prevent="moveFocus(1)"
+                    @blur="ValidaModelo"
                     :disabled="form.desabilita_step1"
                   ></b-form-input>
                   <small class="small-msg">
@@ -41,6 +42,7 @@
                     ref="serie"
                     @keydown.enter.prevent="moveFocus(2)"
                     :disabled="form.desabilita_step1"
+                    @blur="ValidaSerie"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.serie) }}
@@ -61,6 +63,7 @@
                     ref="numero_nota"
                     @keydown.enter.prevent="moveFocus(3)"
                     :disabled="form.desabilita_step1"
+                    @blur="ValidaNumeroNota(form.numero_nota)"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.numero_nota) }}
@@ -1012,7 +1015,7 @@ const formMessages = {
   maxValuePercent: () => "Excedeu 100% da(s) parcelas",
   textDataEmissao: () => "Data Posterior a Data Atual",
   textDataChegada: () => "Data anterior a Data de Emissão",
-  inputZero: () => "Valores como '0' não serão aceitos",
+  inputZero: () => "Campo não pode ser ZERO '0' ",
 };
 import { Notyf } from "notyf";
 const notyf = new Notyf({
@@ -2071,6 +2074,24 @@ export default {
       if (event.keyCode === 8) {
         this.condicaoPagamentoDebounce(0);
       }
+    },
+    ValidaNumeroNota(numero_nota) {
+      console.log(numero_nota);
+      ServiceCompra.validaNumNota(numero_nota).then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          return true;
+        }
+        (this.form.numero_nota = ""),
+          notyf.error(response.response.data.errors.numero_nota[0]);
+        this.$v.form.numero_nota.$touch();
+      });
+    },
+    ValidaSerie() {
+      this.$v.form.serie.$touch();
+    },
+    ValidaModelo() {
+      this.$v.form.modelo.$touch();
     },
   },
 };

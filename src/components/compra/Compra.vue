@@ -145,6 +145,7 @@
                       'fail-error': $v.form.data_emissao.$error,
                     }"
                     :disabled="form.desabilita_step1"
+                    @blur="ValidaDataEmissao"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.data_emissao) }}
@@ -161,6 +162,7 @@
                     }"
                     :min="minDate"
                     :disabled="form.desabilita_step1"
+                    @blur="ValidaDataChegada"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.data_chegada) }}
@@ -2111,6 +2113,12 @@ export default {
     ValidaDesconto() {
       this.$v.validaProdutos.desconto.$touch();
     },
+    ValidaDataEmissao(){
+      this.$v.form.data_emissao.$touch();
+    },
+    ValidaDataChegada(){
+      this.$v.form.data_chegada.$touch();
+    }
   },
 };
 </script>

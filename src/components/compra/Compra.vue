@@ -1138,7 +1138,9 @@ export default {
         !this.$v.form.serie.$invalid &&
         !this.$v.form.numero_nota.$invalid &&
         !this.$v.form.id_fornecedor.$invalid &&
-        !this.$v.form.fornecedor.$invalid
+        !this.$v.form.fornecedor.$invalid &&
+        !this.$v.form.data_emissao.$invalid &&
+        !this.$v.form.data_chegada.$invalid
       );
     },
     produtosPreenchidos() {
@@ -2113,12 +2115,12 @@ export default {
     ValidaDesconto() {
       this.$v.validaProdutos.desconto.$touch();
     },
-    ValidaDataEmissao(){
+    ValidaDataEmissao() {
       this.$v.form.data_emissao.$touch();
     },
-    ValidaDataChegada(){
+    ValidaDataChegada() {
       this.$v.form.data_chegada.$touch();
-    }
+    },
   },
 };
 </script>

@@ -273,6 +273,7 @@
                       ref="quantidade"
                       @keydown.enter.prevent="moveFocus(6)"
                       :disabled="form.desabilita_step2"
+                      @blur="ValidaQuantidade"
                     >
                     </b-form-input>
                     <small class="small-msg">
@@ -303,6 +304,7 @@
                         ref="valor_unitario"
                         @keydown.enter.prevent="moveFocus(7)"
                         :disabled="form.desabilita_step2"
+                        @blur="ValidaValorUnitario"
                       ></b-form-input>
                     </b-input-group>
                     <small class="small-msg">
@@ -333,6 +335,7 @@
                         ref="desconto"
                         @keydown.enter.prevent="moveFocus(8)"
                         :disabled="form.desabilita_step2"
+                        @blur="ValidaDesconto"
                       ></b-form-input>
                     </b-input-group>
                     <small class="small-msg">
@@ -1676,6 +1679,7 @@ export default {
       this.form.total_compra = soma.toFixed(5);
     },
     setCondicaoPagamento(obj, valor_compra) {
+      this.$v.validaProdutos.$reset();
       if (
         this.$v.form.produtos.$invalid ||
         this.$v.form.frete.$invalid ||
@@ -2082,9 +2086,14 @@ export default {
         if (response.status === 200) {
           return true;
         }
-        (this.form.numero_nota = ""),
-          notyf.error(response.response.data.errors.numero_nota[0]);
-        this.$v.form.numero_nota.$touch();
+
+        notyf.error(
+          "Número Nota:   " +
+            this.form.numero_nota +
+            "    " +
+            response.response.data.errors.numero_nota[0]
+        );
+        (this.form.numero_nota = ""), this.$v.form.numero_nota.$touch();
       });
     },
     ValidaSerie() {
@@ -2092,6 +2101,15 @@ export default {
     },
     ValidaModelo() {
       this.$v.form.modelo.$touch();
+    },
+    ValidaQuantidade() {
+      this.$v.validaProdutos.quantidade.$touch();
+    },
+    ValidaValorUnitario() {
+      this.$v.validaProdutos.valor_unitario.$touch();
+    },
+    ValidaDesconto() {
+      this.$v.validaProdutos.desconto.$touch();
     },
   },
 };

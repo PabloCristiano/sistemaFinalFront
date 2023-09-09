@@ -20,7 +20,8 @@
         </div>
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Agenda</a></li>
-          <li><router-link :to="{path:'/agenda'}">Agenda</router-link></li>
+          <li><router-link :to="{path:'/agenda'}">Agendamento</router-link></li>
+          <li><router-link :to="{path:'/homeagendamento'}">Agenda</router-link></li>
         </ul>
       </li>
       <li  v-if="data.isUser !== 'false' ? false : true">

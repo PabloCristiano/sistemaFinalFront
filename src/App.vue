@@ -20,7 +20,6 @@ export default {
 #app {
   font-family: "Poppins", sans-serif !important;
 }
-
 body {
   margin: 0;
   padding: 0;

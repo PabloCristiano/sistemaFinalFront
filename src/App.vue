@@ -31,7 +31,6 @@ body {
   padding-bottom: 50px;
   /* Altura do footer */
 }
-
 #footer {
   position: fixed;
   bottom: 0;

@@ -9,7 +9,7 @@
             <v-select class="form-select" :options="profissional" placeholder="Selecione um Profissional" label="text"
               v-model="selected2"></v-select>
           </div>
-          <div class="col-md-6" v-if="false">
+          <div class="col-md-6" v-if="true">
             <label for="">Serviço:</label>
             <v-select class="form-select" :options="servico" placeholder="Selecione um Serviço" label="text"
               v-model="selected1"></v-select>

@@ -133,7 +133,7 @@ export default {
   },
   methods: {
     selectCellProfissional(params) {
-      console.log(params);
+      console.log(params.rowIndex);
       // if (this.functionCategorias) {
       //     this.functionCidade(params);
       // }

@@ -756,6 +756,7 @@ export default {
         this.$v.$touch();
       } else {
         if (this.form.btn === "Salvar") {
+          console.log(this.form);
           ServiceProfissional.storeProfissional(this.form)
             .then((response) => {
               if (response.status === 200) {
@@ -784,6 +785,7 @@ export default {
             });
         }
         if (this.form.btn === "Alterar") {
+          console.log(this.form);
           ServiceProfissional.alterarProfissional(this.form)
             .then((response) => {
               if (response.status === 200) {

@@ -7,38 +7,45 @@
           <div class="">
             <div class="row col-md-12 col-sm-12">
               <div class="col-md-4 col-sm-1">
-                <label>Data Inicio:</label>
+                <label>Data Inicio:<b style="color: rgb(245, 153, 153)"> *</b></label>
                 <b-form-input
-                  id="data_inicio"
+                  id="horario_inicio"
                   type="datetime-local"
-                  :class="{
-                    'fail-error': false,
-                  }"
-                  v-model="startDate"
+                  :class="{ 'fail-error': $v.form.horario_inicio.$error }"
+                  v-model="form.horario_inicio"
+                  @blur="ValidaDataInicio"
                 ></b-form-input>
-                <small class="small-msg"> </small>
+                <small class="small-msg">
+                  {{ validationMsg($v.form.horario_inicio) }}
+                </small>
               </div>
               <div class="col-md-4 col-sm-4">
-                <label>Data Fim:</label>
+                <label>Data Fim:<b style="color: rgb(245, 153, 153)"> *</b></label>
                 <b-form-input
                   id="data_fim"
                   type="datetime-local"
-                  :class="{
-                    'fail-error': false,
-                  }"
-                  v-model="endDate"
+                  :class="{ 'fail-error': $v.form.horario_fim.$error }"
+                  v-model="form.horario_fim"
+                  @blur="ValidaDataFim"
                 ></b-form-input>
-                <small class="small-msg"> </small>
+                <small class="small-msg">
+                  {{ validationMsg($v.form.horario_fim) }}
+                </small>
               </div>
               <div class="col-md-4">
-                <label>Intervalo Horario:</label>
+                <label>Intervalo Horario:<b style="color: rgb(245, 153, 153)"> *</b></label>
                 <b-form-input
                   type="number"
-                  v-model="interval"
-                  id="interval"
+                  :class="{ 'fail-error': $v.form.intervalo.$error }"
+                  v-model="form.intervalo"
+                  id="intervalo"
                   placeholder="Intervalo Horario"
+                  @blur="ValidaIntervalo"
                 >
                 </b-form-input>
+                <small class="small-msg">
+                  {{ validationMsg($v.form.intervalo) }}
+                </small>
               </div>
             </div>
             <div class="row col-md-12 col-sm-12 justify-content-start">
@@ -203,13 +210,20 @@
 </template>
 <script>
 import { VueGoodTable } from "vue-good-table";
+import * as validators from "vuelidate/lib/validators";
+import { validationMessage } from "vuelidate-messages";
+const formMessages = {
+  required: () => "Campo Obrigatório",
+};
 export default {
   components: { VueGoodTable },
   data() {
     return {
-      startDate: "",
-      endDate: "",
-      interval: "",
+      form: {
+        horario_inicio: "",
+        horario_fim: "",
+        intervalo: "",
+      },
       columns: [
         {
           label: "Data",
@@ -219,7 +233,7 @@ export default {
         },
         {
           label: "Horario",
-          field: "horario",
+          field: "horario_inicio",
           thClass: "text-center",
           tdClass: "text-center",
         },
@@ -233,20 +247,26 @@ export default {
       agenda: [],
     };
   },
+  validations: {
+    form: {
+      horario_inicio: {
+        required: validators.required,
+      },
+      horario_fim: {
+        required: validators.required,
+      },
+      intervalo: {
+        required: validators.required,
+      },
+    },
+  },
   methods: {
+    validationMsg: validationMessage(formMessages),
     generateAgenda() {
       this.agenda = [];
-      const startTime = new Date(this.startDate).getTime();
-      const endTime = new Date(this.endDate).getTime();
-      const interval = parseInt(this.interval) * 60000; // Convert minutes to milliseconds
-
-      // for (let time = startTime; time <= endTime; time += interval) {
-      //   const dateTime = new Date(time);
-      //   this.agenda.push({
-      //     horario: dateTime.toLocaleString(),
-      //     profissional: "TESTE",
-      //   });
-      // }
+      const startTime = new Date(this.form.horario_inicio).getTime();
+      const endTime = new Date(this.form.horario_fim).getTime();
+      const interval = parseInt(this.form.intervalo) * 60000; // Converte minutos to millisegundos
       for (let time = startTime; time <= endTime; time += interval) {
         const dateTime = new Date(time);
         const data = dateTime.toLocaleDateString();
@@ -254,13 +274,43 @@ export default {
 
         this.agenda.push({
           data: data,
-          horario: horario,
+          horario_inicio: horario,
           profissional: "TESTE",
         });
       }
       console.log(this.agenda);
     },
+    validarDataHora() {
+      const dataHoraAtual = new Date().toISOString().slice(0, 16);
+
+      if (this.form.horario_inicio < dataHoraAtual) {
+        this.mensagemErro =
+          "A data e hora selecionadas devem ser posteriores à data e hora atual.";
+      } else {
+        this.mensagemErro = "";
+        // Faça algo com a data e hora selecionada, como enviar para o servidor
+      }
+    },
+    ValidaDataInicio() {
+      this.$v.form.horario_inicio.$touch();
+    },
+    ValidaDataFim() {
+      this.$v.form.horario_fim.$touch();
+    },
+    ValidaIntervalo() {
+      this.$v.form.intervalo.$touch();
+    },
   },
 };
 </script>
-<style></style>
+<style>
+.fail-error {
+  border: 2px solid #e46060bb;
+}
+.small-msg {
+  font-size: 11px;
+  color: rgba(228, 96, 96, 0.733);
+  font-family: sans-serif;
+  font-weight: 700;
+}
+</style>

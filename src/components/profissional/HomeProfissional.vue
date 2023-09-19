@@ -1,35 +1,52 @@
 <template>
-  <div class="container" style="margin-bottom: -90px;">
+  <div class="container" style="margin-bottom: -90px">
     <b-overlay :show="isLoading" rounded="sm">
       <div class="card mb-5">
         <div class="card-header">Cadastrar Profissionais</div>
         <div class="card-body">
           <div>
-            <vue-good-table :columns="columns" :rows="profissionais" @on-cell-click="selectCellProfissional"
+            <vue-good-table
+              :columns="columns"
+              :rows="profissionais"
+              @on-cell-click="selectCellProfissional"
               :search-options="{
-                  enabled: true,
-                  placeholder: 'Procure por um Profissional',
-                  skipDiacritics: true,
-                }" :pagination-options="{
-      enabled: true,
-      mode: 'records',
-      perPage: 5,
-      position: 'end',
-      perPageDropdown: [5, 10],
-      prevLabel: 'Anterior',
-      nextLabel: 'Proximo',
-      rowsPerPageLabel: 'Qtd por página',
-      ofLabel: 'de',
-      pageLabel: 'Pagina', // for 'pages' mode
-    }">
+                enabled: true,
+                placeholder: 'Procure por um Profissional',
+                skipDiacritics: true,
+              }"
+              :pagination-options="{
+                enabled: true,
+                mode: 'records',
+                perPage: 5,
+                position: 'end',
+                perPageDropdown: [5, 10],
+                prevLabel: 'Anterior',
+                nextLabel: 'Proximo',
+                rowsPerPageLabel: 'Qtd por página',
+                ofLabel: 'de',
+                pageLabel: 'Pagina', // for 'pages' mode
+              }"
+            >
               <template slot="table-row" slot-scope="props">
                 <span v-if="props.column.field === 'btn'">
-                  <a @click="showModalAlterarProfissional(props.row.id)" size="sm" class="btn btn-sm me-1 mb-1"
-                    data-backdrop="static" title="EDITAR" style="background-color: #f0f8ff">
+                  <a
+                    @click="showModalAlterarProfissional(props.row.id)"
+                    size="sm"
+                    class="btn btn-sm me-1 mb-1"
+                    data-backdrop="static"
+                    title="EDITAR"
+                    style="background-color: #f0f8ff"
+                  >
                     <i class="bx bx-edit-alt"></i>
                   </a>
-                  <a @click="showModalExcluirProfissional(props.row.id)" size="sm" class="btn btn-sm me-1 mb-1"
-                    data-backdrop="static" title="EXCLUIR" style="background-color: #f0f8ff">
+                  <a
+                    @click="showModalExcluirProfissional(props.row.id)"
+                    size="sm"
+                    class="btn btn-sm me-1 mb-1"
+                    data-backdrop="static"
+                    title="EXCLUIR"
+                    style="background-color: #f0f8ff"
+                  >
                     <i class="bx bx-trash-alt"></i>
                   </a>
                 </span>
@@ -40,7 +57,10 @@
         <div class="card-footer">
           <div class="col-md-12 text-end">
             <div class="col-md-2 offset-md-10">
-              <button class="btn btn-sm btn-dark" @click="ShowModalFormProfissional()">
+              <button
+                class="btn btn-sm btn-dark"
+                @click="ShowModalFormProfissional()"
+              >
                 <i class="bx bx-plus-circle"></i> Adicionar
               </button>
             </div>
@@ -49,7 +69,11 @@
       </div>
     </b-overlay>
     <br /><br />
-    <Modal :formulario="form_Profissional" :functionGetListProfissional="getListProfissionais" :funcOnReset="onReset">
+    <Modal
+      :formulario="form_Profissional"
+      :functionGetListProfissional="getListProfissionais"
+      :funcOnReset="onReset"
+    >
     </Modal>
   </div>
 </template>
@@ -59,6 +83,11 @@ import { VueGoodTable } from "vue-good-table";
 import Modal from "./Modal.vue";
 export default {
   components: { VueGoodTable, Modal },
+  props: {
+    functionProfissional: {
+      type: Function,
+    },
+  },
   data() {
     return {
       modal_form_profisional: "modal_form_profisional",
@@ -133,10 +162,9 @@ export default {
   },
   methods: {
     selectCellProfissional(params) {
-      console.log(params.rowIndex);
-      // if (this.functionCategorias) {
-      //     this.functionCidade(params);
-      // }
+      if (this.functionProfissional) {
+          this.functionProfissional(params);
+      }
     },
     getListProfissionais() {
       this.isLoading = true;
@@ -197,7 +225,7 @@ export default {
     funcGetById(id) {
       this.isLoading = true;
       ServiceProfissional.getById(id)
-        .then(obj => {
+        .then((obj) => {
           this.form_Profissional.id = obj.data[0].id;
           this.form_Profissional.profissional = obj.data[0].profissional;
           this.form_Profissional.apelido = obj.data[0].apelido;
@@ -222,10 +250,11 @@ export default {
           this.form_Profissional.data_alt = obj.data[0].data_alt;
           this.isLoading = false;
           this.$bvModal.show(this.modal_form_profisional);
-          return
-        }).catch(error => {
-          console.log(error)
+          return;
         })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };

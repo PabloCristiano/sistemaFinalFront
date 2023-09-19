@@ -62,9 +62,10 @@
               <div class="col-md-2">
                 <label>Código:</label>
                 <b-form-input
-                  id="id_estado"
+                  id="id_profissional_"
                   type="number"
                   placeholder="Código"
+                  v-model="form.id_profissional"
                   :class="{ 'fail-error': false }"
                 >
                 </b-form-input>
@@ -79,8 +80,9 @@
                 <b-overlay :show="false" rounded="sm">
                   <b-input-group>
                     <b-form-input
-                      id="cidade"
+                      id="profissional_"
                       type="text"
+                      v-model="form.profissional"
                       placeholder="Profissional"
                       :class="{ 'fail-error': false }"
                       disabled
@@ -88,6 +90,7 @@
                     </b-form-input>
                     <b-input-group-append>
                       <b-button
+                        @click="showSearchProfissional()"
                         text="Button"
                         variant="dark"
                         title="Pesquisar Profissional"
@@ -161,22 +164,6 @@
               </template>
             </vue-good-table>
           </div>
-          <!-- <div class="row mt-4">
-            <div class="col">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Data e Hora</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in agenda" :key="item">
-                    <td>{{ item }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div> -->
         </div>
         <div class="card-footer">
           <div class="col-md-12 text-end">
@@ -216,6 +203,45 @@
         </button>
       </div>
     </div> -->
+    <!-- Modal HomeProfissional -->
+    <b-modal
+      :id="modal_search_Profissional"
+      size="xl"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+    >
+      <template v-slot:modal-header>
+        <h5>Pesquisar Profissional</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="fecharModalSearchProfissional()"
+        >
+          X
+        </b-button>
+      </template>
+      <b-container fluid>
+        <HomeProfissional
+          :functionProfissional="changeSearchProfissional"
+        ></HomeProfissional>
+      </b-container>
+      <b-container
+        class="col-sm-12 col-md-12 mt-3"
+        style="text-align: center"
+        footer
+      >
+        <b-button
+          @click="fecharModalSearchProfissional()"
+          type="button"
+          id=""
+          class="btn btn-dark btn-sm"
+          >Fechar Pesquisa Profissional</b-button
+        >
+      </b-container>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -223,18 +249,25 @@ import { VueGoodTable } from "vue-good-table";
 import * as validators from "vuelidate/lib/validators";
 import { validationMessage } from "vuelidate-messages";
 import Rules from "../../rules/rules";
+import HomeProfissional from "../profissional/HomeProfissional.vue";
 const formMessages = {
   required: () => "Campo Obrigatório",
   txtValidaHorarioInicio: () => "Data e horario Inválida !",
 };
 export default {
-  components: { VueGoodTable },
+  components: { VueGoodTable, HomeProfissional },
   data() {
     return {
+      modal_search_Profissional: "modal_search_Profissional",
+      headerBgVariant: "dark",
+      headerTextVariant: "light",
+      customDialogClass: "my-custom-modal-dialog",
       form: {
         horario_inicio: "",
         horario_fim: "",
         intervalo: "",
+        profissional: "",
+        id_profissional: "",
       },
       columns: [
         {
@@ -293,10 +326,25 @@ export default {
         this.agenda.push({
           data: data,
           horario_inicio: horario,
-          profissional: "TESTE",
+          profissional: this.form.profissional,
+          id_profissional: this.form.id_profissional,
         });
       }
       console.log(this.agenda);
+    },
+    fecharModalSearchProfissional() {
+      this.$bvModal.hide(this.modal_search_Profissional);
+    },
+    changeSearchProfissional(obj) {
+      if (obj.column.field === "btn") {
+        return;
+      }
+      this.form.id_profissional = obj.row.id;
+      this.form.profissional = obj.row.profissional;
+      this.$bvModal.hide(this.modal_search_Profissional);
+    },
+    showSearchProfissional() {
+      this.$bvModal.show(this.modal_search_Profissional);
     },
     ValidaDataInicio() {
       this.$v.form.horario_inicio.$touch();

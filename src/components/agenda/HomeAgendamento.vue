@@ -7,7 +7,11 @@
           <div class="">
             <div class="row col-md-12 col-sm-12">
               <div class="col-md-4 col-sm-1">
-                <label>Data Inicio:<b style="color: rgb(245, 153, 153)"> *</b></label>
+                <label
+                  >Data Inicio:<b style="color: rgb(245, 153, 153)">
+                    *</b
+                  ></label
+                >
                 <b-form-input
                   id="horario_inicio"
                   type="datetime-local"
@@ -20,7 +24,9 @@
                 </small>
               </div>
               <div class="col-md-4 col-sm-4">
-                <label>Data Fim:<b style="color: rgb(245, 153, 153)"> *</b></label>
+                <label
+                  >Data Fim:<b style="color: rgb(245, 153, 153)"> *</b></label
+                >
                 <b-form-input
                   id="data_fim"
                   type="datetime-local"
@@ -33,7 +39,11 @@
                 </small>
               </div>
               <div class="col-md-4">
-                <label>Intervalo Horario:<b style="color: rgb(245, 153, 153)"> *</b></label>
+                <label
+                  >Intervalo Horario:<b style="color: rgb(245, 153, 153)">
+                    *</b
+                  ></label
+                >
                 <b-form-input
                   type="number"
                   :class="{ 'fail-error': $v.form.intervalo.$error }"
@@ -212,8 +222,10 @@
 import { VueGoodTable } from "vue-good-table";
 import * as validators from "vuelidate/lib/validators";
 import { validationMessage } from "vuelidate-messages";
+import Rules from "../../rules/rules";
 const formMessages = {
   required: () => "Campo Obrigatório",
+  txtValidaHorarioInicio: () => "Data e horario Inválida !",
 };
 export default {
   components: { VueGoodTable },
@@ -251,9 +263,15 @@ export default {
     form: {
       horario_inicio: {
         required: validators.required,
+        txtValidaHorarioInicio: function ValidaHora_inicio(value) {
+          return Rules.validarHorario_Inicio(value);
+        },
       },
       horario_fim: {
         required: validators.required,
+        txtValidaHorarioInicio: function ValidaHora_inicio(value) {
+          return Rules.validarHorario_Inicio(value);
+        },
       },
       intervalo: {
         required: validators.required,
@@ -279,17 +297,6 @@ export default {
         });
       }
       console.log(this.agenda);
-    },
-    validarDataHora() {
-      const dataHoraAtual = new Date().toISOString().slice(0, 16);
-
-      if (this.form.horario_inicio < dataHoraAtual) {
-        this.mensagemErro =
-          "A data e hora selecionadas devem ser posteriores à data e hora atual.";
-      } else {
-        this.mensagemErro = "";
-        // Faça algo com a data e hora selecionada, como enviar para o servidor
-      }
     },
     ValidaDataInicio() {
       this.$v.form.horario_inicio.$touch();

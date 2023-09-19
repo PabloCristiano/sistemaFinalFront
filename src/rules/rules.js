@@ -146,5 +146,42 @@ const Rules = {
 
     return milliseconds;
   },
+  validarHorario_Inicio(value) {
+    const dataHoraAtual = new Date();
+    const ano_ = dataHoraAtual.getFullYear();
+    const mes_ = String(dataHoraAtual.getMonth() + 1).padStart(2, "0");
+    const dia_ = String(dataHoraAtual.getDate()).padStart(2, "0");
+    var hora_ = String(dataHoraAtual.getHours()).padStart(2, "0");
+    var minutos_ = String(dataHoraAtual.getMinutes()).padStart(2, "0");
+    var _hora_ = parseInt(hora_);
+    var _minutos_ = parseInt(minutos_);
+    var milissegundos_ = (_hora_ * 60 + _minutos_) * 60 * 1000;
+    const dataAtual_ = `${ano_}-${mes_}-${dia_}`;
+    const dataAtual_milisegundos = Rules.convertToMilliseconds(dataAtual_);
+
+    const partes = value.split("T");
+    const horario_v = partes[1];
+    const data_value = new Date(value);
+    const ano_v = data_value.getFullYear();
+    const mes_v = String(data_value.getMonth() + 1).padStart(2, "0");
+    const dia_v = String(data_value.getDate()).padStart(2, "0");
+    const dataAtual_v = `${ano_v}-${mes_v}-${dia_v}`;
+    const data_v_milisegundos = Rules.convertToMilliseconds(dataAtual_v);
+    if (horario_v) {
+      const horario_partes = horario_v.split(":");
+      const hora_v = parseInt(horario_partes[0], 10);
+      const minutos_v = parseInt(horario_partes[1], 10);
+      var milissegundos_v = (hora_v * 60 + minutos_v) * 60 * 1000;
+    }
+
+    if (
+      data_v_milisegundos + milissegundos_v <
+      dataAtual_milisegundos + milissegundos_
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  },
 };
 export default Rules;

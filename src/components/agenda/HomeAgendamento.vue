@@ -67,6 +67,11 @@
                   placeholder="Código"
                   v-model="form.id_profissional"
                   :class="{ 'fail-error': false }"
+                  ref="id_profissional_"
+                  @keydown.enter.prevent="
+                    profissionalDebounce(form.id_profissional)
+                  "
+                  @keydown.backspace="handleBackspace_profissional"
                 >
                 </b-form-input>
                 <small style="font-size: 11px; color: red"> </small>
@@ -125,7 +130,7 @@
               :search-options="{
                 enabled: true,
                 placeholder: 'Procure por um Horario',
-                skipDiacritics: true,
+                skipDiacritics: true
               }"
               :pagination-options="{
                 enabled: true,
@@ -137,7 +142,7 @@
                 nextLabel: 'Proximo',
                 rowsPerPageLabel: 'Qtd por página',
                 ofLabel: 'de',
-                pageLabel: 'Pagina', // for 'pages' mode
+                pageLabel: 'Pagina' // for 'pages' mode
               }"
             >
               <template slot="table-row" slot-scope="props">
@@ -250,9 +255,10 @@ import * as validators from "vuelidate/lib/validators";
 import { validationMessage } from "vuelidate-messages";
 import Rules from "../../rules/rules";
 import HomeProfissional from "../profissional/HomeProfissional.vue";
+import { ServiceProfissional } from "../../services/serviceProfissional";
 const formMessages = {
   required: () => "Campo Obrigatório",
-  txtValidaHorarioInicio: () => "Data e horario Inválida !",
+  txtValidaHorarioInicio: () => "Data e horario Inválida !"
 };
 export default {
   components: { VueGoodTable, HomeProfissional },
@@ -267,29 +273,30 @@ export default {
         horario_fim: "",
         intervalo: "",
         profissional: "",
-        id_profissional: "",
+        id_profissional: ""
       },
       columns: [
         {
           label: "Data",
           field: "data",
           thClass: "text-center",
-          tdClass: "text-center",
+          tdClass: "text-center"
         },
         {
           label: "Horario",
           field: "horario_inicio",
           thClass: "text-center",
-          tdClass: "text-center",
+          tdClass: "text-center"
         },
         {
           label: "Profissioanal",
           field: "profissional",
           thClass: "text-center",
-          tdClass: "text-center",
-        },
+          tdClass: "text-center"
+        }
       ],
       agenda: [],
+      isLoadingProfissional: false
     };
   },
   validations: {
@@ -298,18 +305,18 @@ export default {
         required: validators.required,
         txtValidaHorarioInicio: function ValidaHora_inicio(value) {
           return Rules.validarHorario_Inicio(value);
-        },
+        }
       },
       horario_fim: {
         required: validators.required,
         txtValidaHorarioInicio: function ValidaHora_inicio(value) {
           return Rules.validarHorario_Inicio(value);
-        },
+        }
       },
       intervalo: {
-        required: validators.required,
-      },
-    },
+        required: validators.required
+      }
+    }
   },
   methods: {
     validationMsg: validationMessage(formMessages),
@@ -327,7 +334,7 @@ export default {
           data: data,
           horario_inicio: horario,
           profissional: this.form.profissional,
-          id_profissional: this.form.id_profissional,
+          id_profissional: this.form.id_profissional
         });
       }
       console.log(this.agenda);
@@ -346,6 +353,34 @@ export default {
     showSearchProfissional() {
       this.$bvModal.show(this.modal_search_Profissional);
     },
+    profissionalDebounce(id) {
+      this.isLoadingProfissional = true;
+      this.form.id_profissional = "";
+      this.form.profissional = "";
+      ServiceProfissional.getById(id).then((response) => {
+        if (response.status === 200) {
+          this.form.id_profissional = "";
+          this.form.profissional = "";
+          this.form.id_profissional = response.data[0].id;
+          this.form.profissional = response.data[0].profissional;
+          this.isLoadingProfissional = false;
+        } else {
+          this.form.fornecedor = "";
+          this.form.id_fornecedor = "";
+          this.isLoadingProfissional = false;
+          this.$nextTick(() => {
+            this.$refs.id_profissional_.focus();
+          });
+        }
+      });
+    },
+    handleBackspace_profissional(event) {
+      if (event.keyCode === 8) {
+        //this.fornecedorDebounce(0);
+        this.form.id_profissional = "";
+        this.form.profissional = "";
+      }
+    },
     ValidaDataInicio() {
       this.$v.form.horario_inicio.$touch();
     },
@@ -355,7 +390,17 @@ export default {
     ValidaIntervalo() {
       this.$v.form.intervalo.$touch();
     },
-  },
+    moveFocus(nextIndex) {
+      const inputs = [
+        this.$refs.id_profissional_
+        // ... mais referências de b-form-input ...
+      ];
+
+      if (nextIndex >= 0 && nextIndex < inputs.length) {
+        inputs[nextIndex].focus();
+      }
+    }
+  }
 };
 </script>
 <style>

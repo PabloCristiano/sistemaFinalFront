@@ -66,15 +66,18 @@
                   type="number"
                   placeholder="Código"
                   v-model="form.id_profissional"
-                  :class="{ 'fail-error': false }"
+                  :class="{ 'fail-error': $v.form.id_profissional.$error }"
                   ref="id_profissional_"
                   @keydown.enter.prevent="
                     profissionalDebounce(form.id_profissional)
                   "
                   @keydown.backspace="handleBackspace_profissional"
+                  @blur="ValidaProfissional"
                 >
                 </b-form-input>
-                <small style="font-size: 11px; color: red"> </small>
+                <small class="small-msg">
+                  {{ validationMsg($v.form.id_profissional) }}
+                </small>
               </div>
               <div class="col-md-4">
                 <label
@@ -82,14 +85,14 @@
                     *</b
                   ></label
                 >
-                <b-overlay :show="false" rounded="sm">
+                <b-overlay :show="isLoadingProfissional" rounded="sm">
                   <b-input-group>
                     <b-form-input
                       id="profissional_"
                       type="text"
                       v-model="form.profissional"
                       placeholder="Profissional"
-                      :class="{ 'fail-error': false }"
+                      :class="{ 'fail-error': $v.form.profissional.$error }"
                       disabled
                     >
                     </b-form-input>
@@ -113,7 +116,9 @@
                       ></b-button>
                     </b-input-group-append>
                   </b-input-group>
-                  <small style="font-size: 11px; color: red"> </small>
+                  <small class="small-msg">
+                    {{ validationMsg($v.form.profissional) }}
+                  </small>
                 </b-overlay>
               </div>
               <div class="col-md-2 mt-4">
@@ -130,7 +135,7 @@
               :search-options="{
                 enabled: true,
                 placeholder: 'Procure por um Horario',
-                skipDiacritics: true
+                skipDiacritics: true,
               }"
               :pagination-options="{
                 enabled: true,
@@ -142,7 +147,7 @@
                 nextLabel: 'Proximo',
                 rowsPerPageLabel: 'Qtd por página',
                 ofLabel: 'de',
-                pageLabel: 'Pagina' // for 'pages' mode
+                pageLabel: 'Pagina', // for 'pages' mode
               }"
             >
               <template slot="table-row" slot-scope="props">
@@ -258,7 +263,7 @@ import HomeProfissional from "../profissional/HomeProfissional.vue";
 import { ServiceProfissional } from "../../services/serviceProfissional";
 const formMessages = {
   required: () => "Campo Obrigatório",
-  txtValidaHorarioInicio: () => "Data e horario Inválida !"
+  txtValidaHorarioInicio: () => "Data e horario Inválida !",
 };
 export default {
   components: { VueGoodTable, HomeProfissional },
@@ -273,30 +278,30 @@ export default {
         horario_fim: "",
         intervalo: "",
         profissional: "",
-        id_profissional: ""
+        id_profissional: "",
       },
       columns: [
         {
           label: "Data",
           field: "data",
           thClass: "text-center",
-          tdClass: "text-center"
+          tdClass: "text-center",
         },
         {
           label: "Horario",
           field: "horario_inicio",
           thClass: "text-center",
-          tdClass: "text-center"
+          tdClass: "text-center",
         },
         {
           label: "Profissioanal",
           field: "profissional",
           thClass: "text-center",
-          tdClass: "text-center"
-        }
+          tdClass: "text-center",
+        },
       ],
       agenda: [],
-      isLoadingProfissional: false
+      isLoadingProfissional: false,
     };
   },
   validations: {
@@ -305,18 +310,24 @@ export default {
         required: validators.required,
         txtValidaHorarioInicio: function ValidaHora_inicio(value) {
           return Rules.validarHorario_Inicio(value);
-        }
+        },
       },
       horario_fim: {
         required: validators.required,
         txtValidaHorarioInicio: function ValidaHora_inicio(value) {
           return Rules.validarHorario_Inicio(value);
-        }
+        },
       },
       intervalo: {
-        required: validators.required
-      }
-    }
+        required: validators.required,
+      },
+      id_profissional: {
+        required: validators.required,
+      },
+      profissional: {
+        required: validators.required,
+      },
+    },
   },
   methods: {
     validationMsg: validationMessage(formMessages),
@@ -334,7 +345,7 @@ export default {
           data: data,
           horario_inicio: horario,
           profissional: this.form.profissional,
-          id_profissional: this.form.id_profissional
+          id_profissional: this.form.id_profissional,
         });
       }
       console.log(this.agenda);
@@ -355,18 +366,25 @@ export default {
     },
     profissionalDebounce(id) {
       this.isLoadingProfissional = true;
-      this.form.id_profissional = "";
-      this.form.profissional = "";
+      // this.form.id_profissional = "";
+      // this.form.profissional = "";
+      this.$v.form.profissional.$reset();
+      this.$v.form.id_profissional.$reset();
       ServiceProfissional.getById(id).then((response) => {
         if (response.status === 200) {
-          this.form.id_profissional = "";
-          this.form.profissional = "";
           this.form.id_profissional = response.data[0].id;
           this.form.profissional = response.data[0].profissional;
           this.isLoadingProfissional = false;
         } else {
-          this.form.fornecedor = "";
-          this.form.id_fornecedor = "";
+          this.form.id_profissional = "";
+          this.form.profissional = "";
+          if (
+            this.$v.form.id_profissional.$invalid &&
+            this.$v.form.profissional.$invalid
+          ) {
+            this.$v.form.id_profissional.$touch();
+            this.$v.form.profissional.$touch();
+          }
           this.isLoadingProfissional = false;
           this.$nextTick(() => {
             this.$refs.id_profissional_.focus();
@@ -390,17 +408,21 @@ export default {
     ValidaIntervalo() {
       this.$v.form.intervalo.$touch();
     },
+    ValidaProfissional() {
+      this.$v.form.id_profissional.$touch();
+      this.$v.form.profissional.$touch();
+    },
     moveFocus(nextIndex) {
       const inputs = [
-        this.$refs.id_profissional_
+        this.$refs.id_profissional_,
         // ... mais referências de b-form-input ...
       ];
 
       if (nextIndex >= 0 && nextIndex < inputs.length) {
         inputs[nextIndex].focus();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style>

@@ -176,43 +176,30 @@
           </div>
         </div>
         <div class="card-footer">
-          <div class="col-md-12 text-end">
-            <div class="col-md-2 offset-md-10">
-              <button class="btn btn-sm btn-dark">
-                <i class="bx bx-plus-circle"></i> SALVAR
-              </button>
+          <div class="d-flex justify-content-end">
+            <b-button
+              class="btn btn-sm me-1"
+              type="button"
+              variant="dark"
+              @click.prevent="closeAgenda"
+            >
+              Cancelar
+            </b-button>
+            <div>
+              <b-button
+                class="btn btn-sm me-1"
+                type="button"
+                variant="dark"
+                @click.prevent="onSubmit"
+              >
+                Salvar<i class="bx bx-check"></i>
+              </b-button>
             </div>
           </div>
         </div>
       </div>
     </b-overlay>
     <br /><br />
-    <!-- <div class="row">
-      <div class="col">
-        <h2>Agenda</h2>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <label for="startDate">Data de Início:</label>
-        <input type="datetime-local" v-model="startDate" id="startDate" />
-      </div>
-      <div class="col">
-        <label for="endDate">Data de Fim:</label>
-        <input type="datetime-local" v-model="endDate" id="endDate" />
-      </div>
-      <div class="col">
-        <label for="interval">Intervalo (em minutos):</label>
-        <input type="number" v-model="interval" id="interval" />
-      </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col">
-        <button @click="generateAgenda" class="btn btn-primary">
-          Gerar Agenda
-        </button>
-      </div>
-    </div> -->
     <!-- Modal HomeProfissional -->
     <b-modal
       :id="modal_search_Profissional"
@@ -332,23 +319,37 @@ export default {
   methods: {
     validationMsg: validationMessage(formMessages),
     generateAgenda() {
-      this.agenda = [];
-      const startTime = new Date(this.form.horario_inicio).getTime();
-      const endTime = new Date(this.form.horario_fim).getTime();
-      const interval = parseInt(this.form.intervalo) * 60000; // Converte minutos to millisegundos
-      for (let time = startTime; time <= endTime; time += interval) {
-        const dateTime = new Date(time);
-        const data = dateTime.toLocaleDateString();
-        const horario = dateTime.toLocaleTimeString();
+      if (
+        this.$v.form.horario_inicio.$invalid ||
+        this.$v.form.horario_fim.$invalid ||
+        this.$v.form.intervalo.$invalid ||
+        this.$v.form.id_profissional.$invalid ||
+        this.$v.form.profissional.$invalid
+      ) {
+        this.$v.form.horario_inicio.$touch();
+        this.$v.form.horario_fim.$touch();
+        this.$v.form.id_profissional.$touch();
+        this.$v.form.profissional.$touch();
+        this.$v.form.intervalo.$touch();
+      } else {
+        this.agenda = [];
+        const startTime = new Date(this.form.horario_inicio).getTime();
+        const endTime = new Date(this.form.horario_fim).getTime();
+        const interval = parseInt(this.form.intervalo) * 60000; // Converte minutos to millisegundos
+        for (let time = startTime; time <= endTime; time += interval) {
+          const dateTime = new Date(time);
+          const data = dateTime.toLocaleDateString();
+          const horario = dateTime.toLocaleTimeString();
 
-        this.agenda.push({
-          data: data,
-          horario_inicio: horario,
-          profissional: this.form.profissional,
-          id_profissional: this.form.id_profissional,
-        });
+          this.agenda.push({
+            data: data,
+            horario_inicio: horario,
+            profissional: this.form.profissional,
+            id_profissional: this.form.id_profissional,
+          });
+        }
+        console.log(this.agenda);
       }
-      console.log(this.agenda);
     },
     fecharModalSearchProfissional() {
       this.$bvModal.hide(this.modal_search_Profissional);
@@ -422,6 +423,14 @@ export default {
         inputs[nextIndex].focus();
       }
     },
+    closeAgenda() {
+      //   this.onReset();
+      //this.$router.push({ name: "compra" });
+      console.log("fechar Agenda");
+    },
+    onSubmit(){
+      console.log(this.agenda);
+    }
   },
 };
 </script>

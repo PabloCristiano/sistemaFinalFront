@@ -8,7 +8,12 @@
         <div class="row col-md-12 col-sm-12 mb-2 justify-content-start">
           <div class="col-md-2 col-sm-">
             <label>Data :</label>
-            <b-form-input id="date" type="date"></b-form-input>
+            <b-form-input
+              id="date"
+              type="date"
+              v-model="form.horario_inicio"
+              ref="horario_inicio_"
+            ></b-form-input>
             <small class="small-msg">
               <!-- {{ validationMsg($v.form.horario_inicio) }} -->
             </small>
@@ -20,6 +25,7 @@
               type="number"
               placeholder="Código"
               ref="id_profissional"
+              v-model="form.id_profissional"
             >
             </b-form-input>
             <small class="small-msg">
@@ -36,11 +42,13 @@
                   id="profissional"
                   type="text"
                   placeholder="Profissional"
+                  v-model="form.profissional"
                   disabled
                 >
                 </b-form-input>
                 <b-input-group-append>
                   <b-button
+                    @click="showSearchProfissional()"
                     text="Button"
                     variant="dark"
                     title="Pesquisar Profissional"
@@ -64,55 +72,63 @@
             </b-overlay>
           </div>
           <div class="col-md-2 mt-4">
-            <button id="pesquisar" class="btn btn-dark">Pesquisar</button>
+            <button
+              id="pesquisar"
+              class="btn btn-dark"
+              @click="findAgendaProfissional"
+            >
+              Pesquisar
+            </button>
           </div>
         </div>
         <div class="row col-md-12 col-sm-12 mb-4 justify-content-end"></div>
         <div class="row mb-3" v-if="true">
-          <vue-good-table
-            :columns="columns"
-            :rows="agenda"
-            :search-options="{
-              enabled: true,
-              placeholder: 'Procure por um Horario Profissional',
-              skipDiacritics: true,
-            }"
-            :pagination-options="{
-              enabled: true,
-              mode: 'records',
-              perPage: 15,
-              position: 'end',
-              perPageDropdown: [15, 30],
-              prevLabel: 'Anterior',
-              nextLabel: 'Proximo',
-              rowsPerPageLabel: 'Qtd por página',
-              ofLabel: 'de',
-              pageLabel: 'Pagina', // for 'pages' mode
-            }"
-          >
-            <template slot="table-row" slot-scope="props">
-              <span v-if="props.column.field === 'btn'">
-                <a
-                  size="sm"
-                  class="btn btn-sm me-1 mb-1"
-                  data-backdrop="static"
-                  title="EDITAR"
-                  style="background-color: #f0f8ff"
-                >
-                  <i class="bx bx-edit-alt"></i>
-                </a>
-                <a
-                  size="sm"
-                  class="btn btn-sm me-1 mb-1"
-                  data-backdrop="static"
-                  title="EXCLUIR"
-                  style="background-color: #f0f8ff"
-                >
-                  <i class="bx bx-trash-alt"></i>
-                </a>
-              </span>
-            </template>
-          </vue-good-table>
+          <b-overlay :show="isLoadingAgenda" rounded="sm">
+            <vue-good-table
+              :columns="columns"
+              :rows="agenda"
+              :search-options="{
+                enabled: true,
+                placeholder: 'Procure por um Horario Profissional',
+                skipDiacritics: true,
+              }"
+              :pagination-options="{
+                enabled: true,
+                mode: 'records',
+                perPage: 15,
+                position: 'end',
+                perPageDropdown: [15, 30],
+                prevLabel: 'Anterior',
+                nextLabel: 'Proximo',
+                rowsPerPageLabel: 'Qtd por página',
+                ofLabel: 'de',
+                pageLabel: 'Pagina', // for 'pages' mode
+              }"
+            >
+              <template slot="table-row" slot-scope="props">
+                <span v-if="props.column.field === 'btn'">
+                  <a
+                    size="sm"
+                    class="btn btn-sm me-1 mb-1"
+                    data-backdrop="static"
+                    title="EDITAR"
+                    style="background-color: #f0f8ff"
+                  >
+                    <i class="bx bx-edit-alt"></i>
+                  </a>
+                  <a
+                    size="sm"
+                    class="btn btn-sm me-1 mb-1"
+                    data-backdrop="static"
+                    title="EXCLUIR"
+                    style="background-color: #f0f8ff"
+                  >
+                    <i class="bx bx-trash-alt"></i>
+                  </a>
+                </span>
+              </template>
+            </vue-good-table>
+          </b-overlay>
         </div>
       </div>
       <div class="card-footer text-muted">
@@ -121,15 +137,63 @@
         </div>
       </div>
     </div>
+    <!-- Modal HomeProfissional -->
+    <b-modal
+      :id="modal_search_Profissional"
+      size="xl"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+    >
+      <template v-slot:modal-header>
+        <h5>Pesquisar Profissional</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="fecharModalSearchProfissional()"
+        >
+          X
+        </b-button>
+      </template>
+      <b-container fluid>
+        <HomeProfissional
+          :functionProfissional="changeSearchProfissional"
+        ></HomeProfissional>
+      </b-container>
+      <b-container
+        class="col-sm-12 col-md-12 mt-3"
+        style="text-align: center"
+        footer
+      >
+        <b-button
+          @click="fecharModalSearchProfissional()"
+          type="button"
+          id=""
+          class="btn btn-dark btn-sm"
+          >Fechar Pesquisa Profissional</b-button
+        >
+      </b-container>
+    </b-modal>
     <br /><br />
   </div>
 </template>
 <script>
 import { VueGoodTable } from "vue-good-table";
+import HomeProfissional from "../profissional/HomeProfissional.vue";
+import { ServiceAgenda } from "../../services/serviceAgenda";
+import {
+  formatarDataParaPtBR,
+  formatarHorarioAgenda,
+} from "../../rules/filters";
 export default {
-  components: { VueGoodTable },
+  components: { VueGoodTable, HomeProfissional },
   data() {
     return {
+      modal_search_Profissional: "modal_search_Profissional",
+      headerBgVariant: "dark",
+      headerTextVariant: "light",
       columns: [
         {
           label: "Data",
@@ -144,19 +208,59 @@ export default {
           tdClass: "text-center",
         },
         {
-          label: "Profissioanal",
-          field: "profissional",
+          label: "Status",
+          field: "status",
           thClass: "text-center",
           tdClass: "text-center",
         },
       ],
-      form: {},
+      form: {
+        profissional: "",
+        id_profissinal: "",
+        id_servico: "",
+        servico: "",
+        horario_inicio: "",
+      },
       agenda: [],
+      isLoadingAgenda: false,
     };
   },
   methods: {
+    showSearchProfissional() {
+      this.$bvModal.show(this.modal_search_Profissional);
+    },
+    changeSearchProfissional(obj) {
+      if (obj.column.field === "btn") {
+        return;
+      }
+      this.form.id_profissional = obj.row.id;
+      this.form.profissional = obj.row.profissional;
+      this.$bvModal.hide(this.modal_search_Profissional);
+    },
     onsubmit() {},
-    findAgendaProfissional() {},
+    findAgendaProfissional() {
+      this.isLoadingAgenda = true;
+      this.agenda = [];
+      ServiceAgenda.findAgendaProfissional(this.form)
+        .then((value) => {
+          if (value.data.Success === true) {
+            this.isLoadingAgenda = false;
+            value.data.Agenda.map((agenda) => {
+              console.log(agenda);
+              agenda.data = formatarDataParaPtBR(agenda.data);
+              agenda.horario_inicio = formatarHorarioAgenda(
+                agenda.horario_inicio
+              );
+            });
+            this.agenda = value.data.Agenda;
+          }
+          console.log(value);
+        })
+        .catch((error) => {
+          this.isLoadingAgenda = false;
+          console.log(error);
+        });
+    },
   },
 };
 </script>

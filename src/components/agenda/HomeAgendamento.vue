@@ -18,6 +18,8 @@
                   :class="{ 'fail-error': $v.form.horario_inicio.$error }"
                   v-model="form.horario_inicio"
                   @blur="ValidaDataInicio"
+                  ref="horario_inicio_"
+                  @keydown.enter.prevent="moveFocus(1)"
                 ></b-form-input>
                 <small class="small-msg">
                   {{ validationMsg($v.form.horario_inicio) }}
@@ -33,6 +35,8 @@
                   :class="{ 'fail-error': $v.form.horario_fim.$error }"
                   v-model="form.horario_fim"
                   @blur="ValidaDataFim"
+                  ref="horario_fim_"
+                  @keydown.enter.prevent="moveFocus(2)"
                 ></b-form-input>
                 <small class="small-msg">
                   {{ validationMsg($v.form.horario_fim) }}
@@ -51,6 +55,8 @@
                   id="intervalo"
                   placeholder="Intervalo Horario"
                   @blur="ValidaIntervalo"
+                  ref="intervalo_"
+                  @keydown.enter.prevent="moveFocus(3)"
                 >
                 </b-form-input>
                 <small class="small-msg">
@@ -121,9 +127,23 @@
                   </small>
                 </b-overlay>
               </div>
-              <div class="col-md-2 mt-4">
-                <button @click="generateAgenda" class="btn btn-dark">
+              <div class="col-md-2 mt-4 text-center">
+                <button
+                  id="btnGerarAgenda_"
+                  @click="generateAgenda"
+                  class="btn btn-dark"
+                  ref="btnGerarAgenda_"
+                >
                   Gerar Agenda
+                </button>
+              </div>
+              <div class="col-md-2 mt-4">
+                <button
+                  class="btn btn-dark"
+                  @click="limparAgenda"
+                  title="LIMPAR AGENDA"
+                >
+                  <i class="bx bx-trash"></i>
                 </button>
               </div>
             </div>
@@ -248,6 +268,30 @@ import { validationMessage } from "vuelidate-messages";
 import Rules from "../../rules/rules";
 import HomeProfissional from "../profissional/HomeProfissional.vue";
 import { ServiceProfissional } from "../../services/serviceProfissional";
+import { Notyf } from "notyf";
+const notyf = new Notyf({
+  position: {
+    x: "center",
+    y: "top",
+  },
+  types: [
+    {
+      type: "warning",
+      background: "orange",
+      icon: {
+        className: "material-icons",
+        tagName: "i",
+        text: "warning",
+      },
+    },
+    {
+      type: "error",
+      background: "indianred",
+      duration: 5000,
+      dismissible: true,
+    },
+  ],
+});
 const formMessages = {
   required: () => "Campo Obrigatório",
   txtValidaHorarioInicio: () => "Data e horario Inválida !",
@@ -318,19 +362,17 @@ export default {
   },
   methods: {
     validationMsg: validationMessage(formMessages),
+    limparAgenda() {
+      this.agenda = [];
+      this.form.horario_inicio = "";
+      this.form.horario_fim = "";
+      this.form.intervalo = "";
+      this.form.profissional = "";
+      this.form.id_profissional = "";
+    },
     generateAgenda() {
-      if (
-        this.$v.form.horario_inicio.$invalid ||
-        this.$v.form.horario_fim.$invalid ||
-        this.$v.form.intervalo.$invalid ||
-        this.$v.form.id_profissional.$invalid ||
-        this.$v.form.profissional.$invalid
-      ) {
-        this.$v.form.horario_inicio.$touch();
-        this.$v.form.horario_fim.$touch();
-        this.$v.form.id_profissional.$touch();
-        this.$v.form.profissional.$touch();
-        this.$v.form.intervalo.$touch();
+      if (this.$v.form.$invalid) {
+        this.$v.form.$touch();
       } else {
         this.agenda = [];
         const startTime = new Date(this.form.horario_inicio).getTime();
@@ -375,6 +417,9 @@ export default {
         if (response.status === 200) {
           this.form.id_profissional = response.data[0].id;
           this.form.profissional = response.data[0].profissional;
+          this.$nextTick(() => {
+            this.$refs.btnGerarAgenda_.focus();
+          });
           this.isLoadingProfissional = false;
         } else {
           this.form.id_profissional = "";
@@ -415,7 +460,13 @@ export default {
     },
     moveFocus(nextIndex) {
       const inputs = [
+        this.$refs.horario_inicio_,
+        this.$refs.horario_fim_,
+        this.$refs.intervalo_,
         this.$refs.id_profissional_,
+        this.$refs.profissional_,
+        this.$refs.btnGerarAgenda_,
+
         // ... mais referências de b-form-input ...
       ];
 
@@ -428,9 +479,14 @@ export default {
       //this.$router.push({ name: "compra" });
       console.log("fechar Agenda");
     },
-    onSubmit(){
-      console.log(this.agenda);
-    }
+    onSubmit() {
+      if (this.$v.form.$invalid) {
+        this.$v.form.$touch();
+        notyf.error("Agenda está enfrentando algum irregularidade !");
+      } else {
+        console.log(this.agenda);
+      }
+    },
   },
 };
 </script>

@@ -150,8 +150,13 @@ export default {
           tdClass: "text-center",
         },
       ],
+      form: {},
       agenda: [],
     };
+  },
+  methods: {
+    onsubmit() {},
+    findAgendaProfissional() {},
   },
 };
 </script>

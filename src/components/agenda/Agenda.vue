@@ -1,38 +1,66 @@
 <template>
   <div class="container">
     <div class="card mb-5">
-      <div class="card-header">Agendar</div>
+      <div class="card-header" style="font-size: 18px"> Agendar</div>
       <div class="card-body">
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="">Profissional:</label>
-            <v-select class="form-select" :options="profissional" placeholder="Selecione um Profissional" label="text"
-              v-model="selected2"></v-select>
+            <v-select
+              class="form-select"
+              :options="profissional"
+              placeholder="Selecione um Profissional"
+              label="text"
+              v-model="selected2"
+            ></v-select>
           </div>
           <div class="col-md-6" v-if="true">
             <label for="">Serviço:</label>
-            <v-select class="form-select" :options="servico" placeholder="Selecione um Serviço" label="text"
-              v-model="selected1"></v-select>
+            <v-select
+              class="form-select"
+              :options="servico"
+              placeholder="Selecione um Serviço"
+              label="text"
+              v-model="selected1"
+            ></v-select>
           </div>
         </div>
         <div v-if="isEnabled">
           <div class="container">
             <b-overlay :show="isLoading" rounded="sm">
-              <div class="table-responsive table-wrapper" :class="{ 'table-disabled': !isEnabled }"
-                style="background-color: #f5f5f561; height: 260px;">
-                <table class="table table-borderless" style=" border-width: 0 0px !important;">
+              <div
+                class="table-responsive table-wrapper"
+                :class="{ 'table-disabled': !isEnabled }"
+                style="background-color: #f5f5f561; height: 260px"
+              >
+                <table
+                  class="table table-borderless"
+                  style="border-width: 0 0px !important"
+                >
                   <thead class="fixed-header">
                     <tr class="table-dark">
-                      <th class="text-center" scope="col" v-for="day in dayIndex" :key="day.label">{{ day.label }}</th>
+                      <th
+                        class="text-center"
+                        scope="col"
+                        v-for="day in dayIndex"
+                        :key="day.label"
+                      >
+                        {{ day.label }}
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="value in dateRange" :key="value.start_time">
-                      <td class=" table-default text-center " style="font-weight: 500; border-radius: 29px;"
-                        v-for="day in dayIndex" :key="day.label" @click="slot($event, value, day)" :disabled="isEnabled">
-                        {{
-                          value.start_time
-                        }}</td>
+                      <td
+                        class="table-default text-center"
+                        style="font-weight: 500; border-radius: 29px"
+                        v-for="day in dayIndex"
+                        :key="day.label"
+                        @click="slot($event, value, day)"
+                        :disabled="isEnabled"
+                      >
+                        {{ value.start_time }}
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -51,7 +79,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -84,14 +111,14 @@ export default {
       selected2: "",
       selected1: "",
       servico: [
-        { id: 55, text: 'Cabelo' },
-        { id: 45, text: 'Barba' },
-        { id: 48, text: 'Cabelo/Barba' },
+        { id: 55, text: "Cabelo" },
+        { id: 45, text: "Barba" },
+        { id: 48, text: "Cabelo/Barba" },
       ],
       profissional: [
-        { id: 55, text: 'Pedrinho Matador' },
-        { id: 54, text: 'Edward Mãos de Tesoura' },
-        { id: 58, text: 'Jorginho de Cantú' },
+        { id: 55, text: "Pedrinho Matador" },
+        { id: 54, text: "Edward Mãos de Tesoura" },
+        { id: 58, text: "Jorginho de Cantú" },
       ],
       dateRange: [
         {
@@ -194,7 +221,6 @@ export default {
           start_time: "18:00",
           end_time: "18:30",
         },
-
       ],
       dayIndex: [],
       dateIndex: 0,

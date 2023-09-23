@@ -2,7 +2,7 @@
   <div class="container" style="margin-bottom: -90px">
     <b-overlay :show="false" rounded="sm">
       <div class="card mb-5">
-        <div class="card-header">Cadastrar Agenda</div>
+        <div class="card-header" style="font-size: 18px"><i class='bx bx-calendar'></i> Cadastrar Agenda</div>
         <div class="card-body">
           <div class="">
             <div class="row col-md-12 col-sm-12">
@@ -25,7 +25,7 @@
                   {{ validationMsg($v.form.horario_inicio) }}
                 </small>
               </div>
-              <div class="col-md-4 col-sm-4">
+              <div class="col-md-4 col-sm-1">
                 <label
                   >Data Fim:<b style="color: rgb(245, 153, 153)"> *</b></label
                 >
@@ -197,14 +197,14 @@
         </div>
         <div class="card-footer">
           <div class="d-flex justify-content-end">
-            <b-button
+            <!-- <b-button
               class="btn btn-sm me-1"
               type="button"
               variant="dark"
               @click.prevent="closeAgenda"
             >
               Cancelar
-            </b-button>
+            </b-button> -->
             <div>
               <b-button
                 class="btn btn-sm me-1"
@@ -482,7 +482,7 @@ export default {
     onSubmit() {
       if (this.$v.form.$invalid) {
         this.$v.form.$touch();
-        notyf.error("Agenda está enfrentando algum irregularidade !");
+        notyf.error("Agenda está enfrentando alguma irregularidade !");
       } else {
         console.log(this.agenda);
       }

@@ -29,7 +29,7 @@ class ServiceAgenda {
       },
     };
     return await axios
-      .post(ApiService.url + "v1/categorias", data, config)
+      .post(ApiService.url + "v1/criarAgenda", data, config)
       .then((obj) => {
         return obj;
       })

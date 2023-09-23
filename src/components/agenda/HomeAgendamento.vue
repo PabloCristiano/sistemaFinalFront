@@ -2,7 +2,9 @@
   <div class="container" style="margin-bottom: -90px">
     <b-overlay :show="false" rounded="sm">
       <div class="card mb-5">
-        <div class="card-header" style="font-size: 18px"><i class='bx bx-calendar'></i> Cadastrar Agenda</div>
+        <div class="card-header" style="font-size: 18px">
+          <i class="bx bx-calendar"></i> Cadastrar Agenda
+        </div>
         <div class="card-body">
           <div class="">
             <div class="row col-md-12 col-sm-12">
@@ -268,6 +270,7 @@ import { validationMessage } from "vuelidate-messages";
 import Rules from "../../rules/rules";
 import HomeProfissional from "../profissional/HomeProfissional.vue";
 import { ServiceProfissional } from "../../services/serviceProfissional";
+import { ServiceAgenda } from "../../services/serviceAgenda";
 import { Notyf } from "notyf";
 const notyf = new Notyf({
   position: {
@@ -310,6 +313,7 @@ export default {
         intervalo: "",
         profissional: "",
         id_profissional: "",
+        agenda: [],
       },
       columns: [
         {
@@ -390,7 +394,9 @@ export default {
             id_profissional: this.form.id_profissional,
           });
         }
+        this.form.agenda = this.agenda;
         console.log(this.agenda);
+        console.log(this.form.agenda);
       }
     },
     fecharModalSearchProfissional() {
@@ -484,7 +490,26 @@ export default {
         this.$v.form.$touch();
         notyf.error("Agenda está enfrentando alguma irregularidade !");
       } else {
-        console.log(this.agenda);
+        ServiceAgenda.storeAgenda(this.form)
+          .then((response) => {
+            if (response.status === 200) {
+              console.log(response);
+              notyf.success(response.data.message);
+              this.limparAgenda();
+              this.$v.$reset();
+            } else {
+              if (response.response.data.errors != null) {
+                Object.keys(response.response.data.errors).forEach(function (
+                  key
+                ) {
+                  notyf.error(response.response.data.errors[key][0]);
+                });
+              }
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     },
   },

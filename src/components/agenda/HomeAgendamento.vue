@@ -377,6 +377,7 @@ export default {
     generateAgenda() {
       if (this.$v.form.$invalid) {
         this.$v.form.$touch();
+        notyf.error('O cadastro Agenda está enfrentando alguma irregularidade !');
       } else {
         this.agenda = [];
         const startTime = new Date(this.form.horario_inicio).getTime();

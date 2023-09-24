@@ -13,9 +13,12 @@
               type="date"
               v-model="form.horario_inicio"
               ref="horario_inicio_"
+              :class="{
+                'fail-error': $v.form.horario_inicio.$error,
+              }"
             ></b-form-input>
             <small class="small-msg">
-              <!-- {{ validationMsg($v.form.horario_inicio) }} -->
+              {{ validationMsg($v.form.horario_inicio) }}
             </small>
           </div>
           <div class="col-md-2">
@@ -23,13 +26,16 @@
             <b-form-input
               id="id_profissional"
               type="number"
+              :class="{
+                'fail-error': $v.form.id_profissional.$error,
+              }"
               placeholder="Código"
               ref="id_profissional"
               v-model="form.id_profissional"
             >
             </b-form-input>
             <small class="small-msg">
-              <!-- {{ validationMsg($v.form.id_profissional) }} -->
+              {{ validationMsg($v.form.id_profissional) }}
             </small>
           </div>
           <div class="col-md-4">
@@ -41,6 +47,9 @@
                 <b-form-input
                   id="profissional"
                   type="text"
+                  :class="{
+                    'fail-error': $v.form.profissional.$error,
+                  }"
                   placeholder="Profissional"
                   v-model="form.profissional"
                   disabled
@@ -67,7 +76,7 @@
                 </b-input-group-append>
               </b-input-group>
               <small class="small-msg">
-                <!-- {{ validationMsg($v.form.profissional) }} -->
+                {{ validationMsg($v.form.profissional) }}
               </small>
             </b-overlay>
           </div>
@@ -114,9 +123,9 @@
                     title="EDITAR"
                     style="background-color: #f0f8ff"
                   >
-                    <i class="bx bx-edit-alt"></i>
+                    EDITAR <i class="bx bx-edit-alt"></i>
                   </a>
-                  <a
+                  <!-- <a
                     size="sm"
                     class="btn btn-sm me-1 mb-1"
                     data-backdrop="static"
@@ -124,7 +133,7 @@
                     style="background-color: #f0f8ff"
                   >
                     <i class="bx bx-trash-alt"></i>
-                  </a>
+                  </a> -->
                 </span>
               </template>
             </vue-good-table>
@@ -181,12 +190,46 @@
 </template>
 <script>
 import { VueGoodTable } from "vue-good-table";
+import * as validators from "vuelidate/lib/validators";
+import { validationMessage } from "vuelidate-messages";
 import HomeProfissional from "../profissional/HomeProfissional.vue";
 import { ServiceAgenda } from "../../services/serviceAgenda";
 import {
   formatarDataParaPtBR,
   formatarHorarioAgenda,
 } from "../../rules/filters";
+import { Notyf } from "notyf";
+const notyf = new Notyf({
+  position: {
+    x: "center",
+    y: "top",
+  },
+  types: [
+    {
+      type: "warning",
+      background: "orange",
+      icon: {
+        className: "material-icons",
+        tagName: "i",
+        text: "warning",
+      },
+    },
+    {
+      type: "error",
+      background: "indianred",
+      duration: 5000,
+      dismissible: true,
+    },
+  ],
+});
+const formMessages = {
+  required: () => "Campo Obrigatório",
+  txtMinLen: ({ $params }) =>
+    `Campo minimo ${$params.txtMinLen.min} characters.`,
+  txtMaxLen: ({ $params }) =>
+    `Campo maximo ${$params.txtMaxLen.max} characters.`,
+  integer: () => "Campo deve ser um Numero inteiro",
+};
 export default {
   components: { VueGoodTable, HomeProfissional },
   data() {
@@ -213,10 +256,18 @@ export default {
           thClass: "text-center",
           tdClass: "text-center",
         },
+        {
+          label: "Ações",
+          sortable: false,
+          field: "btn",
+          html: true,
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
       ],
       form: {
         profissional: "",
-        id_profissinal: "",
+        id_profissional: "",
         id_servico: "",
         servico: "",
         horario_inicio: "",
@@ -225,7 +276,22 @@ export default {
       isLoadingAgenda: false,
     };
   },
+  validations: {
+    form: {
+      id_profissional: {
+        required: validators.required,
+        integer: validators.integer,
+      },
+      profissional: {
+        required: validators.required,
+      },
+      horario_inicio: {
+        required: validators.required,
+      },
+    },
+  },
   methods: {
+    validationMsg: validationMessage(formMessages),
     showSearchProfissional() {
       this.$bvModal.show(this.modal_search_Profissional);
     },
@@ -239,29 +305,48 @@ export default {
     },
     onsubmit() {},
     findAgendaProfissional() {
-      this.isLoadingAgenda = true;
-      this.agenda = [];
-      ServiceAgenda.findAgendaProfissional(this.form)
-        .then((value) => {
-          if (value.data.Success === true) {
+      if (this.$v.form.$invalid) {
+        this.$v.form.$touch();
+        notyf.error('Pesquisa está enfrentando alguma irregularidade !');
+      } else {
+        this.isLoadingAgenda = true;
+        this.agenda = [];
+        ServiceAgenda.findAgendaProfissional(this.form)
+          .then((value) => {
+            if (value.data.Success === true) {
+              this.isLoadingAgenda = false;
+              value.data.Agenda.map((agenda) => {
+                console.log(agenda);
+                agenda.data = formatarDataParaPtBR(agenda.data);
+                agenda.horario_inicio = formatarHorarioAgenda(
+                  agenda.horario_inicio
+                );
+              });
+              this.agenda = value.data.Agenda;
+            }
+            if (value.data.Success === false) {
+              this.isLoadingAgenda = false;
+              notyf.error(value.data.mensagem);
+              this.agenda = [];
+            }
+          })
+          .catch((error) => {
             this.isLoadingAgenda = false;
-            value.data.Agenda.map((agenda) => {
-              console.log(agenda);
-              agenda.data = formatarDataParaPtBR(agenda.data);
-              agenda.horario_inicio = formatarHorarioAgenda(
-                agenda.horario_inicio
-              );
-            });
-            this.agenda = value.data.Agenda;
-          }
-          console.log(value);
-        })
-        .catch((error) => {
-          this.isLoadingAgenda = false;
-          console.log(error);
-        });
+            console.error("Erro na requisição:", error);
+          });
+      }
     },
   },
 };
 </script>
-<style></style>
+<style>
+.fail-error {
+  border: 2px solid #e46060bb;
+}
+.small-msg {
+  font-size: 11px;
+  color: rgba(228, 96, 96, 0.733);
+  font-family: sans-serif;
+  font-weight: 700;
+}
+</style>

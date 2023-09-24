@@ -12,10 +12,11 @@
               id="date"
               type="date"
               v-model="form.horario_inicio"
-              ref="horario_inicio_"
+              ref="horario_inicio"
               :class="{
                 'fail-error': $v.form.horario_inicio.$error,
               }"
+              @keydown.enter.prevent="moveFocus(1)"
             ></b-form-input>
             <small class="small-msg">
               {{ validationMsg($v.form.horario_inicio) }}
@@ -32,6 +33,10 @@
               placeholder="Código"
               ref="id_profissional"
               v-model="form.id_profissional"
+              @keydown.enter.prevent="
+                profissionalDebounce(form.id_profissional)
+              "
+              @keydown.backspace="handleBackspace_profissional"
             >
             </b-form-input>
             <small class="small-msg">
@@ -42,7 +47,7 @@
             <label
               >Profissional:<b style="color: rgb(245, 153, 153)"> *</b></label
             >
-            <b-overlay :show="false" rounded="sm">
+            <b-overlay :show="isLoadingProfissional" rounded="sm">
               <b-input-group>
                 <b-form-input
                   id="profissional"
@@ -84,6 +89,7 @@
             <button
               id="pesquisar"
               class="btn btn-dark"
+              ref="pesquisar"
               @click="findAgendaProfissional"
             >
               Pesquisar
@@ -194,6 +200,7 @@ import * as validators from "vuelidate/lib/validators";
 import { validationMessage } from "vuelidate-messages";
 import HomeProfissional from "../profissional/HomeProfissional.vue";
 import { ServiceAgenda } from "../../services/serviceAgenda";
+import { ServiceProfissional } from "../../services/serviceProfissional";
 import {
   formatarDataParaPtBR,
   formatarHorarioAgenda,
@@ -274,7 +281,13 @@ export default {
       },
       agenda: [],
       isLoadingAgenda: false,
+      isLoadingProfissional: false,
     };
+  },
+  watch: {
+    "form.horario_inicio"() {
+      this.agenda = [];
+    },
   },
   validations: {
     form: {
@@ -295,10 +308,16 @@ export default {
     showSearchProfissional() {
       this.$bvModal.show(this.modal_search_Profissional);
     },
+    fecharModalSearchProfissional() {
+      this.$bvModal.hide(this.modal_search_Profissional);
+    },
     changeSearchProfissional(obj) {
       if (obj.column.field === "btn") {
         return;
       }
+      this.form.id_profissional = "";
+      this.form.profissional = "";
+      this.agenda = [];
       this.form.id_profissional = obj.row.id;
       this.form.profissional = obj.row.profissional;
       this.$bvModal.hide(this.modal_search_Profissional);
@@ -307,7 +326,7 @@ export default {
     findAgendaProfissional() {
       if (this.$v.form.$invalid) {
         this.$v.form.$touch();
-        notyf.error('Pesquisa está enfrentando alguma irregularidade !');
+        notyf.error("Pesquisa está enfrentando alguma irregularidade !");
       } else {
         this.isLoadingAgenda = true;
         this.agenda = [];
@@ -334,6 +353,48 @@ export default {
             this.isLoadingAgenda = false;
             console.error("Erro na requisição:", error);
           });
+      }
+    },
+    profissionalDebounce(id) {
+      this.isLoadingProfissional = true;
+      // this.form.id_profissional = "";
+      // this.form.profissional = "";
+      this.agenda = [];
+      this.$v.form.profissional.$reset();
+      this.$v.form.id_profissional.$reset();
+      ServiceProfissional.getById(id).then((response) => {
+        if (response.status === 200) {
+          this.form.id_profissional = response.data[0].id;
+          this.form.profissional = response.data[0].profissional;
+          this.isLoadingProfissional = false;
+          this.findAgendaProfissional();
+        } else {
+          notyf.error("Profissional não encontrado !");
+          this.form.id_profissional = "";
+          this.form.profissional = "";
+          this.isLoadingProfissional = false;
+        }
+      });
+    },
+    handleBackspace_profissional(event) {
+      if (event.keyCode === 8) {
+        //this.fornecedorDebounce(0);
+        this.form.id_profissional = "";
+        this.form.profissional = "";
+        this.agenda = [];
+        this.$v.form.profissional.$reset();
+      }
+    },
+    moveFocus(nextIndex) {
+      const inputs = [
+        this.$refs.horario_inicio,
+        this.$refs.id_profissional,
+        this.$refs.pesquisar,
+        // ... mais referências de b-form-input ...
+      ];
+
+      if (nextIndex >= 0 && nextIndex < inputs.length) {
+        inputs[nextIndex].focus();
       }
     },
   },

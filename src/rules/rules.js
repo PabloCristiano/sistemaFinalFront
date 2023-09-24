@@ -183,5 +183,53 @@ const Rules = {
       return true;
     }
   },
+  validarHorario_Fim(horario_fim, horario_inicio) {
+    const partes = horario_fim.split("T");
+    const data_horario_fim = partes[1];
+    const data_value = new Date(horario_fim);
+    const ano_v = data_value.getFullYear();
+    const mes_v = String(data_value.getMonth() + 1).padStart(2, "0");
+    const dia_v = String(data_value.getDate()).padStart(2, "0");
+    const dataHorario_fim = `${ano_v}-${mes_v}-${dia_v}`;
+    const data_horario_fim_milisegundos =
+      Rules.convertToMilliseconds(dataHorario_fim);
+    if (data_horario_fim) {
+      const horario_partes = data_horario_fim.split(":");
+      const hora_v = parseInt(horario_partes[0], 10);
+      const minutos_v = parseInt(horario_partes[1], 10);
+      var milissegundos_horario_fim = (hora_v * 60 + minutos_v) * 60 * 1000;
+    }
+
+    const partes_inicio = horario_inicio.split("T");
+    const horario_inicioo = partes_inicio[1];
+    const data_horario_inicio = new Date(horario_inicio);
+    const ano_horario_incio = data_horario_inicio.getFullYear();
+    const mes_horario_incio = String(
+      data_horario_inicio.getMonth() + 1
+    ).padStart(2, "0");
+    const dia_horario_incio = String(data_horario_inicio.getDate()).padStart(
+      2,
+      "0"
+    );
+    const dataHorario_Iinicio = `${ano_horario_incio}-${mes_horario_incio}-${dia_horario_incio}`;
+    const data_horario_Inicio_milisegundos =
+      Rules.convertToMilliseconds(dataHorario_Iinicio);
+    if (horario_inicioo) {
+      const horario_partes_inicio = horario_inicioo.split(":");
+      const hora_inicio = parseInt(horario_partes_inicio[0], 10);
+      const minutos_inicio = parseInt(horario_partes_inicio[1], 10);
+      var milissegundos_horario_inicio =
+        (hora_inicio * 60 + minutos_inicio) * 60 * 1000;
+    }
+
+    if (
+      data_horario_fim_milisegundos + milissegundos_horario_fim <
+      data_horario_Inicio_milisegundos + milissegundos_horario_inicio
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  },
 };
 export default Rules;

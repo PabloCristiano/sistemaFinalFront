@@ -193,6 +193,15 @@
                 </span>
               </template>
             </vue-good-table>
+            <div v-if="$v.agenda.$error" class="col text-center">
+              <div
+                class="d-flex justify-content-center align-items-center col-12 mt-2"
+              >
+                <div class="col-8 alert alert-danger" role="alert">
+                  {{ validationMsg($v.agenda) }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="card-footer">
@@ -295,7 +304,9 @@ const notyf = new Notyf({
 });
 const formMessages = {
   required: () => "Campo Obrigatório",
+  required_Agenda: () => "Deve conter pelo menos um Horário adicionado !",
   txtValidaHorarioInicio: () => "Data e horario Inválida !",
+  txtValidaHorarioFim: () => "Data e horario Inválida !",
 };
 export default {
   components: { VueGoodTable, HomeProfissional },
@@ -350,6 +361,9 @@ export default {
         txtValidaHorarioInicio: function ValidaHora_inicio(value) {
           return Rules.validarHorario_Inicio(value);
         },
+        txtValidaHorarioFim: function ValidaHorario_fim(value) {
+          return Rules.validarHorario_Fim(value, this.form.horario_inicio);
+        },
       },
       intervalo: {
         required: validators.required,
@@ -360,6 +374,9 @@ export default {
       profissional: {
         required: validators.required,
       },
+    },
+    agenda: {
+      required_Agenda: validators.required,
     },
   },
   methods: {
@@ -380,6 +397,8 @@ export default {
           "O cadastro Agenda está enfrentando alguma irregularidade !"
         );
       } else {
+        this.$v.$reset();
+        this.$v.form.$reset();
         this.agenda = [];
         const startTime = new Date(this.form.horario_inicio).getTime();
         const endTime = new Date(this.form.horario_fim).getTime();
@@ -486,6 +505,13 @@ export default {
         this.$v.form.$touch();
         notyf.error("Agenda está enfrentando alguma irregularidade !");
       } else {
+        if (this.$v.$invalid) {
+          this.$v.$touch();
+          notyf.error(
+            "O cadastro Agenda está enfrentando alguma irregularidade !"
+          );
+          return;
+        }
         ServiceAgenda.storeAgenda(this.form)
           .then((response) => {
             if (response.status === 200) {

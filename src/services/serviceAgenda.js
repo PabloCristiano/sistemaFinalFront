@@ -109,6 +109,24 @@ class ServiceAgenda {
         return errors;
       });
   }
+
+  async findCriarAgendaProfissional(data) {
+    ApiService.setHeader();
+    let config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Accept: "application/json",
+      },
+    };
+    return await axios
+      .post(ApiService.url + "v1/pesquisaAgenda", data, config)
+      .then((obj) => {
+        return obj;
+      })
+      .catch((errors) => {
+        return errors;
+      });
+  }
 }
 const instance = new ServiceAgenda();
 export { instance as ServiceAgenda };

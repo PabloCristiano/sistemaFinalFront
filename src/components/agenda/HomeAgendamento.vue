@@ -410,11 +410,11 @@ export default {
         );
       } else {
         // console.log(this.form);
-        async function verificarRegistro() {
-          var isregistro = await this.pesquisaHorarioAgendaProfissional();
+        // async function verificarRegistro() {
+        //   var isregistro = await this.pesquisaHorarioAgendaProfissional();
 
-          // Faça o que você precisa com a variável isregistro aqui
-        }
+        //   // Faça o que você precisa com a variável isregistro aqui
+        // }
 
         var isregistro = this.pesquisaHorarioAgendaProfissional();
         console.log(isregistro);

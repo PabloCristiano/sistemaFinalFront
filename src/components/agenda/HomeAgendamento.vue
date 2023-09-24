@@ -56,7 +56,6 @@
                   v-model="form.intervalo"
                   id="intervalo"
                   placeholder="Intervalo Horario"
-                  @blur="ValidaIntervalo"
                   ref="intervalo_"
                   @keydown.enter.prevent="moveFocus(3)"
                 >
@@ -80,7 +79,6 @@
                     profissionalDebounce(form.id_profissional)
                   "
                   @keydown.backspace="handleBackspace_profissional"
-                  @blur="ValidaProfissional"
                 >
                 </b-form-input>
                 <small class="small-msg">
@@ -373,11 +371,14 @@ export default {
       this.form.intervalo = "";
       this.form.profissional = "";
       this.form.id_profissional = "";
+      this.$v.form.$reset();
     },
     generateAgenda() {
       if (this.$v.form.$invalid) {
         this.$v.form.$touch();
-        notyf.error('O cadastro Agenda está enfrentando alguma irregularidade !');
+        notyf.error(
+          "O cadastro Agenda está enfrentando alguma irregularidade !"
+        );
       } else {
         this.agenda = [];
         const startTime = new Date(this.form.horario_inicio).getTime();
@@ -431,17 +432,8 @@ export default {
         } else {
           this.form.id_profissional = "";
           this.form.profissional = "";
-          if (
-            this.$v.form.id_profissional.$invalid &&
-            this.$v.form.profissional.$invalid
-          ) {
-            this.$v.form.id_profissional.$touch();
-            this.$v.form.profissional.$touch();
-          }
           this.isLoadingProfissional = false;
-          this.$nextTick(() => {
-            this.$refs.id_profissional_.focus();
-          });
+          notyf.error("Profissional não encontrado !");
         }
       });
     },

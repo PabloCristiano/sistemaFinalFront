@@ -410,6 +410,7 @@ export default {
       }
       this.form.id_profissional = obj.row.id;
       this.form.profissional = obj.row.profissional;
+      this.agenda = [];
       this.$bvModal.hide(this.modal_search_Profissional);
     },
     showSearchProfissional() {
@@ -419,6 +420,7 @@ export default {
       this.isLoadingProfissional = true;
       // this.form.id_profissional = "";
       // this.form.profissional = "";
+      this.agenda = [];
       this.$v.form.profissional.$reset();
       this.$v.form.id_profissional.$reset();
       ServiceProfissional.getById(id).then((response) => {
@@ -442,6 +444,7 @@ export default {
         //this.fornecedorDebounce(0);
         this.form.id_profissional = "";
         this.form.profissional = "";
+        this.agenda = [];
       }
     },
     ValidaDataInicio() {

@@ -156,7 +156,7 @@
                 :search-options="{
                   enabled: true,
                   placeholder: 'Procure por um Horario',
-                  skipDiacritics: true
+                  skipDiacritics: true,
                 }"
                 :pagination-options="{
                   enabled: true,
@@ -168,7 +168,7 @@
                   nextLabel: 'Proximo',
                   rowsPerPageLabel: 'Qtd por página',
                   ofLabel: 'de',
-                  pageLabel: 'Pagina' // for 'pages' mode
+                  pageLabel: 'Pagina', // for 'pages' mode
                 }"
               >
                 <template slot="table-row" slot-scope="props">
@@ -284,7 +284,7 @@ import { Notyf } from "notyf";
 const notyf = new Notyf({
   position: {
     x: "center",
-    y: "top"
+    y: "top",
   },
   types: [
     {
@@ -293,22 +293,22 @@ const notyf = new Notyf({
       icon: {
         className: "material-icons",
         tagName: "i",
-        text: "warning"
-      }
+        text: "warning",
+      },
     },
     {
       type: "error",
       background: "indianred",
       duration: 5000,
-      dismissible: true
-    }
-  ]
+      dismissible: true,
+    },
+  ],
 });
 const formMessages = {
   required: () => "Campo Obrigatório",
   required_Agenda: () => "Deve conter pelo menos um Horário adicionado !",
   txtValidaHorarioInicio: () => "Data e horario Inválida !",
-  txtValidaHorarioFim: () => "Data e horario Inválida !"
+  txtValidaHorarioFim: () => "Data e horario Inválida !",
 };
 export default {
   components: { VueGoodTable, HomeProfissional },
@@ -325,30 +325,30 @@ export default {
         intervalo: "",
         profissional: "",
         id_profissional: "",
-        agenda: []
+        agenda: [],
       },
       columns: [
         {
           label: "Data",
           field: "data",
           thClass: "text-center",
-          tdClass: "text-center"
+          tdClass: "text-center",
         },
         {
           label: "Horario",
           field: "horario_inicio",
           thClass: "text-center",
-          tdClass: "text-center"
+          tdClass: "text-center",
         },
         {
           label: "Profissioanal",
           field: "profissional",
           thClass: "text-center",
-          tdClass: "text-center"
-        }
+          tdClass: "text-center",
+        },
       ],
       agenda: [],
-      isLoadingProfissional: false
+      isLoadingProfissional: false,
     };
   },
   watch: {
@@ -360,7 +360,7 @@ export default {
     },
     "form.intervalo"() {
       this.agenda = [];
-    }
+    },
   },
   validations: {
     form: {
@@ -368,7 +368,7 @@ export default {
         required: validators.required,
         txtValidaHorarioInicio: function ValidaHora_inicio(value) {
           return Rules.validarHorario_Inicio(value);
-        }
+        },
       },
       horario_fim: {
         required: validators.required,
@@ -377,21 +377,21 @@ export default {
         },
         txtValidaHorarioFim: function ValidaHorario_fim(value) {
           return Rules.validarHorario_Fim(value, this.form.horario_inicio);
-        }
+        },
       },
       intervalo: {
-        required: validators.required
+        required: validators.required,
       },
       id_profissional: {
-        required: validators.required
+        required: validators.required,
       },
       profissional: {
-        required: validators.required
-      }
+        required: validators.required,
+      },
     },
     agenda: {
-      required_Agenda: validators.required
-    }
+      required_Agenda: validators.required,
+    },
   },
   methods: {
     validationMsg: validationMessage(formMessages),
@@ -481,7 +481,7 @@ export default {
         this.$refs.intervalo_,
         this.$refs.id_profissional_,
         this.$refs.profissional_,
-        this.$refs.btnGerarAgenda_
+        this.$refs.btnGerarAgenda_,
 
         // ... mais referências de b-form-input ...
       ];
@@ -496,6 +496,7 @@ export default {
       console.log("fechar Agenda");
     },
     onSubmit() {
+      console.log(this.form);
       if (this.$v.form.$invalid) {
         this.$v.form.$touch();
         notyf.error("Agenda está enfrentando alguma irregularidade !");
@@ -562,12 +563,13 @@ export default {
           data: data,
           horario_inicio: horario,
           profissional: this.form.profissional,
-          id_profissional: this.form.id_profissional
+          id_profissional: this.form.id_profissional,
+          intervalo: this.form.intervalo,
         });
       }
       this.form.agenda = this.agenda;
-    }
-  }
+    },
+  },
 };
 </script>
 <style>

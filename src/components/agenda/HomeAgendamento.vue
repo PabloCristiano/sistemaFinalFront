@@ -149,50 +149,52 @@
             </div>
           </div>
           <div class="row mt-2">
-            <vue-good-table
-              :columns="columns"
-              :rows="agenda"
-              :search-options="{
-                enabled: true,
-                placeholder: 'Procure por um Horario',
-                skipDiacritics: true,
-              }"
-              :pagination-options="{
-                enabled: true,
-                mode: 'records',
-                perPage: 15,
-                position: 'end',
-                perPageDropdown: [15, 30],
-                prevLabel: 'Anterior',
-                nextLabel: 'Proximo',
-                rowsPerPageLabel: 'Qtd por página',
-                ofLabel: 'de',
-                pageLabel: 'Pagina', // for 'pages' mode
-              }"
-            >
-              <template slot="table-row" slot-scope="props">
-                <span v-if="props.column.field === 'btn'">
-                  <a
-                    size="sm"
-                    class="btn btn-sm me-1 mb-1"
-                    data-backdrop="static"
-                    title="EDITAR"
-                    style="background-color: #f0f8ff"
-                  >
-                    <i class="bx bx-edit-alt"></i>
-                  </a>
-                  <a
-                    size="sm"
-                    class="btn btn-sm me-1 mb-1"
-                    data-backdrop="static"
-                    title="EXCLUIR"
-                    style="background-color: #f0f8ff"
-                  >
-                    <i class="bx bx-trash-alt"></i>
-                  </a>
-                </span>
-              </template>
-            </vue-good-table>
+            <b-overlay :show="isLoading" rounded="sm">
+              <vue-good-table
+                :columns="columns"
+                :rows="agenda"
+                :search-options="{
+                  enabled: true,
+                  placeholder: 'Procure por um Horario',
+                  skipDiacritics: true
+                }"
+                :pagination-options="{
+                  enabled: true,
+                  mode: 'records',
+                  perPage: 15,
+                  position: 'end',
+                  perPageDropdown: [15, 30],
+                  prevLabel: 'Anterior',
+                  nextLabel: 'Proximo',
+                  rowsPerPageLabel: 'Qtd por página',
+                  ofLabel: 'de',
+                  pageLabel: 'Pagina' // for 'pages' mode
+                }"
+              >
+                <template slot="table-row" slot-scope="props">
+                  <span v-if="props.column.field === 'btn'">
+                    <a
+                      size="sm"
+                      class="btn btn-sm me-1 mb-1"
+                      data-backdrop="static"
+                      title="EDITAR"
+                      style="background-color: #f0f8ff"
+                    >
+                      <i class="bx bx-edit-alt"></i>
+                    </a>
+                    <a
+                      size="sm"
+                      class="btn btn-sm me-1 mb-1"
+                      data-backdrop="static"
+                      title="EXCLUIR"
+                      style="background-color: #f0f8ff"
+                    >
+                      <i class="bx bx-trash-alt"></i>
+                    </a>
+                  </span>
+                </template>
+              </vue-good-table>
+            </b-overlay>
             <div v-if="$v.agenda.$error" class="col text-center">
               <div
                 class="d-flex justify-content-center align-items-center col-12 mt-2"
@@ -282,7 +284,7 @@ import { Notyf } from "notyf";
 const notyf = new Notyf({
   position: {
     x: "center",
-    y: "top",
+    y: "top"
   },
   types: [
     {
@@ -291,27 +293,28 @@ const notyf = new Notyf({
       icon: {
         className: "material-icons",
         tagName: "i",
-        text: "warning",
-      },
+        text: "warning"
+      }
     },
     {
       type: "error",
       background: "indianred",
       duration: 5000,
-      dismissible: true,
-    },
-  ],
+      dismissible: true
+    }
+  ]
 });
 const formMessages = {
   required: () => "Campo Obrigatório",
   required_Agenda: () => "Deve conter pelo menos um Horário adicionado !",
   txtValidaHorarioInicio: () => "Data e horario Inválida !",
-  txtValidaHorarioFim: () => "Data e horario Inválida !",
+  txtValidaHorarioFim: () => "Data e horario Inválida !"
 };
 export default {
   components: { VueGoodTable, HomeProfissional },
   data() {
     return {
+      isLoading: false,
       modal_search_Profissional: "modal_search_Profissional",
       headerBgVariant: "dark",
       headerTextVariant: "light",
@@ -322,30 +325,30 @@ export default {
         intervalo: "",
         profissional: "",
         id_profissional: "",
-        agenda: [],
+        agenda: []
       },
       columns: [
         {
           label: "Data",
           field: "data",
           thClass: "text-center",
-          tdClass: "text-center",
+          tdClass: "text-center"
         },
         {
           label: "Horario",
           field: "horario_inicio",
           thClass: "text-center",
-          tdClass: "text-center",
+          tdClass: "text-center"
         },
         {
           label: "Profissioanal",
           field: "profissional",
           thClass: "text-center",
-          tdClass: "text-center",
-        },
+          tdClass: "text-center"
+        }
       ],
       agenda: [],
-      isLoadingProfissional: false,
+      isLoadingProfissional: false
     };
   },
   watch: {
@@ -357,7 +360,7 @@ export default {
     },
     "form.intervalo"() {
       this.agenda = [];
-    },
+    }
   },
   validations: {
     form: {
@@ -365,7 +368,7 @@ export default {
         required: validators.required,
         txtValidaHorarioInicio: function ValidaHora_inicio(value) {
           return Rules.validarHorario_Inicio(value);
-        },
+        }
       },
       horario_fim: {
         required: validators.required,
@@ -374,21 +377,21 @@ export default {
         },
         txtValidaHorarioFim: function ValidaHorario_fim(value) {
           return Rules.validarHorario_Fim(value, this.form.horario_inicio);
-        },
+        }
       },
       intervalo: {
-        required: validators.required,
+        required: validators.required
       },
       id_profissional: {
-        required: validators.required,
+        required: validators.required
       },
       profissional: {
-        required: validators.required,
-      },
+        required: validators.required
+      }
     },
     agenda: {
-      required_Agenda: validators.required,
-    },
+      required_Agenda: validators.required
+    }
   },
   methods: {
     validationMsg: validationMessage(formMessages),
@@ -505,7 +508,7 @@ export default {
         this.$refs.intervalo_,
         this.$refs.id_profissional_,
         this.$refs.profissional_,
-        this.$refs.btnGerarAgenda_,
+        this.$refs.btnGerarAgenda_
 
         // ... mais referências de b-form-input ...
       ];
@@ -553,18 +556,21 @@ export default {
       }
     },
     pesquisaHorarioAgendaProfissional() {
+      this.isLoading = true;
       ServiceAgenda.findCriarAgendaProfissional(this.form)
         .then((response) => {
           if (response.status === 200) {
+            this.isLoading = false;
             console.log(response.data.Success);
             return response.data.Success;
           }
         })
         .catch((error) => {
+          this.isLoading = false;
           console.log(error);
         });
-    },
-  },
+    }
+  }
 };
 </script>
 <style>

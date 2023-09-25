@@ -405,41 +405,14 @@ export default {
       this.$v.form.$reset();
     },
     generateAgenda() {
+      this.agenda = [];
       if (this.$v.form.$invalid) {
         this.$v.form.$touch();
-
         notyf.error(
           "O cadastro Agenda está enfrentando alguma irregularidade !"
         );
       } else {
-        // console.log(this.form);
-        // async function verificarRegistro() {
-        //   var isregistro = await this.pesquisaHorarioAgendaProfissional();
-
-        //   // Faça o que você precisa com a variável isregistro aqui
-        // }
-
-        var isregistro = this.pesquisaHorarioAgendaProfissional();
-        console.log(isregistro);
-        // this.$v.$reset();
-        // this.$v.form.$reset();
-        // this.agenda = [];
-        // const startTime = new Date(this.form.horario_inicio).getTime();
-        // const endTime = new Date(this.form.horario_fim).getTime();
-        // const interval = parseInt(this.form.intervalo) * 60000; // Converte minutos to millisegundos
-        // for (let time = startTime; time <= endTime; time += interval) {
-        //   const dateTime = new Date(time);
-        //   const data = dateTime.toLocaleDateString();
-        //   const horario = dateTime.toLocaleTimeString();
-
-        //   this.agenda.push({
-        //     data: data,
-        //     horario_inicio: horario,
-        //     profissional: this.form.profissional,
-        //     id_profissional: this.form.id_profissional,
-        //   });
-        // }
-        // this.form.agenda = this.agenda;
+        this.pesquisaHorarioAgendaProfissional();
       }
     },
     fecharModalSearchProfissional() {
@@ -561,14 +534,38 @@ export default {
         .then((response) => {
           if (response.status === 200) {
             this.isLoading = false;
-            console.log(response.data.Success);
-            return response.data.Success;
+            if (response.data.Success) {
+              notyf.error("Já existem registro para essa Data");
+            } else {
+              this.setAgenda();
+            }
+            return;
           }
         })
         .catch((error) => {
           this.isLoading = false;
           console.log(error);
         });
+    },
+    setAgenda() {
+      this.$v.$reset();
+      this.$v.form.$reset();
+      this.agenda = [];
+      const startTime = new Date(this.form.horario_inicio).getTime();
+      const endTime = new Date(this.form.horario_fim).getTime();
+      const interval = parseInt(this.form.intervalo) * 60000; // Converte minutos to millisegundos
+      for (let time = startTime; time <= endTime; time += interval) {
+        const dateTime = new Date(time);
+        const data = dateTime.toLocaleDateString();
+        const horario = dateTime.toLocaleTimeString();
+        this.agenda.push({
+          data: data,
+          horario_inicio: horario,
+          profissional: this.form.profissional,
+          id_profissional: this.form.id_profissional
+        });
+      }
+      this.form.agenda = this.agenda;
     }
   }
 };

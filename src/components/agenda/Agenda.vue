@@ -231,8 +231,8 @@ export default {
     this.getAllProfissionais();
   },
   mounted() {
-    //   let todaysDate = new Date(new Date().getTime() + 0 * 24 * 60 * 60 * 1000);
-    this.createTable();
+    
+    // this.createTable();
   },
   methods: {
     calcularResultado() {
@@ -278,6 +278,7 @@ export default {
     },
     nextDate(index) {
       let dia = new Date(new Date().getTime() + index * 24 * 60 * 60 * 1000);
+      console.log(dia);
       return dia;
     },
     slot(event, value, day) {
@@ -310,15 +311,16 @@ export default {
       ServiceProfissional.findAllAgendaProfissional(id)
         .then((obj) => {
           if (obj) {
-            console.log(obj.data.Agenda);
+            // console.log(obj.data.Agenda);
             this.dateRange = [];
-            obj.data.Agenda.map((a) => {
-              this.dateRange.push({
-                label: a.horario_inicio,
-                start_time: a.horario_inicio,
-                end_time: a.horario_fim,
-              });
-            });
+            // obj.data.Agenda.map((a) => {
+            //   // this.dateRange.push({
+            //   //   label: a.horario_inicio,
+            //   //   start_time: a.horario_inicio,
+            //   //   end_time: a.horario_fim,
+            //   // });
+            //   console.log(a)
+            // });
           }
 
           this.isLoading = false;

@@ -43,9 +43,9 @@
                         class="text-center"
                         scope="col"
                         v-for="day in dayIndex"
-                        :key="day.label"
+                        :key="day.data"
                       >
-                        {{ day.label }}
+                        {{ day.data }}
                       </th>
                     </tr>
                   </thead>
@@ -232,7 +232,7 @@ export default {
     this.getAllProfissionais();
   },
   mounted() {
-    this.createTable();
+    // this.createTable();
   },
   methods: {
     calcularResultado() {
@@ -313,15 +313,21 @@ export default {
           if (obj) {
             // console.log(obj.data.Agenda);
             this.dateProfissional = this.extrairDatasUnicas(obj.data.Agenda);
+            this.dateProfissional.map((a) => {
+              var data = this.formatarData(a);
+              this.dayIndex.push({
+                data,
+              });
+            });
             this.dateRange = [];
-            // obj.data.Agenda.map((a) => {
-            //   // this.dateRange.push({
-            //   //   label: a.horario_inicio,
-            //   //   start_time: a.horario_inicio,
-            //   //   end_time: a.horario_fim,
-            //   // });
-            //   console.log(a)
-            // });
+            obj.data.Agenda.map((a) => {
+              this.dateRange.push({
+                label: a.horario_inicio,
+                start_time: a.horario_inicio,
+                end_time: a.horario_fim,
+              });
+              console.log(a);
+            });
           }
 
           this.isLoading = false;
@@ -340,6 +346,47 @@ export default {
       });
       console.log(datasUnicas);
       return datasUnicas;
+    },
+    formatarData(dataString) {
+      //     const diasDaSemana = [
+      //   'Domingo',
+      //   'Segunda-feira',
+      //   'Terça-feira',
+      //   'Quarta-feira',
+      //   'Quinta-feira',
+      //   'Sexta-feira',
+      //   'Sábado'
+      // ];
+
+      // const meses = [
+      //   'Janeiro',
+      //   'Fevereiro',
+      //   'Março',
+      //   'Abril',
+      //   'Maio',
+      //   'Junho',
+      //   'Julho',
+      //   'Agosto',
+      //   'Setembro',
+      //   'Outubro',
+      //   'Novembro',
+      //   'Dezembro'
+      // ];
+
+      // const data = new Date(dataString);
+      // const diaSemana = diasDaSemana[data.getUTCDay()];
+      // const dia = data.getUTCDate();
+      // const mes = meses[data.getUTCMonth()];
+      // const ano = data.getUTCFullYear();
+
+      // return `${diaSemana}, ${dia}/${mes}/${ano}`;
+      const data = new Date(dataString);
+      const diaSemana = data.toLocaleDateString("pt-BR", { weekday: "long" });
+      const dia = data.getUTCDate();
+      const mes = data.getUTCMonth() + 1; // Adiciona 1, pois os meses em JavaScript são baseados em zero
+      const ano = data.getUTCFullYear();
+
+      return `${diaSemana}, ${dia}/${mes < 10 ? "0" : ""}${mes}/${ano}`;
     },
   },
 };

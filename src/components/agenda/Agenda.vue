@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="card mb-5">
-      <div class="card-header" style="font-size: 18px"> Agendar</div>
+      <div class="card-header" style="font-size: 18px">Agendar</div>
       <div class="card-body">
         <div class="row mb-3">
           <div class="col-md-6">
@@ -10,11 +10,11 @@
               class="form-select"
               :options="profissional"
               placeholder="Selecione um Profissional"
-              label="text"
+              label="profissional"
               v-model="selected2"
             ></v-select>
           </div>
-          <div class="col-md-6" v-if="true">
+          <!-- <div class="col-md-6" v-if="true">
             <label for="">Serviço:</label>
             <v-select
               class="form-select"
@@ -23,7 +23,7 @@
               label="text"
               v-model="selected1"
             ></v-select>
-          </div>
+          </div> -->
         </div>
         <div v-if="isEnabled">
           <div class="container">
@@ -31,7 +31,7 @@
               <div
                 class="table-responsive table-wrapper"
                 :class="{ 'table-disabled': !isEnabled }"
-                style="background-color: #f5f5f561; height: 260px"
+                style="background-color: #f5f5f561; height: 600px"
               >
                 <table
                   class="table table-borderless"
@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import { ServiceProfissional } from "../../services/serviceProfissional";
 export default {
   props: {
     min: {
@@ -94,13 +95,17 @@ export default {
     selected1: {
       handler() {
         this.calcularResultado();
+        this.selected2;
       },
       deep: true,
     },
     selected2: {
       handler() {
         this.calcularResultado();
+        this.findAllAgendaProfissional(this.selected2.id);
+        // console.log(this.selected2.id);
       },
+
       deep: true,
     },
   },
@@ -115,116 +120,115 @@ export default {
         { id: 45, text: "Barba" },
         { id: 48, text: "Cabelo/Barba" },
       ],
-      profissional: [
-        { id: 55, text: "Pedrinho Matador" },
-        { id: 54, text: "Edward Mãos de Tesoura" },
-        { id: 58, text: "Jorginho de Cantú" },
-      ],
+      profissional: [],
       dateRange: [
-        {
-          label: "08:00",
-          start_time: "08:00",
-          end_time: "08:30",
-        },
-        {
-          label: "08:30",
-          start_time: "08:30",
-          end_time: "09:00",
-        },
-        {
-          label: "09:00",
-          start_time: "09:00",
-          end_time: "09:30",
-        },
-        {
-          label: "09:30",
-          start_time: "09:30",
-          end_time: "10:00",
-        },
-        {
-          label: "10:00",
-          start_time: "10:00",
-          end_time: "10:30",
-        },
-        {
-          label: "10:30",
-          start_time: "10:30",
-          end_time: "11:00",
-        },
-        {
-          label: "11:00",
-          start_time: "11:00",
-          end_time: "11:30",
-        },
-        {
-          label: "11:30",
-          start_time: "11:30",
-          end_time: "12:00",
-        },
-        {
-          label: "12:00",
-          start_time: "12:00",
-          end_time: "12:30",
-        },
-        {
-          label: "12:30",
-          start_time: "12:30",
-          end_time: "12:00",
-        },
-        {
-          label: "13:00",
-          start_time: "13:00",
-          end_time: "13:30",
-        },
-        {
-          label: "13:30",
-          start_time: "13:30",
-          end_time: "14:00",
-        },
-        {
-          label: "14:00",
-          start_time: "14:00",
-          end_time: "14:30",
-        },
-        {
-          label: "14:30",
-          start_time: "14:30",
-          end_time: "15:00",
-        },
-        {
-          label: "15:00",
-          start_time: "15:00",
-          end_time: "15:30",
-        },
-        {
-          label: "15:30",
-          start_time: "15:30",
-          end_time: "16:00",
-        },
-        {
-          label: "16:00",
-          start_time: "16:00",
-          end_time: "16:30",
-        },
-        {
-          label: "17:00",
-          start_time: "17:00",
-          end_time: "17:30",
-        },
-        {
-          label: "17:30",
-          start_time: "17:30",
-          end_time: "18:00",
-        },
-        {
-          label: "18:00",
-          start_time: "18:00",
-          end_time: "18:30",
-        },
+        // {
+        //   label: "08:00",
+        //   start_time: "08:00",
+        //   end_time: "08:30",
+        // },
+        // {
+        //   label: "08:30",
+        //   start_time: "08:30",
+        //   end_time: "09:00",
+        // },
+        // {
+        //   label: "09:00",
+        //   start_time: "09:00",
+        //   end_time: "09:30",
+        // },
+        // {
+        //   label: "09:30",
+        //   start_time: "09:30",
+        //   end_time: "10:00",
+        // },
+        // {
+        //   label: "10:00",
+        //   start_time: "10:00",
+        //   end_time: "10:30",
+        // },
+        // {
+        //   label: "10:30",
+        //   start_time: "10:30",
+        //   end_time: "11:00",
+        // },
+        // {
+        //   label: "11:00",
+        //   start_time: "11:00",
+        //   end_time: "11:30",
+        // },
+        // {
+        //   label: "11:30",
+        //   start_time: "11:30",
+        //   end_time: "12:00",
+        // },
+        // {
+        //   label: "12:00",
+        //   start_time: "12:00",
+        //   end_time: "12:30",
+        // },
+        // {
+        //   label: "12:30",
+        //   start_time: "12:30",
+        //   end_time: "12:00",
+        // },
+        // {
+        //   label: "13:00",
+        //   start_time: "13:00",
+        //   end_time: "13:30",
+        // },
+        // {
+        //   label: "13:30",
+        //   start_time: "13:30",
+        //   end_time: "14:00",
+        // },
+        // {
+        //   label: "14:00",
+        //   start_time: "14:00",
+        //   end_time: "14:30",
+        // },
+        // {
+        //   label: "14:30",
+        //   start_time: "14:30",
+        //   end_time: "15:00",
+        // },
+        // {
+        //   label: "15:00",
+        //   start_time: "15:00",
+        //   end_time: "15:30",
+        // },
+        // {
+        //   label: "15:30",
+        //   start_time: "15:30",
+        //   end_time: "16:00",
+        // },
+        // {
+        //   label: "16:00",
+        //   start_time: "16:00",
+        //   end_time: "16:30",
+        // },
+        // {
+        //   label: "17:00",
+        //   start_time: "17:00",
+        //   end_time: "17:30",
+        // },
+        // {
+        //   label: "17:30",
+        //   start_time: "17:30",
+        //   end_time: "18:00",
+        // },
+        // {
+        //   label: "18:00",
+        //   start_time: "18:00",
+        //   end_time: "18:30",
+        // },
       ],
       dayIndex: [],
       dateIndex: 0,
     };
+  },
+  created() {
+    this.getAllProfissionais();
   },
   mounted() {
     //   let todaysDate = new Date(new Date().getTime() + 0 * 24 * 60 * 60 * 1000);
@@ -232,7 +236,7 @@ export default {
   },
   methods: {
     calcularResultado() {
-      if (this.selected1 && this.selected2) {
+      if (this.selected2) {
         this.isEnabled = true;
       } else {
         this.isEnabled = false;
@@ -269,10 +273,7 @@ export default {
       };
     },
     addDate() {
-      this.dayIndex.push(
-        //this.formatDate(this.nextDate(this.dateIndex), "short"),
-        this.formataData(this.nextDate(this.dateIndex))
-      );
+      this.dayIndex.push(this.formataData(this.nextDate(this.dateIndex)));
       this.dateIndex++;
     },
     nextDate(index) {
@@ -289,12 +290,42 @@ export default {
     },
     createTable() {
       for (var index = 0; index < this.min; index++) {
-        this.dayIndex.push(
-          //this.formatDate(this.nextDate(this.dateIndex), "short"),
-          this.fomataData(this.nextDate(this.dateIndex))
-        );
+        this.dayIndex.push(this.fomataData(this.nextDate(this.dateIndex)));
         this.dateIndex++;
       }
+    },
+    getAllProfissionais() {
+      ServiceProfissional.getAll()
+        .then((obj) => {
+          if (obj) {
+            this.profissional = obj;
+          }
+          //this.isLoading = false;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    findAllAgendaProfissional(id) {
+      ServiceProfissional.findAllAgendaProfissional(id)
+        .then((obj) => {
+          if (obj) {
+            console.log(obj.data.Agenda);
+            this.dateRange = [];
+            obj.data.Agenda.map((a) => {
+              this.dateRange.push({
+                label: a.horario_inicio,
+                start_time: a.horario_inicio,
+                end_time: a.horario_fim,
+              });
+            });
+          }
+
+          this.isLoading = false;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };

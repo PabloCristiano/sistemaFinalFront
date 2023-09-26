@@ -231,8 +231,7 @@ export default {
     this.getAllProfissionais();
   },
   mounted() {
-    
-    // this.createTable();
+    this.createTable();
   },
   methods: {
     calcularResultado() {
@@ -312,6 +311,7 @@ export default {
         .then((obj) => {
           if (obj) {
             // console.log(obj.data.Agenda);
+            this.extrairDatasUnicas(obj.data.Agenda);
             this.dateRange = [];
             // obj.data.Agenda.map((a) => {
             //   // this.dateRange.push({
@@ -328,6 +328,17 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    extrairDatasUnicas(dados) {
+      const datasUnicas = [];
+      dados.forEach(function (evento) {
+        const data = evento.data;
+        if (!datasUnicas.includes(data)) {
+          datasUnicas.push(data);
+        }
+      });
+      console.log(datasUnicas);
+      return datasUnicas;
     },
   },
 };

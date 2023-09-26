@@ -70,8 +70,11 @@
                 class="d-flex justify-content-center align-items-center col-12 mt-2"
                 v-if="isMsgProfissional"
               >
-                <div class="col-12 alert alert-danger text-center" role="alert">
-                  Profissional sem Agenda !
+                <div
+                  class="col-12 alert alert-warning text-center"
+                  role="alert"
+                >
+                  <b>Profissional sem Agenda !</b>
                 </div>
               </div>
             </b-overlay>

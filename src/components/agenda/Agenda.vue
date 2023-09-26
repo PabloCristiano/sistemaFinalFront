@@ -225,6 +225,7 @@ export default {
       ],
       dayIndex: [],
       dateIndex: 0,
+      dateProfissional: [],
     };
   },
   created() {
@@ -311,7 +312,7 @@ export default {
         .then((obj) => {
           if (obj) {
             // console.log(obj.data.Agenda);
-            this.extrairDatasUnicas(obj.data.Agenda);
+            this.dateProfissional = this.extrairDatasUnicas(obj.data.Agenda);
             this.dateRange = [];
             // obj.data.Agenda.map((a) => {
             //   // this.dateRange.push({

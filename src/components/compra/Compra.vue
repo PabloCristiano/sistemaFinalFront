@@ -640,7 +640,7 @@
                 <div
                   class="d-flex justify-content-center align-items-center col-12 mt-2"
                 >
-                  <div class="col-8 alert alert-danger" role="alert">
+                  <div class="col-12 alert alert-danger" role="alert">
                     {{ validationMsg($v.form.produtos) }}
                   </div>
                 </div>

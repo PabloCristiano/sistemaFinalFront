@@ -25,13 +25,14 @@
             ></v-select>
           </div> -->
         </div>
-        <div v-if="isEnabled">
+        <div>
           <div class="container">
             <b-overlay :show="isLoading" rounded="sm">
               <div
                 class="table-responsive table-wrapper"
                 :class="{ 'table-disabled': !isEnabled }"
                 style="background-color: #f5f5f561; height: 600px"
+                v-if="isEnabled"
               >
                 <table
                   class="table table-borderless"
@@ -65,6 +66,14 @@
                   </tbody>
                 </table>
               </div>
+              <div
+                class="d-flex justify-content-center align-items-center col-12 mt-2"
+                v-if="isMsgProfissional"
+              >
+                <div class="col-12 alert alert-danger text-center" role="alert">
+                  Profissional sem Agenda !
+                </div>
+              </div>
             </b-overlay>
           </div>
         </div>
@@ -85,6 +94,30 @@
 <script>
 import { ServiceProfissional } from "../../services/serviceProfissional";
 import Rules from "../../rules/rules";
+// import { Notyf } from "notyf";
+// const notyf = new Notyf({
+//   position: {
+//     x: "center",
+//     y: "top"
+//   },
+//   types: [
+//     {
+//       type: "warning",
+//       background: "orange",
+//       icon: {
+//         className: "material-icons",
+//         tagName: "i",
+//         text: "warning"
+//       }
+//     },
+//     {
+//       type: "error",
+//       background: "indianred",
+//       duration: 5000,
+//       dismissible: true
+//     }
+//   ]
+// });
 export default {
   props: {
     min: {
@@ -105,6 +138,7 @@ export default {
         this.calcularResultado();
         this.dayIndex = [];
         this.dateRange = [];
+        this.isMsgProfissional = false;
         this.findAllAgendaProfissional(this.selected2.id);
         // console.log(this.selected2.id);
       },
@@ -116,6 +150,7 @@ export default {
     return {
       isEnabled: false,
       isLoading: false,
+      isMsgProfissional: false,
       selected2: "",
       selected1: "",
       servico: [
@@ -311,11 +346,10 @@ export default {
         });
     },
     findAllAgendaProfissional(id) {
-      this.dateRange = [];
+      this.isLoading = true;
       ServiceProfissional.findAllAgendaProfissional(id)
         .then((obj) => {
           if (obj) {
-            // console.log(obj.data.Agenda);
             this.dateProfissional = this.extrairDatasUnicas(obj.data.Agenda);
             this.dateProfissional.map((a) => {
               var data = this.formatarData(a);
@@ -332,11 +366,16 @@ export default {
               // console.log(a);
             });
           }
-
           this.isLoading = false;
+          this.isEnabled = true;
+          this.isMsgProfissional = false;
         })
         .catch((error) => {
           console.log(error);
+          this.isLoading = false;
+          this.isEnabled = false;
+          this.isMsgProfissional = true;
+          // notyf.error("Profissional sem Agenda !");
         });
     },
     extrairDatasUnicas(dados) {

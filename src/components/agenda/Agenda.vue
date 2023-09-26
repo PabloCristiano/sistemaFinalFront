@@ -84,12 +84,13 @@
 
 <script>
 import { ServiceProfissional } from "../../services/serviceProfissional";
+import Rules from "../../rules/rules";
 export default {
   props: {
     min: {
       type: Number,
-      default: 6,
-    },
+      default: 6
+    }
   },
   watch: {
     selected1: {
@@ -97,17 +98,19 @@ export default {
         this.calcularResultado();
         this.selected2;
       },
-      deep: true,
+      deep: true
     },
     selected2: {
       handler() {
         this.calcularResultado();
+        this.dayIndex = [];
+        this.dateRange = [];
         this.findAllAgendaProfissional(this.selected2.id);
         // console.log(this.selected2.id);
       },
 
-      deep: true,
-    },
+      deep: true
+    }
   },
   data() {
     return {
@@ -118,7 +121,7 @@ export default {
       servico: [
         { id: 55, text: "Cabelo" },
         { id: 45, text: "Barba" },
-        { id: 48, text: "Cabelo/Barba" },
+        { id: 48, text: "Cabelo/Barba" }
       ],
       profissional: [],
       dateRange: [
@@ -225,7 +228,7 @@ export default {
       ],
       dayIndex: [],
       dateIndex: 0,
-      dateProfissional: [],
+      dateProfissional: []
     };
   },
   created() {
@@ -254,7 +257,7 @@ export default {
         "Quarta-feira",
         "Quinta-feira",
         "Sexta-feira",
-        "Sábado",
+        "Sábado"
       ];
 
       // Obtem o número correspondente ao dia da semana (0-6)
@@ -269,7 +272,7 @@ export default {
       // Exibe a data formatada no console
       return {
         label: dataFormatada,
-        value: date,
+        value: date
       };
     },
     addDate() {
@@ -308,6 +311,7 @@ export default {
         });
     },
     findAllAgendaProfissional(id) {
+      this.dateRange = [];
       ServiceProfissional.findAllAgendaProfissional(id)
         .then((obj) => {
           if (obj) {
@@ -316,17 +320,16 @@ export default {
             this.dateProfissional.map((a) => {
               var data = this.formatarData(a);
               this.dayIndex.push({
-                data,
+                data
               });
             });
-            this.dateRange = [];
             obj.data.Agenda.map((a) => {
               this.dateRange.push({
                 label: a.horario_inicio,
                 start_time: a.horario_inicio,
-                end_time: a.horario_fim,
+                end_time: a.horario_fim
               });
-              console.log(a);
+              // console.log(a);
             });
           }
 
@@ -344,51 +347,21 @@ export default {
           datasUnicas.push(data);
         }
       });
-      console.log(datasUnicas);
       return datasUnicas;
     },
     formatarData(dataString) {
-      //     const diasDaSemana = [
-      //   'Domingo',
-      //   'Segunda-feira',
-      //   'Terça-feira',
-      //   'Quarta-feira',
-      //   'Quinta-feira',
-      //   'Sexta-feira',
-      //   'Sábado'
-      // ];
-
-      // const meses = [
-      //   'Janeiro',
-      //   'Fevereiro',
-      //   'Março',
-      //   'Abril',
-      //   'Maio',
-      //   'Junho',
-      //   'Julho',
-      //   'Agosto',
-      //   'Setembro',
-      //   'Outubro',
-      //   'Novembro',
-      //   'Dezembro'
-      // ];
-
-      // const data = new Date(dataString);
-      // const diaSemana = diasDaSemana[data.getUTCDay()];
-      // const dia = data.getUTCDate();
-      // const mes = meses[data.getUTCMonth()];
-      // const ano = data.getUTCFullYear();
-
-      // return `${diaSemana}, ${dia}/${mes}/${ano}`;
+      const milisegundos = Rules.convertToMilliseconds(dataString);
+      const dataaaa = Rules.milissegundosParaDataFormatada_(milisegundos);
       const data = new Date(dataString);
-      const diaSemana = data.toLocaleDateString("pt-BR", { weekday: "long" });
+      //const diaSemana = data.toLocaleDateString("pt-BR", { weekday: "long" });
+      const diaSemana = Rules.converterDataParaDiaSemana(dataaaa);
       const dia = data.getUTCDate();
       const mes = data.getUTCMonth() + 1; // Adiciona 1, pois os meses em JavaScript são baseados em zero
       const ano = data.getUTCFullYear();
 
       return `${diaSemana}, ${dia}/${mes < 10 ? "0" : ""}${mes}/${ano}`;
-    },
-  },
+    }
+  }
 };
 </script>
 

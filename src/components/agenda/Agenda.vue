@@ -246,26 +246,20 @@
           </div>
         </div>
       </b-container>
-      <b-container class="col-sm-12 col-md-12 mt-3" footer>
-        <div class="row col-sm-12 col-md-12 mt-3 d-flex justify-content-end">
-          <div class="col-sm-12 col-md-2 mt-3 text-end">
-            <b-button
-              @click="fecharModalAgendar()"
-              type="button"
-              id=""
-              class="btn btn-dark btn-sm"
-              >Cancelar</b-button
-            >
-          </div>
-
-          <div class="col-sm-12 col-md-2 mt-3 text-end">
-            <b-button
-              @click="fecharModalAgendar()"
-              type="button"
-              id=""
-              class="btn btn-dark btn-sm"
-              >Agendar</b-button
-            >
+      <b-container class="row col-12" footer>
+        <div class="d-flex justify-content-end mt-3">
+          <b-button
+            class="btn btn-sm me-1"
+            type="button"
+            variant="dark"
+            @click="fecharModalAgendar()"
+          >
+            Cancelar
+          </b-button>
+          <div>
+            <b-button class="btn btn-sm me-1" type="button" variant="dark">
+              Agendar<i class="bx bx-check"></i>
+            </b-button>
           </div>
         </div>
       </b-container>
@@ -304,8 +298,8 @@ export default {
   props: {
     min: {
       type: Number,
-      default: 6,
-    },
+      default: 6
+    }
   },
   watch: {
     selected1: {
@@ -313,7 +307,7 @@ export default {
         this.calcularResultado();
         this.selected2;
       },
-      deep: true,
+      deep: true
     },
     selected2: {
       handler() {
@@ -331,8 +325,8 @@ export default {
         }
       },
 
-      deep: true,
-    },
+      deep: true
+    }
   },
   data() {
     return {
@@ -347,7 +341,7 @@ export default {
       servico: [
         { id: 55, text: "Cabelo" },
         { id: 45, text: "Barba" },
-        { id: 48, text: "Cabelo/Barba" },
+        { id: 48, text: "Cabelo/Barba" }
       ],
       profissional: [],
       dateRange: [
@@ -454,7 +448,7 @@ export default {
       ],
       dayIndex: [],
       dateIndex: 0,
-      dateProfissional: [],
+      dateProfissional: []
     };
   },
   created() {
@@ -483,7 +477,7 @@ export default {
         "Quarta-feira",
         "Quinta-feira",
         "Sexta-feira",
-        "Sábado",
+        "Sábado"
       ];
 
       // Obtem o número correspondente ao dia da semana (0-6)
@@ -498,7 +492,7 @@ export default {
       // Exibe a data formatada no console
       return {
         label: dataFormatada,
-        value: date,
+        value: date
       };
     },
     addDate() {
@@ -546,7 +540,7 @@ export default {
             this.dateProfissional.map((a) => {
               var data = this.formatarData(a);
               this.dayIndex.push({
-                data,
+                data
               });
             });
             obj.data.Agenda.map((a) => {
@@ -556,7 +550,7 @@ export default {
                 date: a.data,
                 label: a.horario_inicio,
                 start_time: a.horario_inicio,
-                end_time: a.horario_fim,
+                end_time: a.horario_fim
               });
             });
             this.isLoading = false;
@@ -597,8 +591,8 @@ export default {
     },
     fecharModalAgendar() {
       this.$bvModal.hide(this.modal_search_agendar);
-    },
-  },
+    }
+  }
 };
 </script>
 

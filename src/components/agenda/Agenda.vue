@@ -96,7 +96,7 @@
     </div>
     <b-modal
       :id="modal_search_agendar"
-      size="xl"
+      size="lg"
       :header-bg-variant="headerBgVariant"
       :header-text-variant="headerTextVariant"
       no-close-on-backdrop
@@ -115,48 +115,38 @@
       </template>
       <b-container fluid>
         <div class="row col-12 mt-2">
-          <div class="col-md-3">
-            <label>Hr Fim:</label>
-            <b-form-input
-              id="horario_fim"
-              type="text"
-              placeholder="Horario Inicio"
-            >
-            </b-form-input>
-          </div>
-          <div class="col-md-3">
-            <label>Hr Inicio:</label>
-            <b-form-input
-              id="horario_inicio"
-              type="text"
-              placeholder="Horario Inicio"
-            >
-            </b-form-input>
-          </div>
-        </div>
-        <div class="row col-12 mt-2">
-          <div class="col-md-4">
+          <div class="col-md-8">
             <label>Profissional:</label>
             <b-form-input
               id="horario_inicio"
               type="text"
+              v-model="form.profissional"
               placeholder="Nome Profissional"
+              disabled
             >
             </b-form-input>
           </div>
+        </div>
+        <div class="row col-md-12 mt-2">
           <div class="col-md-2">
             <label>Código:</label>
-            <b-form-input id="id_estado" type="number" placeholder="Código">
+            <b-form-input
+              id="id_cliente"
+              type="number"
+              placeholder="Código"
+              v-model="form.id_cliente"
+            >
             </b-form-input>
             <small class="small-msg"> </small>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-10">
             <label>Cliente:<b style="color: rgb(245, 153, 153)"> *</b></label>
             <b-overlay :show="false" rounded="sm">
               <b-input-group>
                 <b-form-input
-                  id="cidade"
+                  id="cliente"
                   type="text"
+                  v-model="form.cliente"
                   placeholder="Nome do Cliente"
                   disabled
                 >
@@ -184,21 +174,21 @@
             </b-overlay>
           </div>
         </div>
-        <div class="row col-12 mt-2">
+        <div class="row col-md-12 mt-2">
           <div class="col-md-2">
             <label>Código:</label>
             <b-form-input id="id_estado" type="number" placeholder="Código">
             </b-form-input>
             <small class="small-msg"> </small>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-10">
             <label>Serviço:<b style="color: rgb(245, 153, 153)"> *</b></label>
             <b-overlay :show="false" rounded="sm">
               <b-input-group>
                 <b-form-input
                   id="cidade"
                   type="text"
-                  placeholder="Nome do Cliente"
+                  placeholder="Nome do Serviço"
                   disabled
                 >
                 </b-form-input>
@@ -224,7 +214,31 @@
               <small class="small-msg"> </small>
             </b-overlay>
           </div>
-          <div class="col-md-2">
+        </div>
+        <div class="row col-md-12 mt-2">
+          <div class="col-md-3">
+            <label>Hr Inicio:</label>
+            <b-form-input
+              id="horario_inicio"
+              type="text"
+              v-model="form.horario_inicio"
+              placeholder="Horario Inicio"
+              disabled
+            >
+            </b-form-input>
+          </div>
+          <div class="col-md-3">
+            <label>Hr Fim:</label>
+            <b-form-input
+              id="horario_fim"
+              v-model="form.horario_fim"
+              type="text"
+              placeholder="Horario Inicio"
+              disabled
+            >
+            </b-form-input>
+          </div>
+          <div class="col-md-3">
             <label>Tempo:</label>
             <b-form-input
               id="id_estado"
@@ -234,7 +248,7 @@
             >
             </b-form-input>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-3">
             <label>Valor:</label>
             <b-form-input
               id="id_estado"
@@ -246,7 +260,7 @@
           </div>
         </div>
       </b-container>
-      <b-container class="row col-12" footer>
+      <b-container class="row col-md-12" footer>
         <div class="d-flex justify-content-end mt-3">
           <b-button
             class="btn btn-sm me-1"
@@ -322,6 +336,8 @@ export default {
         this.isMsgProfissional = false;
         if (this.selected2) {
           this.findAllAgendaProfissional(this.selected2.id);
+          this.form.id_profissional = this.selected2.id;
+          this.form.profissional = this.selected2.profissional;
         }
       },
 
@@ -346,101 +362,6 @@ export default {
       profissional: [],
       dateRange: [
         // {
-        //   label: "08:00",
-        //   start_time: "08:00",
-        //   end_time: "08:30",
-        // },
-        // {
-        //   label: "08:30",
-        //   start_time: "08:30",
-        //   end_time: "09:00",
-        // },
-        // {
-        //   label: "09:00",
-        //   start_time: "09:00",
-        //   end_time: "09:30",
-        // },
-        // {
-        //   label: "09:30",
-        //   start_time: "09:30",
-        //   end_time: "10:00",
-        // },
-        // {
-        //   label: "10:00",
-        //   start_time: "10:00",
-        //   end_time: "10:30",
-        // },
-        // {
-        //   label: "10:30",
-        //   start_time: "10:30",
-        //   end_time: "11:00",
-        // },
-        // {
-        //   label: "11:00",
-        //   start_time: "11:00",
-        //   end_time: "11:30",
-        // },
-        // {
-        //   label: "11:30",
-        //   start_time: "11:30",
-        //   end_time: "12:00",
-        // },
-        // {
-        //   label: "12:00",
-        //   start_time: "12:00",
-        //   end_time: "12:30",
-        // },
-        // {
-        //   label: "12:30",
-        //   start_time: "12:30",
-        //   end_time: "12:00",
-        // },
-        // {
-        //   label: "13:00",
-        //   start_time: "13:00",
-        //   end_time: "13:30",
-        // },
-        // {
-        //   label: "13:30",
-        //   start_time: "13:30",
-        //   end_time: "14:00",
-        // },
-        // {
-        //   label: "14:00",
-        //   start_time: "14:00",
-        //   end_time: "14:30",
-        // },
-        // {
-        //   label: "14:30",
-        //   start_time: "14:30",
-        //   end_time: "15:00",
-        // },
-        // {
-        //   label: "15:00",
-        //   start_time: "15:00",
-        //   end_time: "15:30",
-        // },
-        // {
-        //   label: "15:30",
-        //   start_time: "15:30",
-        //   end_time: "16:00",
-        // },
-        // {
-        //   label: "16:00",
-        //   start_time: "16:00",
-        //   end_time: "16:30",
-        // },
-        // {
-        //   label: "17:00",
-        //   start_time: "17:00",
-        //   end_time: "17:30",
-        // },
-        // {
-        //   label: "17:30",
-        //   start_time: "17:30",
-        //   end_time: "18:00",
-        // },
-        // {
         //   label: "18:00",
         //   start_time: "18:00",
         //   end_time: "18:30",
@@ -448,7 +369,18 @@ export default {
       ],
       dayIndex: [],
       dateIndex: 0,
-      dateProfissional: []
+      dateProfissional: [],
+      form: {
+        id_profissional: "",
+        profissional: "",
+        id_cliente: "",
+        cliente: "",
+        id_servico: "",
+        servico: "",
+        horario_inicio: "",
+        horario_fim: "",
+        preço: ""
+      }
     };
   },
   created() {
@@ -511,6 +443,8 @@ export default {
         this.$emit("callback", value);
         console.log(value);
       }
+      this.form.horario_inicio = value.start_time;
+      this.form.horario_fim = value.end_time;
       this.$bvModal.show(this.modal_search_agendar);
     },
     createTable() {

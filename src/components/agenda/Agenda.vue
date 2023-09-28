@@ -44,20 +44,23 @@
                         class="text-center"
                         scope="col"
                         v-for="day in dayIndex"
-                        :key="day.data"
+                        :key="day.index"
                       >
                         {{ day.data }}
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="value in dateRange" :key="value.start_time">
+                    <tr
+                      v-for="(value, valueIndex) in dateRange"
+                      :key="value.start_time + valueIndex"
+                    >
                       <td
                         class="table-default text-center"
                         style="font-weight: 500; border-radius: 29px"
                         v-for="day in dayIndex"
-                        :key="day.label"
-                        @click="slot($event, value, day)"
+                        :key="day.index"
+                        @click="slot($event, value, day.data)"
                         :disabled="isEnabled"
                       >
                         {{ value.start_time }}
@@ -91,6 +94,182 @@
         </div>
       </div>
     </div>
+    <b-modal
+      :id="modal_search_agendar"
+      size="xl"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+    >
+      <template v-slot:modal-header>
+        <h5>Agendar um Horário</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="fecharModalAgendar()"
+        >
+          X
+        </b-button>
+      </template>
+      <b-container fluid>
+        <div class="row col-12 mt-2">
+          <div class="col-md-3">
+            <label>Hr Fim:</label>
+            <b-form-input
+              id="horario_fim"
+              type="text"
+              placeholder="Horario Inicio"
+            >
+            </b-form-input>
+          </div>
+          <div class="col-md-3">
+            <label>Hr Inicio:</label>
+            <b-form-input
+              id="horario_inicio"
+              type="text"
+              placeholder="Horario Inicio"
+            >
+            </b-form-input>
+          </div>
+        </div>
+        <div class="row col-12 mt-2">
+          <div class="col-md-4">
+            <label>Profissional:</label>
+            <b-form-input
+              id="horario_inicio"
+              type="text"
+              placeholder="Nome Profissional"
+            >
+            </b-form-input>
+          </div>
+          <div class="col-md-2">
+            <label>Código:</label>
+            <b-form-input id="id_estado" type="number" placeholder="Código">
+            </b-form-input>
+            <small class="small-msg"> </small>
+          </div>
+          <div class="col-md-6">
+            <label>Cliente:<b style="color: rgb(245, 153, 153)"> *</b></label>
+            <b-overlay :show="false" rounded="sm">
+              <b-input-group>
+                <b-form-input
+                  id="cidade"
+                  type="text"
+                  placeholder="Nome do Cliente"
+                  disabled
+                >
+                </b-form-input>
+                <b-input-group-append>
+                  <b-button
+                    text="Button"
+                    variant="dark"
+                    title="Pesquisar Cidade"
+                    ><svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-search"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+                      /></svg
+                  ></b-button>
+                </b-input-group-append>
+              </b-input-group>
+              <small class="small-msg"> </small>
+            </b-overlay>
+          </div>
+        </div>
+        <div class="row col-12 mt-2">
+          <div class="col-md-2">
+            <label>Código:</label>
+            <b-form-input id="id_estado" type="number" placeholder="Código">
+            </b-form-input>
+            <small class="small-msg"> </small>
+          </div>
+          <div class="col-md-6">
+            <label>Serviço:<b style="color: rgb(245, 153, 153)"> *</b></label>
+            <b-overlay :show="false" rounded="sm">
+              <b-input-group>
+                <b-form-input
+                  id="cidade"
+                  type="text"
+                  placeholder="Nome do Cliente"
+                  disabled
+                >
+                </b-form-input>
+                <b-input-group-append>
+                  <b-button
+                    text="Button"
+                    variant="dark"
+                    title="Pesquisar Cidade"
+                    ><svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-search"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+                      /></svg
+                  ></b-button>
+                </b-input-group-append>
+              </b-input-group>
+              <small class="small-msg"> </small>
+            </b-overlay>
+          </div>
+          <div class="col-md-2">
+            <label>Tempo:</label>
+            <b-form-input
+              id="id_estado"
+              type="number"
+              placeholder="Min"
+              disabled
+            >
+            </b-form-input>
+          </div>
+          <div class="col-md-2">
+            <label>Valor:</label>
+            <b-form-input
+              id="id_estado"
+              type="number"
+              placeholder="R$ 0,00"
+              disabled
+            >
+            </b-form-input>
+          </div>
+        </div>
+      </b-container>
+      <b-container class="col-sm-12 col-md-12 mt-3" footer>
+        <div class="row col-sm-12 col-md-12 mt-3 d-flex justify-content-end">
+          <div class="col-sm-12 col-md-2 mt-3 text-end">
+            <b-button
+              @click="fecharModalAgendar()"
+              type="button"
+              id=""
+              class="btn btn-dark btn-sm"
+              >Cancelar</b-button
+            >
+          </div>
+
+          <div class="col-sm-12 col-md-2 mt-3 text-end">
+            <b-button
+              @click="fecharModalAgendar()"
+              type="button"
+              id=""
+              class="btn btn-dark btn-sm"
+              >Agendar</b-button
+            >
+          </div>
+        </div>
+      </b-container>
+    </b-modal>
   </div>
 </template>
 
@@ -125,8 +304,8 @@ export default {
   props: {
     min: {
       type: Number,
-      default: 6
-    }
+      default: 6,
+    },
   },
   watch: {
     selected1: {
@@ -134,23 +313,32 @@ export default {
         this.calcularResultado();
         this.selected2;
       },
-      deep: true
+      deep: true,
     },
     selected2: {
       handler() {
-        this.calcularResultado();
+        // this.calcularResultado();
+        if (this.selected2) {
+          this.isEnabled = true;
+        } else {
+          this.isEnabled = false;
+        }
         this.dayIndex = [];
         this.dateRange = [];
         this.isMsgProfissional = false;
-        this.findAllAgendaProfissional(this.selected2.id);
-        // console.log(this.selected2.id);
+        if (this.selected2) {
+          this.findAllAgendaProfissional(this.selected2.id);
+        }
       },
 
-      deep: true
-    }
+      deep: true,
+    },
   },
   data() {
     return {
+      modal_search_agendar: "modal_search_agendar",
+      headerBgVariant: "dark",
+      headerTextVariant: "light",
       isEnabled: false,
       isLoading: false,
       isMsgProfissional: false,
@@ -159,7 +347,7 @@ export default {
       servico: [
         { id: 55, text: "Cabelo" },
         { id: 45, text: "Barba" },
-        { id: 48, text: "Cabelo/Barba" }
+        { id: 48, text: "Cabelo/Barba" },
       ],
       profissional: [],
       dateRange: [
@@ -266,7 +454,7 @@ export default {
       ],
       dayIndex: [],
       dateIndex: 0,
-      dateProfissional: []
+      dateProfissional: [],
     };
   },
   created() {
@@ -295,7 +483,7 @@ export default {
         "Quarta-feira",
         "Quinta-feira",
         "Sexta-feira",
-        "Sábado"
+        "Sábado",
       ];
 
       // Obtem o número correspondente ao dia da semana (0-6)
@@ -310,7 +498,7 @@ export default {
       // Exibe a data formatada no console
       return {
         label: dataFormatada,
-        value: date
+        value: date,
       };
     },
     addDate() {
@@ -325,10 +513,11 @@ export default {
     slot(event, value, day) {
       if (this.isEnabled) {
         event.target.classList.toggle("table-active");
-        value.date = day.value;
+        value.date = day;
         this.$emit("callback", value);
         console.log(value);
       }
+      this.$bvModal.show(this.modal_search_agendar);
     },
     createTable() {
       for (var index = 0; index < this.min; index++) {
@@ -357,21 +546,24 @@ export default {
             this.dateProfissional.map((a) => {
               var data = this.formatarData(a);
               this.dayIndex.push({
-                data
+                data,
               });
             });
             obj.data.Agenda.map((a) => {
               this.dateRange.push({
+                index: a.id_profissionais_servicos_agenda,
+                id_profissional: a.id_profissional,
+                date: a.data,
                 label: a.horario_inicio,
                 start_time: a.horario_inicio,
-                end_time: a.horario_fim
+                end_time: a.horario_fim,
               });
-              // console.log(a);
             });
+            this.isLoading = false;
+            this.isEnabled = true;
+            this.isMsgProfissional = false;
+            return;
           }
-          this.isLoading = false;
-          this.isEnabled = true;
-          this.isMsgProfissional = false;
         })
         .catch((error) => {
           console.log(error);
@@ -402,8 +594,11 @@ export default {
       const ano = data.getUTCFullYear();
 
       return `${diaSemana}, ${dia}/${mes < 10 ? "0" : ""}${mes}/${ano}`;
-    }
-  }
+    },
+    fecharModalAgendar() {
+      this.$bvModal.hide(this.modal_search_agendar);
+    },
+  },
 };
 </script>
 
@@ -541,5 +736,14 @@ td {
 
 .table-disabled {
   opacity: 0.5;
+}
+.fail-error {
+  border: 2px solid #e46060bb;
+}
+.small-msg {
+  font-size: 11px;
+  color: rgba(228, 96, 96, 0.733);
+  font-family: sans-serif;
+  font-weight: 700;
 }
 </style>

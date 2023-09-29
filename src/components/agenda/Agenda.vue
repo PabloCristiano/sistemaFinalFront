@@ -378,7 +378,7 @@ import { Notyf } from "notyf";
 const notyf = new Notyf({
   position: {
     x: "center",
-    y: "top"
+    y: "top",
   },
   types: [
     {
@@ -387,24 +387,24 @@ const notyf = new Notyf({
       icon: {
         className: "material-icons",
         tagName: "i",
-        text: "warning"
-      }
+        text: "warning",
+      },
     },
     {
       type: "error",
       background: "indianred",
       duration: 5000,
-      dismissible: true
-    }
-  ]
+      dismissible: true,
+    },
+  ],
 });
 export default {
   components: { HomeCliente, HomeServico },
   props: {
     min: {
       type: Number,
-      default: 6
-    }
+      default: 6,
+    },
   },
   watch: {
     selected1: {
@@ -412,7 +412,7 @@ export default {
         this.calcularResultado();
         this.selected2;
       },
-      deep: true
+      deep: true,
     },
     selected2: {
       handler() {
@@ -432,8 +432,8 @@ export default {
         }
       },
 
-      deep: true
-    }
+      deep: true,
+    },
   },
   data() {
     return {
@@ -450,7 +450,7 @@ export default {
       servico: [
         { id: 55, text: "Cabelo" },
         { id: 45, text: "Barba" },
-        { id: 48, text: "Cabelo/Barba" }
+        { id: 48, text: "Cabelo/Barba" },
       ],
       profissional: [],
       dateRange: [
@@ -476,9 +476,9 @@ export default {
         horario_fim: "",
         valor: "",
         tempo: "",
-        qtd_horario: ""
+        qtd_horario: "",
       },
-      isLoadingAgenda: false
+      isLoadingAgenda: false,
     };
   },
   created() {
@@ -507,7 +507,7 @@ export default {
         "Quarta-feira",
         "Quinta-feira",
         "Sexta-feira",
-        "Sábado"
+        "Sábado",
       ];
 
       // Obtem o número correspondente ao dia da semana (0-6)
@@ -522,7 +522,7 @@ export default {
       // Exibe a data formatada no console
       return {
         label: dataFormatada,
-        value: date
+        value: date,
       };
     },
     addDate() {
@@ -576,7 +576,7 @@ export default {
             this.dateProfissional.map((a) => {
               var data = this.formatarData(a);
               this.dayIndex.push({
-                data
+                data,
               });
             });
             obj.data.Agenda.map((a) => {
@@ -586,7 +586,7 @@ export default {
                 date: a.data,
                 label: a.horario_inicio,
                 start_time: a.horario_inicio,
-                end_time: a.horario_fim
+                end_time: a.horario_fim,
               });
             });
             this.isLoading = false;
@@ -701,7 +701,7 @@ export default {
                 "Não foi possivel realizar o agendamento, Verificar Disponibilidade de horários."
               );
             }
-            //this.isLoading = false;
+            this.isLoading = false;
           })
           .catch((error) => {
             this.isLoadingAgenda = false;
@@ -712,8 +712,8 @@ export default {
         this.isLoadingAgenda = false;
         return;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

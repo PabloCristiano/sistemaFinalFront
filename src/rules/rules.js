@@ -12,13 +12,13 @@ const Rules = {
       resto;
     for (let i = 1; i <= 9; i++)
       soma = soma + parseInt(cpf.substring(i - 1, i)) * (11 - i);
-    resto = soma * 10 % 11;
+    resto = (soma * 10) % 11;
     if (resto == 10 || resto == 11) resto = 0;
     if (resto != parseInt(cpf.substring(9, 10))) return false;
     soma = 0;
     for (let i = 1; i <= 10; i++)
       soma = soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
-    resto = soma * 10 % 11;
+    resto = (soma * 10) % 11;
     if (resto == 10 || resto == 11) resto = 0;
     if (resto != parseInt(cpf.substring(10, 11))) return false;
     return true;
@@ -31,7 +31,7 @@ const Rules = {
       d = cnpj.substring(t),
       d1 = parseInt(d.charAt(0)),
       d2 = parseInt(d.charAt(1)),
-      calc = x => {
+      calc = (x) => {
         let n = cnpj.substring(0, x),
           y = x - 7,
           s = 0,
@@ -40,7 +40,7 @@ const Rules = {
           s += n.charAt(x - i) * y--;
           if (y < 2) y = 9;
         }
-        r = 11 - s % 11;
+        r = 11 - (s % 11);
         return r > 9 ? 0 : r;
       };
     return calc(t) === d1 && calc(t + 1) === d2;
@@ -104,7 +104,7 @@ const Rules = {
       "09",
       "10",
       "11",
-      "12"
+      "12",
     ];
     const dataEmissao = Rules.convertToMilliseconds(data);
 
@@ -191,9 +191,8 @@ const Rules = {
     const mes_v = String(data_value.getMonth() + 1).padStart(2, "0");
     const dia_v = String(data_value.getDate()).padStart(2, "0");
     const dataHorario_fim = `${ano_v}-${mes_v}-${dia_v}`;
-    const data_horario_fim_milisegundos = Rules.convertToMilliseconds(
-      dataHorario_fim
-    );
+    const data_horario_fim_milisegundos =
+      Rules.convertToMilliseconds(dataHorario_fim);
     if (data_horario_fim) {
       const horario_partes = data_horario_fim.split(":");
       const hora_v = parseInt(horario_partes[0], 10);
@@ -213,9 +212,8 @@ const Rules = {
       "0"
     );
     const dataHorario_Iinicio = `${ano_horario_incio}-${mes_horario_incio}-${dia_horario_incio}`;
-    const data_horario_Inicio_milisegundos = Rules.convertToMilliseconds(
-      dataHorario_Iinicio
-    );
+    const data_horario_Inicio_milisegundos =
+      Rules.convertToMilliseconds(dataHorario_Iinicio);
     if (horario_inicioo) {
       const horario_partes_inicio = horario_inicioo.split(":");
       const hora_inicio = parseInt(horario_partes_inicio[0], 10);
@@ -277,7 +275,7 @@ const Rules = {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
-      timeZoneName: "short"
+      timeZoneName: "short",
     };
 
     const dataFormatada = data.toLocaleString("en-US", opcoes);
@@ -292,7 +290,7 @@ const Rules = {
       "Quarta-feira",
       "Quinta-feira",
       "Sexta-feira",
-      "Sábado"
+      "Sábado",
     ];
 
     // Crie um objeto de data a partir da string
@@ -308,7 +306,7 @@ const Rules = {
   },
   horarioParaMilissegundos(horario) {
     //recebe  um formato 13:00:00 e converte em milisegundos
-    const partes = horario.split(":");
+    const partes = (horario ?? "").split(":");
     const horas = parseInt(partes[0], 10);
     const minutos = parseInt(partes[1], 10);
     const segundos = parseInt(partes[2], 10);
@@ -329,7 +327,7 @@ const Rules = {
     // Calcula horas, minutos e segundos a partir dos milissegundos
     const segundosTotais = Math.floor(milissegundos / 1000);
     const horas = Math.floor(segundosTotais / 3600);
-    const minutos = Math.floor(segundosTotais % 3600 / 60);
+    const minutos = Math.floor((segundosTotais % 3600) / 60);
     const segundos = segundosTotais % 60;
 
     // Formata os valores em uma string no formato hh:mm:ss
@@ -350,7 +348,7 @@ const Rules = {
   },
   converterData(dataString) {
     // converte a ( Quarta-feira, 27/09/2023 )  em data (2023-09-27)
-    
+
     // Mapeia os nomes dos dias da semana para números
     // const diasSemana = {
     //   Domingo: 0,
@@ -379,6 +377,6 @@ const Rules = {
     const dataFormatada = `${ano}-${mes}-${dia}`;
 
     return dataFormatada;
-  }
+  },
 };
 export default Rules;

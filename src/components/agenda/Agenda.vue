@@ -701,7 +701,6 @@ export default {
                 "Não foi possivel realizar o agendamento, Verificar Disponibilidade de horários."
               );
             }
-            this.isLoading = false;
           })
           .catch((error) => {
             this.isLoadingAgenda = false;

@@ -305,6 +305,48 @@ const Rules = {
     const diaSemana = diasDaSemana[indiceDiaSemana];
 
     return diaSemana;
+  },
+  horarioParaMilissegundos(horario) {
+    //recebe  um formato 13:00:00 e converte em milisegundos
+    const partes = horario.split(":");
+    const horas = parseInt(partes[0], 10);
+    const minutos = parseInt(partes[1], 10);
+    const segundos = parseInt(partes[2], 10);
+
+    const milissegundosPorHora = 60 * 60 * 1000;
+    const milissegundosPorMinuto = 60 * 1000;
+    const milissegundosPorSegundo = 1000;
+
+    const totalMilissegundos =
+      horas * milissegundosPorHora +
+      minutos * milissegundosPorMinuto +
+      segundos * milissegundosPorSegundo;
+
+    return totalMilissegundos;
+  },
+  milissegundosParaHorario(milissegundos) {
+    //recebe  um formato  em milisegundos e convert em formata em hora 14:00:00
+    // Calcula horas, minutos e segundos a partir dos milissegundos
+    const segundosTotais = Math.floor(milissegundos / 1000);
+    const horas = Math.floor(segundosTotais / 3600);
+    const minutos = Math.floor(segundosTotais % 3600 / 60);
+    const segundos = segundosTotais % 60;
+
+    // Formata os valores em uma string no formato hh:mm:ss
+    const horarioFormatado = `${String(horas).padStart(2, "0")}:${String(
+      minutos
+    ).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`;
+
+    return horarioFormatado;
+  },
+  milissegundosParaMinutos(milissegundos) {
+    //Pega Milisegundos e converte em minutos
+    const minutos = Math.floor(milissegundos / 60000); // 1 minuto = 60.000 milissegundos
+    return minutos;
+  },
+  minutosParaMilissegundos(minutos) {
+    const milissegundos = minutos * 60000; // 1 minuto = 60.000 milissegundos
+    return milissegundos;
   }
 };
 export default Rules;

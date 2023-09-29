@@ -272,12 +272,17 @@
             class="btn btn-sm me-1"
             type="button"
             variant="dark"
-            @click="fecharModalAgendar()"
+            @click="fecharModalAgendar"
           >
             Cancelar
           </b-button>
           <div>
-            <b-button class="btn btn-sm me-1" type="button" variant="dark">
+            <b-button
+              class="btn btn-sm me-1"
+              type="button"
+              variant="dark"
+              @click="onSubmit"
+            >
               Agendar<i class="bx bx-check"></i>
             </b-button>
           </div>
@@ -395,8 +400,8 @@ export default {
   props: {
     min: {
       type: Number,
-      default: 6,
-    },
+      default: 6
+    }
   },
   watch: {
     selected1: {
@@ -404,7 +409,7 @@ export default {
         this.calcularResultado();
         this.selected2;
       },
-      deep: true,
+      deep: true
     },
     selected2: {
       handler() {
@@ -424,8 +429,8 @@ export default {
         }
       },
 
-      deep: true,
-    },
+      deep: true
+    }
   },
   data() {
     return {
@@ -442,7 +447,7 @@ export default {
       servico: [
         { id: 55, text: "Cabelo" },
         { id: 45, text: "Barba" },
-        { id: 48, text: "Cabelo/Barba" },
+        { id: 48, text: "Cabelo/Barba" }
       ],
       profissional: [],
       dateRange: [
@@ -456,6 +461,7 @@ export default {
       dateIndex: 0,
       dateProfissional: [],
       form: {
+        index: "",
         id_profissional: "",
         profissional: "",
         id_cliente: "",
@@ -465,8 +471,8 @@ export default {
         horario_inicio: "",
         horario_fim: "",
         valor: "",
-        tempo: "",
-      },
+        tempo: ""
+      }
     };
   },
   created() {
@@ -495,7 +501,7 @@ export default {
         "Quarta-feira",
         "Quinta-feira",
         "Sexta-feira",
-        "Sábado",
+        "Sábado"
       ];
 
       // Obtem o número correspondente ao dia da semana (0-6)
@@ -510,7 +516,7 @@ export default {
       // Exibe a data formatada no console
       return {
         label: dataFormatada,
-        value: date,
+        value: date
       };
     },
     addDate() {
@@ -531,6 +537,7 @@ export default {
       // }
       value.date = day;
       console.log(value);
+      this.form.index = value.index;
       this.form.horario_inicio = value.start_time;
       this.form.horario_fim = value.end_time;
       this.$bvModal.show(this.modal_search_agendar);
@@ -562,7 +569,7 @@ export default {
             this.dateProfissional.map((a) => {
               var data = this.formatarData(a);
               this.dayIndex.push({
-                data,
+                data
               });
             });
             obj.data.Agenda.map((a) => {
@@ -572,7 +579,7 @@ export default {
                 date: a.data,
                 label: a.horario_inicio,
                 start_time: a.horario_inicio,
-                end_time: a.horario_fim,
+                end_time: a.horario_fim
               });
             });
             this.isLoading = false;
@@ -656,7 +663,29 @@ export default {
         (this.form.valor = ""),
         (this.form.tempo = "");
     },
-  },
+    VerificaTempoHorario() {
+      var hora_1 = Rules.horarioParaMilissegundos(this.form.horario_inicio);
+      var hora_2 = Rules.horarioParaMilissegundos(this.form.horario_fim);
+      var intervalo = hora_2 - hora_1;
+      var tempo = this.form.tempo;
+      var tempo_partes = tempo.split(",");
+      var tempo_partes_1 = parseInt(tempo_partes[0], 10);
+      var tempo_partes_1_Mili = Rules.minutosParaMilissegundos(tempo_partes_1);
+      //console.log(
+      //  this.form.horario_inicio,
+      //  this.form.horario_fim,
+      //  this.form.tempo,
+      //  intervalo,
+      //   tempo_partes_1,
+      //   tempo_partes_1_Mili
+      // );
+      return tempo_partes_1_Mili > intervalo;
+    },
+    onSubmit() {
+      console.log(this.VerificaTempoHorario());
+      console.log(this.form);
+    }
+  }
 };
 </script>
 

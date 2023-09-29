@@ -131,7 +131,7 @@
           <div class="col-md-2">
             <label>Código:</label>
             <b-form-input
-              id="id_cliente"
+              id="id_cliente_"
               type="number"
               placeholder="Código"
               v-model="form.id_cliente"
@@ -144,7 +144,7 @@
             <b-overlay :show="false" rounded="sm">
               <b-input-group>
                 <b-form-input
-                  id="cliente"
+                  id="cliente_"
                   type="text"
                   v-model="form.cliente"
                   placeholder="Nome do Cliente"
@@ -153,9 +153,10 @@
                 </b-form-input>
                 <b-input-group-append>
                   <b-button
+                    @click="showSearchCliente"
                     text="Button"
                     variant="dark"
-                    title="Pesquisar Cidade"
+                    title="Pesquisar Cliente"
                     ><svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
@@ -177,7 +178,12 @@
         <div class="row col-md-12 mt-2">
           <div class="col-md-2">
             <label>Código:</label>
-            <b-form-input id="id_estado" type="number" placeholder="Código">
+            <b-form-input
+              id="id_estado"
+              type="number"
+              placeholder="Código"
+              v-model="form.id_servico"
+            >
             </b-form-input>
             <small class="small-msg"> </small>
           </div>
@@ -186,17 +192,19 @@
             <b-overlay :show="false" rounded="sm">
               <b-input-group>
                 <b-form-input
-                  id="cidade"
+                  id="servico"
                   type="text"
+                  v-model="form.servico"
                   placeholder="Nome do Serviço"
                   disabled
                 >
                 </b-form-input>
                 <b-input-group-append>
                   <b-button
+                    @click="showSearchServico"
                     text="Button"
                     variant="dark"
-                    title="Pesquisar Cidade"
+                    title="Pesquisar Serviço"
                     ><svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
@@ -219,7 +227,7 @@
           <div class="col-md-3">
             <label>Hr Inicio:</label>
             <b-form-input
-              id="horario_inicio"
+              id="horario_inicio_"
               type="text"
               v-model="form.horario_inicio"
               placeholder="Horario Inicio"
@@ -241,8 +249,9 @@
           <div class="col-md-3">
             <label>Tempo:</label>
             <b-form-input
-              id="id_estado"
-              type="number"
+              id="tempo"
+              type="text"
+              v-model="form.tempo"
               placeholder="Min"
               disabled
             >
@@ -251,8 +260,9 @@
           <div class="col-md-3">
             <label>Valor:</label>
             <b-form-input
-              id="id_estado"
-              type="number"
+              id="valor_"
+              type="text"
+              v-model="form.valor"
               placeholder="R$ 0,00"
               disabled
             >
@@ -278,11 +288,87 @@
         </div>
       </b-container>
     </b-modal>
+    <!-- modal Cliente -->
+    <b-modal
+      :id="modal_search_cliente"
+      size="xl"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+    >
+      <template v-slot:modal-header>
+        <h5>Pesquisar Cliente</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="fecharModalSearchCliente"
+        >
+          X
+        </b-button>
+      </template>
+      <b-container fluid>
+        <HomeCliente :functionCliente="changeSearchCliente"></HomeCliente>
+      </b-container>
+      <b-container
+        class="col-sm-12 col-md-12 mt-3"
+        style="text-align: center"
+        footer
+      >
+        <b-button
+          @click="fecharModalSearchCliente"
+          type="button"
+          id=""
+          class="btn btn-dark btn-sm"
+          >Fechar Pesquisa Cliente</b-button
+        >
+      </b-container>
+    </b-modal>
+    <!-- modal Serviço -->
+    <b-modal
+      :id="modal_search_servico"
+      size="xl"
+      :header-bg-variant="headerBgVariant"
+      :header-text-variant="headerTextVariant"
+      no-close-on-backdrop
+      hide-footer
+    >
+      <template v-slot:modal-header>
+        <h5>Pesquisar Serviço</h5>
+        <b-button
+          style="border: 0"
+          size="sm"
+          variant="outline-light"
+          @click="fecharModalSearchServico"
+        >
+          X
+        </b-button>
+      </template>
+      <b-container fluid>
+        <HomeServico :functionServico="changeSearchServico"></HomeServico>
+      </b-container>
+      <b-container
+        class="col-sm-12 col-md-12 mt-3"
+        style="text-align: center"
+        footer
+      >
+        <b-button
+          @click="fecharModalSearchServico"
+          type="button"
+          id=""
+          class="btn btn-dark btn-sm"
+          >Fechar Pesquisa Serviço</b-button
+        >
+      </b-container>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import { ServiceProfissional } from "../../services/serviceProfissional";
+import HomeCliente from "../cliente/HomeCliente.vue";
+import HomeServico from "../servico/HomeServico.vue";
 import Rules from "../../rules/rules";
 // import { Notyf } from "notyf";
 // const notyf = new Notyf({
@@ -309,11 +395,12 @@ import Rules from "../../rules/rules";
 //   ]
 // });
 export default {
+  components: { HomeCliente, HomeServico },
   props: {
     min: {
       type: Number,
-      default: 6
-    }
+      default: 6,
+    },
   },
   watch: {
     selected1: {
@@ -321,7 +408,7 @@ export default {
         this.calcularResultado();
         this.selected2;
       },
-      deep: true
+      deep: true,
     },
     selected2: {
       handler() {
@@ -341,12 +428,14 @@ export default {
         }
       },
 
-      deep: true
-    }
+      deep: true,
+    },
   },
   data() {
     return {
       modal_search_agendar: "modal_search_agendar",
+      modal_search_cliente: "modal_search_cliente",
+      modal_search_servico: "modal_search_servico",
       headerBgVariant: "dark",
       headerTextVariant: "light",
       isEnabled: false,
@@ -357,7 +446,7 @@ export default {
       servico: [
         { id: 55, text: "Cabelo" },
         { id: 45, text: "Barba" },
-        { id: 48, text: "Cabelo/Barba" }
+        { id: 48, text: "Cabelo/Barba" },
       ],
       profissional: [],
       dateRange: [
@@ -379,8 +468,9 @@ export default {
         servico: "",
         horario_inicio: "",
         horario_fim: "",
-        preço: ""
-      }
+        valor: "",
+        tempo: "",
+      },
     };
   },
   created() {
@@ -409,7 +499,7 @@ export default {
         "Quarta-feira",
         "Quinta-feira",
         "Sexta-feira",
-        "Sábado"
+        "Sábado",
       ];
 
       // Obtem o número correspondente ao dia da semana (0-6)
@@ -424,7 +514,7 @@ export default {
       // Exibe a data formatada no console
       return {
         label: dataFormatada,
-        value: date
+        value: date,
       };
     },
     addDate() {
@@ -437,12 +527,14 @@ export default {
       return dia;
     },
     slot(event, value, day) {
-      if (this.isEnabled) {
-        event.target.classList.toggle("table-active");
-        value.date = day;
-        this.$emit("callback", value);
-        console.log(value);
-      }
+      // if (this.isEnabled) {
+      //   event.target.classList.toggle("table-active");
+      //   value.date = day;
+      //   this.$emit("callback", value);
+      //   console.log(value);
+      // }
+      value.date = day;
+      console.log(value);
       this.form.horario_inicio = value.start_time;
       this.form.horario_fim = value.end_time;
       this.$bvModal.show(this.modal_search_agendar);
@@ -474,7 +566,7 @@ export default {
             this.dateProfissional.map((a) => {
               var data = this.formatarData(a);
               this.dayIndex.push({
-                data
+                data,
               });
             });
             obj.data.Agenda.map((a) => {
@@ -484,7 +576,7 @@ export default {
                 date: a.data,
                 label: a.horario_inicio,
                 start_time: a.horario_inicio,
-                end_time: a.horario_fim
+                end_time: a.horario_fim,
               });
             });
             this.isLoading = false;
@@ -525,8 +617,39 @@ export default {
     },
     fecharModalAgendar() {
       this.$bvModal.hide(this.modal_search_agendar);
-    }
-  }
+    },
+    showSearchCliente() {
+      this.$bvModal.show(this.modal_search_cliente);
+    },
+    fecharModalSearchCliente() {
+      this.$bvModal.hide(this.modal_search_cliente);
+    },
+    changeSearchCliente(obj) {
+      if (obj.column.field === "btn") {
+        return;
+      }
+      this.form.id_cliente = obj.row.id;
+      this.form.cliente = obj.row.cliente;
+      this.$bvModal.hide(this.modal_search_cliente);
+    },
+    fecharModalSearchServico() {
+      this.$bvModal.hide(this.modal_search_servico);
+    },
+    showSearchServico() {
+      this.$bvModal.show(this.modal_search_servico);
+    },
+    changeSearchServico(obj) {
+      if (obj.column.field === "btn") {
+        return;
+      }
+      console.log(obj);
+      this.form.id_servico = obj.row.id;
+      this.form.servico = obj.row.servico;
+      this.form.valor = obj.row.valor;
+      this.form.tempo = obj.row.tempo;
+      this.$bvModal.hide(this.modal_search_servico);
+    },
+  },
 };
 </script>
 
@@ -673,5 +796,13 @@ td {
   color: rgba(228, 96, 96, 0.733);
   font-family: sans-serif;
   font-weight: 700;
+}
+.table-active-reservado {
+  --bs-table-accent-bg: var(--bs-table-active-bg);
+  color: var(--bs-table-active-color);
+}
+.table-active-agendado {
+  --bs-table-accent-bg: rgb(40 187 120 / 62%);
+  color: var(--bs-table-active-color);
 }
 </style>

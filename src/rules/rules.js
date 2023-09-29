@@ -347,6 +347,38 @@ const Rules = {
   minutosParaMilissegundos(minutos) {
     const milissegundos = minutos * 60000; // 1 minuto = 60.000 milissegundos
     return milissegundos;
+  },
+  converterData(dataString) {
+    // converte a ( Quarta-feira, 27/09/2023 )  em data (2023-09-27)
+    
+    // Mapeia os nomes dos dias da semana para números
+    // const diasSemana = {
+    //   Domingo: 0,
+    //   "Segunda-feira": 1,
+    //   "Terça-feira": 2,
+    //   "Quarta-feira": 3,
+    //   "Quinta-feira": 4,
+    //   "Sexta-feira": 5,
+    //   Sábado: 6
+    // };
+
+    // Divide a string em partes
+    const partes = dataString.split(", ");
+
+    // Extrai o dia da semana e a data
+    // const diaSemana = partes[0];
+    const data = partes[1];
+
+    // Divide a data em dia, mês e ano
+    const [dia, mes, ano] = data.split("/");
+
+    // // Formata o dia da semana como número de 0 a 6
+    // const numeroDiaSemana = diasSemana[diaSemana];
+
+    // Formata a data no formato desejado
+    const dataFormatada = `${ano}-${mes}-${dia}`;
+
+    return dataFormatada;
   }
 };
 export default Rules;

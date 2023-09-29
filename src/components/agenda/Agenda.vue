@@ -109,185 +109,187 @@
           X
         </b-button>
       </template>
-      <b-container fluid>
-        <div class="row col-12 mt-2">
-          <div class="col-md-8">
-            <label>Profissional:</label>
-            <b-form-input
-              id="horario_inicio"
-              type="text"
-              v-model="form.profissional"
-              placeholder="Nome Profissional"
-              disabled
-            >
-            </b-form-input>
+      <b-overlay :show="isLoadingAgenda" rounded="sm">
+        <b-container fluid>
+          <div class="row col-12 mt-2">
+            <div class="col-md-8">
+              <label>Profissional:</label>
+              <b-form-input
+                id="horario_inicio"
+                type="text"
+                v-model="form.profissional"
+                placeholder="Nome Profissional"
+                disabled
+              >
+              </b-form-input>
+            </div>
           </div>
-        </div>
-        <div class="row col-md-12 mt-2">
-          <div class="col-md-2">
-            <label>Código:</label>
-            <b-form-input
-              id="id_cliente_"
-              type="number"
-              placeholder="Código"
-              v-model="form.id_cliente"
-            >
-            </b-form-input>
-            <small class="small-msg"> </small>
-          </div>
-          <div class="col-md-10">
-            <label>Cliente:<b style="color: rgb(245, 153, 153)"> *</b></label>
-            <b-overlay :show="false" rounded="sm">
-              <b-input-group>
-                <b-form-input
-                  id="cliente_"
-                  type="text"
-                  v-model="form.cliente"
-                  placeholder="Nome do Cliente"
-                  disabled
-                >
-                </b-form-input>
-                <b-input-group-append>
-                  <b-button
-                    @click="showSearchCliente"
-                    text="Button"
-                    variant="dark"
-                    title="Pesquisar Cliente"
-                    ><svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      class="bi bi-search"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-                      /></svg
-                  ></b-button>
-                </b-input-group-append>
-              </b-input-group>
+          <div class="row col-md-12 mt-2">
+            <div class="col-md-2">
+              <label>Código:</label>
+              <b-form-input
+                id="id_cliente_"
+                type="number"
+                placeholder="Código"
+                v-model="form.id_cliente"
+              >
+              </b-form-input>
               <small class="small-msg"> </small>
-            </b-overlay>
+            </div>
+            <div class="col-md-10">
+              <label>Cliente:<b style="color: rgb(245, 153, 153)"> *</b></label>
+              <b-overlay :show="false" rounded="sm">
+                <b-input-group>
+                  <b-form-input
+                    id="cliente_"
+                    type="text"
+                    v-model="form.cliente"
+                    placeholder="Nome do Cliente"
+                    disabled
+                  >
+                  </b-form-input>
+                  <b-input-group-append>
+                    <b-button
+                      @click="showSearchCliente"
+                      text="Button"
+                      variant="dark"
+                      title="Pesquisar Cliente"
+                      ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-search"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+                        /></svg
+                    ></b-button>
+                  </b-input-group-append>
+                </b-input-group>
+                <small class="small-msg"> </small>
+              </b-overlay>
+            </div>
           </div>
-        </div>
-        <div class="row col-md-12 mt-2">
-          <div class="col-md-2">
-            <label>Código:</label>
-            <b-form-input
-              id="id_estado"
-              type="number"
-              placeholder="Código"
-              v-model="form.id_servico"
-            >
-            </b-form-input>
-            <small class="small-msg"> </small>
-          </div>
-          <div class="col-md-10">
-            <label>Serviço:<b style="color: rgb(245, 153, 153)"> *</b></label>
-            <b-overlay :show="false" rounded="sm">
-              <b-input-group>
-                <b-form-input
-                  id="servico"
-                  type="text"
-                  v-model="form.servico"
-                  placeholder="Nome do Serviço"
-                  disabled
-                >
-                </b-form-input>
-                <b-input-group-append>
-                  <b-button
-                    @click="showSearchServico"
-                    text="Button"
-                    variant="dark"
-                    title="Pesquisar Serviço"
-                    ><svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      class="bi bi-search"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-                      /></svg
-                  ></b-button>
-                </b-input-group-append>
-              </b-input-group>
+          <div class="row col-md-12 mt-2">
+            <div class="col-md-2">
+              <label>Código:</label>
+              <b-form-input
+                id="id_estado"
+                type="number"
+                placeholder="Código"
+                v-model="form.id_servico"
+              >
+              </b-form-input>
               <small class="small-msg"> </small>
-            </b-overlay>
+            </div>
+            <div class="col-md-10">
+              <label>Serviço:<b style="color: rgb(245, 153, 153)"> *</b></label>
+              <b-overlay :show="false" rounded="sm">
+                <b-input-group>
+                  <b-form-input
+                    id="servico"
+                    type="text"
+                    v-model="form.servico"
+                    placeholder="Nome do Serviço"
+                    disabled
+                  >
+                  </b-form-input>
+                  <b-input-group-append>
+                    <b-button
+                      @click="showSearchServico"
+                      text="Button"
+                      variant="dark"
+                      title="Pesquisar Serviço"
+                      ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-search"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+                        /></svg
+                    ></b-button>
+                  </b-input-group-append>
+                </b-input-group>
+                <small class="small-msg"> </small>
+              </b-overlay>
+            </div>
           </div>
-        </div>
-        <div class="row col-md-12 mt-2">
-          <div class="col-md-3">
-            <label>Hr Inicio:</label>
-            <b-form-input
-              id="horario_inicio_"
-              type="text"
-              v-model="form.horario_inicio"
-              placeholder="Horario Inicio"
-              disabled
-            >
-            </b-form-input>
+          <div class="row col-md-12 mt-2">
+            <div class="col-md-3">
+              <label>Hr Inicio:</label>
+              <b-form-input
+                id="horario_inicio_"
+                type="text"
+                v-model="form.horario_inicio"
+                placeholder="Horario Inicio"
+                disabled
+              >
+              </b-form-input>
+            </div>
+            <div class="col-md-3">
+              <label>Hr Fim:</label>
+              <b-form-input
+                id="horario_fim"
+                v-model="form.horario_fim"
+                type="text"
+                placeholder="Horario Inicio"
+                disabled
+              >
+              </b-form-input>
+            </div>
+            <div class="col-md-3">
+              <label>Tempo:</label>
+              <b-form-input
+                id="tempo"
+                type="text"
+                v-model="form.tempo"
+                placeholder="Min"
+                disabled
+              >
+              </b-form-input>
+            </div>
+            <div class="col-md-3">
+              <label>Valor:</label>
+              <b-form-input
+                id="valor_"
+                type="text"
+                v-model="form.valor"
+                placeholder="R$ 0,00"
+                disabled
+              >
+              </b-form-input>
+            </div>
           </div>
-          <div class="col-md-3">
-            <label>Hr Fim:</label>
-            <b-form-input
-              id="horario_fim"
-              v-model="form.horario_fim"
-              type="text"
-              placeholder="Horario Inicio"
-              disabled
-            >
-            </b-form-input>
-          </div>
-          <div class="col-md-3">
-            <label>Tempo:</label>
-            <b-form-input
-              id="tempo"
-              type="text"
-              v-model="form.tempo"
-              placeholder="Min"
-              disabled
-            >
-            </b-form-input>
-          </div>
-          <div class="col-md-3">
-            <label>Valor:</label>
-            <b-form-input
-              id="valor_"
-              type="text"
-              v-model="form.valor"
-              placeholder="R$ 0,00"
-              disabled
-            >
-            </b-form-input>
-          </div>
-        </div>
-      </b-container>
-      <b-container class="row col-md-12" footer>
-        <div class="d-flex justify-content-end mt-3">
-          <b-button
-            class="btn btn-sm me-1"
-            type="button"
-            variant="dark"
-            @click="fecharModalAgendar"
-          >
-            Cancelar
-          </b-button>
-          <div>
+        </b-container>
+        <b-container class="row col-md-12" footer>
+          <div class="d-flex justify-content-end mt-3">
             <b-button
               class="btn btn-sm me-1"
               type="button"
               variant="dark"
-              @click="onSubmit"
+              @click="fecharModalAgendar"
             >
-              Agendar<i class="bx bx-check"></i>
+              Cancelar
             </b-button>
+            <div>
+              <b-button
+                class="btn btn-sm me-1"
+                type="button"
+                variant="dark"
+                @click="onSubmit"
+              >
+                Agendar<i class="bx bx-check"></i>
+              </b-button>
+            </div>
           </div>
-        </div>
-      </b-container>
+        </b-container>
+      </b-overlay>
     </b-modal>
     <!-- modal Cliente -->
     <b-modal
@@ -371,30 +373,31 @@ import { ServiceProfissional } from "../../services/serviceProfissional";
 import HomeCliente from "../cliente/HomeCliente.vue";
 import HomeServico from "../servico/HomeServico.vue";
 import Rules from "../../rules/rules";
-// import { Notyf } from "notyf";
-// const notyf = new Notyf({
-//   position: {
-//     x: "center",
-//     y: "top"
-//   },
-//   types: [
-//     {
-//       type: "warning",
-//       background: "orange",
-//       icon: {
-//         className: "material-icons",
-//         tagName: "i",
-//         text: "warning"
-//       }
-//     },
-//     {
-//       type: "error",
-//       background: "indianred",
-//       duration: 5000,
-//       dismissible: true
-//     }
-//   ]
-// });
+import { ServiceAgenda } from "@/services/serviceAgenda";
+import { Notyf } from "notyf";
+const notyf = new Notyf({
+  position: {
+    x: "center",
+    y: "top"
+  },
+  types: [
+    {
+      type: "warning",
+      background: "orange",
+      icon: {
+        className: "material-icons",
+        tagName: "i",
+        text: "warning"
+      }
+    },
+    {
+      type: "error",
+      background: "indianred",
+      duration: 5000,
+      dismissible: true
+    }
+  ]
+});
 export default {
   components: { HomeCliente, HomeServico },
   props: {
@@ -461,6 +464,7 @@ export default {
       dateIndex: 0,
       dateProfissional: [],
       form: {
+        data: "",
         index: "",
         id_profissional: "",
         profissional: "",
@@ -473,7 +477,8 @@ export default {
         valor: "",
         tempo: "",
         qtd_horario: ""
-      }
+      },
+      isLoadingAgenda: false
     };
   },
   created() {
@@ -541,6 +546,7 @@ export default {
       this.form.index = value.index;
       this.form.horario_inicio = value.start_time;
       this.form.horario_fim = value.end_time;
+      this.form.data = Rules.converterData(value.date);
       this.$bvModal.show(this.modal_search_agendar);
     },
     createTable() {
@@ -662,7 +668,9 @@ export default {
         (this.form.horario_inicio = ""),
         (this.form.horario_fim = ""),
         (this.form.valor = ""),
-        (this.form.tempo = "");
+        (this.form.tempo = ""),
+        (this.form.qtd_horario = ""),
+        (this.form.data = "");
     },
     VerificaTempoHorario() {
       var hora_1 = Rules.horarioParaMilissegundos(this.form.horario_inicio);
@@ -674,23 +682,38 @@ export default {
       var tempo_partes_1_Mili = Rules.minutosParaMilissegundos(tempo_partes_1);
       var qtd_horario = tempo_partes_1_Mili / intervalo;
       this.form.qtd_horario = qtd_horario;
-      //console.log(
-      //  this.form.horario_inicio,
-      //  this.form.horario_fim,
-      //  this.form.tempo,
-      //  intervalo,
-      //  tempo_partes_1,
-      //  tempo_partes_1_Mili,
-      //  qtd_horario
-      //);
-      return tempo_partes_1_Mili > intervalo;
+      return qtd_horario > 0;
     },
     onSubmit() {
-      console.log(this.VerificaTempoHorario());
-      if (this.VerificaTempoHorario()) {
-        console.log("vai pesquisar o proximo horario ", this.form);
-      }
+      this.isLoadingAgenda = true;
       console.log(this.form);
+      if (this.VerificaTempoHorario()) {
+        ServiceAgenda.findAgendaProfissionalProximoHorario(this.form)
+          .then((obj) => {
+            console.log(obj);
+            if (obj.data.Success === true) {
+              console.log("Deu Bom ");
+              console.log(obj);
+              this.isLoadingAgenda = false;
+            } else {
+              console.log("Deu ruim");
+              console.log(obj);
+              this.isLoadingAgenda = false;
+              notyf.error(
+                "Não foi possivel realizar o agendamento, Verificar Disponibilidade de horários."
+              );
+            }
+            //this.isLoading = false;
+          })
+          .catch((error) => {
+            this.isLoadingAgenda = false;
+            console.log(error);
+          });
+      } else {
+        console.log("onSubmit no Else", this.form);
+        this.isLoadingAgenda = false;
+        return;
+      }
     }
   }
 };

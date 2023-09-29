@@ -690,14 +690,12 @@ export default {
       if (this.VerificaTempoHorario()) {
         ServiceAgenda.findAgendaProfissionalProximoHorario(this.form)
           .then((obj) => {
-            console.log(obj);
             if (obj.data.Success === true) {
               console.log("Deu Bom ");
               console.log(obj);
               this.isLoadingAgenda = false;
             } else {
               console.log("Deu ruim");
-              console.log(obj);
               this.isLoadingAgenda = false;
               notyf.error(
                 "Não foi possivel realizar o agendamento, Verificar Disponibilidade de horários."

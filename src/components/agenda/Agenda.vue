@@ -86,11 +86,7 @@
       </div>
       <div class="card-footer text-muted">
         <div class="col-md-12 text-end">
-          <div class="col-md-2 offset-md-10">
-            <button class="btn btn-sm btn-dark" :disabled="!isEnabled">
-              <i class="bx bx-plus-circle"></i> Agendar
-            </button>
-          </div>
+          <div class="col-md-2 offset-md-10"><br /><br /></div>
         </div>
       </div>
     </div>
@@ -617,6 +613,7 @@ export default {
     },
     fecharModalAgendar() {
       this.$bvModal.hide(this.modal_search_agendar);
+      this.resetForm();
     },
     showSearchCliente() {
       this.$bvModal.show(this.modal_search_cliente);
@@ -648,6 +645,18 @@ export default {
       this.form.valor = obj.row.valor;
       this.form.tempo = obj.row.tempo;
       this.$bvModal.hide(this.modal_search_servico);
+    },
+    resetForm() {
+      (this.form.id_profissional = ""),
+        (this.form.profissional = ""),
+        (this.form.id_cliente = ""),
+        (this.form.cliente = ""),
+        (this.form.id_servico = ""),
+        (this.form.servico = ""),
+        (this.form.horario_inicio = ""),
+        (this.form.horario_fim = ""),
+        (this.form.valor = ""),
+        (this.form.tempo = "");
     },
   },
 };

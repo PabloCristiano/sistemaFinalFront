@@ -471,7 +471,8 @@ export default {
         horario_inicio: "",
         horario_fim: "",
         valor: "",
-        tempo: ""
+        tempo: "",
+        qtd_horario: ""
       }
     };
   },
@@ -671,18 +672,24 @@ export default {
       var tempo_partes = tempo.split(",");
       var tempo_partes_1 = parseInt(tempo_partes[0], 10);
       var tempo_partes_1_Mili = Rules.minutosParaMilissegundos(tempo_partes_1);
+      var qtd_horario = tempo_partes_1_Mili / intervalo;
+      this.form.qtd_horario = qtd_horario;
       //console.log(
       //  this.form.horario_inicio,
       //  this.form.horario_fim,
       //  this.form.tempo,
       //  intervalo,
-      //   tempo_partes_1,
-      //   tempo_partes_1_Mili
-      // );
+      //  tempo_partes_1,
+      //  tempo_partes_1_Mili,
+      //  qtd_horario
+      //);
       return tempo_partes_1_Mili > intervalo;
     },
     onSubmit() {
       console.log(this.VerificaTempoHorario());
+      if (this.VerificaTempoHorario()) {
+        console.log("vai pesquisar o proximo horario ", this.form);
+      }
       console.log(this.form);
     }
   }

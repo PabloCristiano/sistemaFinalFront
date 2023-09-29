@@ -647,9 +647,7 @@ export default {
       this.$bvModal.hide(this.modal_search_servico);
     },
     resetForm() {
-      (this.form.id_profissional = ""),
-        (this.form.profissional = ""),
-        (this.form.id_cliente = ""),
+      (this.form.id_cliente = ""),
         (this.form.cliente = ""),
         (this.form.id_servico = ""),
         (this.form.servico = ""),

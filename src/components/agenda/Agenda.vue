@@ -59,9 +59,14 @@
                         class="table-default text-center"
                         style="font-weight: 500; border-radius: 29px"
                         v-for="day in dayIndex"
+                        :class="{
+                          'table-active-livre': value.status === 'LIVRE',
+                          'table-active-reservado':
+                            value.status === 'RESERVADO',
+                        }"
                         :key="day.index"
                         @click="slot($event, value, day.data)"
-                        :disabled="isEnabled"
+                        :disabled="true"
                       >
                         {{ value.start_time }}
                       </td>
@@ -541,8 +546,8 @@ export default {
       //   this.$emit("callback", value);
       //   console.log(value);
       // }
+      this.resetForm();
       value.date = day;
-      console.log(value);
       this.form.index = value.index;
       this.form.horario_inicio = value.start_time;
       this.form.horario_fim = value.end_time;
@@ -571,8 +576,10 @@ export default {
       this.isLoading = true;
       ServiceProfissional.findAllAgendaProfissional(id)
         .then((obj) => {
+          console.log(obj);
           if (obj) {
             this.dateProfissional = this.extrairDatasUnicas(obj.data.Agenda);
+            console.log(this.dateProfissional);
             this.dateProfissional.map((a) => {
               var data = this.formatarData(a);
               this.dayIndex.push({
@@ -581,6 +588,7 @@ export default {
             });
             obj.data.Agenda.map((a) => {
               this.dateRange.push({
+                status: a.status,
                 index: a.id_profissionais_servicos_agenda,
                 id_profissional: a.id_profissional,
                 date: a.data,
@@ -589,6 +597,7 @@ export default {
                 end_time: a.horario_fim,
               });
             });
+            console.log(this.dateRange);
             this.isLoading = false;
             this.isEnabled = true;
             this.isMsgProfissional = false;
@@ -861,10 +870,10 @@ td {
   font-weight: 700;
 }
 .table-active-reservado {
-  --bs-table-accent-bg: var(--bs-table-active-bg);
+  --bs-table-accent-bg: rgba(228, 96, 96, 0.733);
   color: var(--bs-table-active-color);
 }
-.table-active-agendado {
+.table-active-livre {
   --bs-table-accent-bg: rgb(40 187 120 / 62%);
   color: var(--bs-table-active-color);
 }

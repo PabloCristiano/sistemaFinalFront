@@ -34,7 +34,7 @@
                 style="background-color: #f5f5f561; height: 600px"
                 v-if="isEnabled"
               >
-                <table
+                <!-- <table
                   class="table table-borderless"
                   style="border-width: 0 0px !important"
                 >
@@ -59,16 +59,49 @@
                         class="table-default text-center"
                         style="font-weight: 500; border-radius: 29px"
                         v-for="day in dayIndex"
-                        :class="{
-                          'table-active-livre': value.status === 'LIVRE',
-                          'table-active-reservado':
-                            value.status === 'RESERVADO',
-                        }"
                         :key="day.index"
                         @click="slot($event, value, day.data)"
                         :disabled="true"
                       >
                         {{ value.start_time }}
+                        {{ getTimeForDay(value, day) }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table> -->
+                <table
+                  class="table table-borderless"
+                  style="border-width: 0 0px !important"
+                >
+                  <thead class="fixed-header">
+                    <tr class="table-dark">
+                      <!-- <th></th> -->
+                      <th
+                        class="text-center"
+                        scope="col"
+                        v-for="(date, index) in dates"
+                        :key="index"
+                      >
+                        {{ date }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(time, key) in times" :key="key">
+                      <!-- <td>{{ key }}</td> -->
+                      <td
+                        class="table-default text-center"
+                        style="font-weight: 500; border-radius: 29px"
+                        :class="{
+                          'table-active-livre': times.status === 'LIVRE',
+                          'table-active-reservado':
+                            times.status === 'RESERVADO',
+                        }"
+                        @click="slot($event, items, dates.date)"
+                        v-for="(date, index) in dates"
+                        :key="index"
+                      >
+                        {{ dataByTimeAndDate(time, date).start_time }}
                       </td>
                     </tr>
                   </tbody>
@@ -429,7 +462,11 @@ export default {
         }
         this.dayIndex = [];
         this.dateRange = [];
-        this.isMsgProfissional = false;
+
+        (this.items = []),
+          (this.dates = []),
+          (this.times = []),
+          (this.isMsgProfissional = false);
         if (this.selected2) {
           this.findAllAgendaProfissional(this.selected2.id);
           this.form.id_profissional = this.selected2.id;
@@ -484,6 +521,9 @@ export default {
         qtd_horario: "",
       },
       isLoadingAgenda: false,
+      items: [],
+      dates: [],
+      times: [],
     };
   },
   created() {
@@ -547,11 +587,12 @@ export default {
       //   console.log(value);
       // }
       this.resetForm();
-      value.date = day;
-      this.form.index = value.index;
-      this.form.horario_inicio = value.start_time;
-      this.form.horario_fim = value.end_time;
-      this.form.data = Rules.converterData(value.date);
+      console.log(event, value, day);
+      // value.date = day;
+      // this.form.index = value.index;
+      // this.form.horario_inicio = value.start_time;
+      // this.form.horario_fim = value.end_time;
+      // this.form.data = Rules.converterData(value.date);
       this.$bvModal.show(this.modal_search_agendar);
     },
     createTable() {
@@ -559,6 +600,15 @@ export default {
         this.dayIndex.push(this.fomataData(this.nextDate(this.dateIndex)));
         this.dateIndex++;
       }
+    },
+    getTimeForDay(value, day) {
+      console.log(value, day, "oiiiiiiiiiiii");
+      const data1 = Rules.converterData(day.data);
+      console.log(value.date, day.data, "oiiiiiiiiiiii", data1);
+      // Lógica para exibir o tempo correto com base na data e no dia
+      // Substitua esta lógica pelo que você precisa.
+      // Este é apenas um exemplo simples.
+      return value.date === data1 ? value.start_time : "";
     },
     getAllProfissionais() {
       ServiceProfissional.getAll()
@@ -572,14 +622,22 @@ export default {
           console.log(error);
         });
     },
+    dataByTimeAndDate(time, date) {
+      // console.log(time, date);
+      // Encontra o item correspondente com o horário e data fornecidos
+      const horario = this.items.find(
+        (item) => item.start_time === time && item.date === date
+      );
+      return horario || "";
+    },
     findAllAgendaProfissional(id) {
       this.isLoading = true;
       ServiceProfissional.findAllAgendaProfissional(id)
         .then((obj) => {
-          console.log(obj);
+          // console.log(obj);
           if (obj) {
             this.dateProfissional = this.extrairDatasUnicas(obj.data.Agenda);
-            console.log(this.dateProfissional);
+            // console.log(this.dateProfissional);
             this.dateProfissional.map((a) => {
               var data = this.formatarData(a);
               this.dayIndex.push({
@@ -597,10 +655,29 @@ export default {
                 end_time: a.horario_fim,
               });
             });
-            console.log(this.dateRange);
+            // console.log(this.dateRange);
             this.isLoading = false;
             this.isEnabled = true;
             this.isMsgProfissional = false;
+
+            this.items = this.dateRange;
+            this.items.forEach((item) => {
+              //console.log(item);
+              if (!this.dates.includes(item.date)) {
+                this.dates.push(item.date);
+              }
+
+              if (!this.times.includes(item.start_time)) {
+                this.times.push(item.start_time);
+              }
+              this.dates = this.dates.sort(function (a, b) {
+                return a.localeCompare(b);
+              });
+              this.times = this.times.sort(function (a, b) {
+                return a.localeCompare(b);
+              });
+            });
+
             return;
           }
         })

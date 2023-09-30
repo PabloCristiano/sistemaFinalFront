@@ -120,7 +120,7 @@
             <div class="col-md-8">
               <label>Profissional:</label>
               <b-form-input
-                id="horario_inicio"
+                id="profisional"
                 type="text"
                 v-model="form.profissional"
                 placeholder="Nome Profissional"
@@ -229,7 +229,7 @@
             <div class="col-md-3">
               <label>Hr Inicio:</label>
               <b-form-input
-                id="horario_inicio_"
+                id="horario_inicio"
                 type="text"
                 v-model="form.horario_inicio"
                 placeholder="Horario Inicio"

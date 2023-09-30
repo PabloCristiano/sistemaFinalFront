@@ -100,13 +100,19 @@
                           'table-active-reservado':
                             dataByTimeAndDate(time, date).status ===
                             'RESERVADO',
+                          'table-active-fechado':
+                            dataByTimeAndDate(time, date).status === undefined,
                         }"
-                        @click="slot($event, times[key], date)"
+                        @click="slot(times[key], date)"
                         v-for="(date, index) in dates"
                         :key="index"
                         disabled="false"
                       >
-                        {{ dataByTimeAndDate(time, date).start_time }}
+                        {{
+                          dataByTimeAndDate(time, date).start_time
+                            ? dataByTimeAndDate(time, date).start_time
+                            : "FECHADO"
+                        }}
                       </td>
                     </tr>
                   </tbody>
@@ -584,31 +590,16 @@ export default {
       console.log(dia);
       return dia;
     },
-    slot(event, value, day) {
-      // if (this.isEnabled) {
-      //   event.target.classList.toggle("table-active");
-      //   value.date = day;
-      //   this.$emit("callback", value);
-      //   console.log(value);
-      // }
+    slot(value, day) {
       this.resetForm();
-      console.log(value, day);
-      // value.date = day;
-      // this.form.index = value.index;
-      // this.form.horario_inicio = value.start_time;
-      // this.form.horario_fim = value.end_time;
-
-      var gabi;
-      gabi = this.dataByTimeAndDate(value, day);
-      console.log(gabi.status);
-      if (typeof gabi.status == "undefined" || gabi.status !== "RESERVADO") {
-        this.form.index = gabi.index;
-        this.form.horario_inicio = gabi.start_time;
-        this.form.horario_fim = gabi.end_time;
+      var itemarray = this.dataByTimeAndDate(value, day);
+      if (itemarray.status && itemarray.status !== "RESERVADO") {
+        this.form.index = itemarray.index;
+        this.form.horario_inicio = itemarray.start_time;
+        this.form.horario_fim = itemarray.end_time;
         this.form.data = day;
         this.$bvModal.show(this.modal_search_agendar);
       }
-      //this.$bvModal.show(this.modal_search_agendar);
     },
     createTable() {
       for (var index = 0; index < this.min; index++) {
@@ -971,6 +962,10 @@ td {
 }
 .table-active-livre {
   --bs-table-accent-bg: rgb(40 187 120 / 62%);
+  color: var(--bs-table-active-color);
+}
+.table-active-fechado {
+  --bs-table-accent-bg: rgba(184, 187, 185, 0.486);
   color: var(--bs-table-active-color);
 }
 </style>

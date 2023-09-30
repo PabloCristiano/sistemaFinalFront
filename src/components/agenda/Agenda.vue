@@ -93,11 +93,11 @@
                         class="table-default text-center"
                         style="font-weight: 500; border-radius: 29px"
                         :class="{
-                          'table-active-livre': times.status === 'LIVRE',
+                          'table-active-livre': items.status === 'LIVRE',
                           'table-active-reservado':
-                            times.status === 'RESERVADO',
+                            items.status === 'RESERVADO',
                         }"
-                        @click="slot($event, items, dates.date)"
+                        @click="slot($event, times[key], date)"
                         v-for="(date, index) in dates"
                         :key="index"
                       >
@@ -587,7 +587,7 @@ export default {
       //   console.log(value);
       // }
       this.resetForm();
-      console.log(event, value, day);
+      console.log(value, day);
       // value.date = day;
       // this.form.index = value.index;
       // this.form.horario_inicio = value.start_time;
@@ -668,7 +668,7 @@ export default {
               }
 
               if (!this.times.includes(item.start_time)) {
-                this.times.push(item.start_time);
+                this.times.push(item.start_time, item.end_time);
               }
               this.dates = this.dates.sort(function (a, b) {
                 return a.localeCompare(b);

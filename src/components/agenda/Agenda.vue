@@ -662,12 +662,12 @@ export default {
 
             this.items = this.dateRange;
             this.items.forEach((item) => {
-              //console.log(item);
+              console.log(item);
               if (!this.dates.includes(item.date)) {
                 this.dates.push(item.date);
               }
               if (!this.times.includes(item.start_time)) {
-                this.times.push(item.start_time, item.end_time);
+                this.times.push(item.start_time);
               }
 
               //ordena array
@@ -678,7 +678,6 @@ export default {
                 return a.localeCompare(b);
               });
             });
-
             return;
           }
         })

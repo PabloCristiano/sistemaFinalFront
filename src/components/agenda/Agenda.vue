@@ -75,31 +75,36 @@
                 >
                   <thead class="fixed-header">
                     <tr class="table-dark">
-                      <!-- <th></th> -->
+                      <!-- <th class="text-center" scope="col">HORÁRIO</th> -->
                       <th
                         class="text-center"
                         scope="col"
-                        v-for="(date, index) in dates"
+                        v-for="(date, index) in dayIndex"
                         :key="index"
                       >
-                        {{ date }}
+                        {{ date.data }}
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(time, key) in times" :key="key">
-                      <!-- <td>{{ key }}</td> -->
+                      <!-- <td class="text-center" scope="col">
+                        <b>{{ formatarHora(time) }}</b>
+                      </td> -->
                       <td
                         class="table-default text-center"
                         style="font-weight: 500; border-radius: 29px"
                         :class="{
-                          'table-active-livre': items.status === 'LIVRE',
+                          'table-active-livre':
+                            dataByTimeAndDate(time, date).status === 'LIVRE',
                           'table-active-reservado':
-                            items.status === 'RESERVADO',
+                            dataByTimeAndDate(time, date).status ===
+                            'RESERVADO',
                         }"
                         @click="slot($event, times[key], date)"
                         v-for="(date, index) in dates"
                         :key="index"
+                        disabled="false"
                       >
                         {{ dataByTimeAndDate(time, date).start_time }}
                       </td>
@@ -592,8 +597,18 @@ export default {
       // this.form.index = value.index;
       // this.form.horario_inicio = value.start_time;
       // this.form.horario_fim = value.end_time;
-      // this.form.data = Rules.converterData(value.date);
-      this.$bvModal.show(this.modal_search_agendar);
+
+      var gabi;
+      gabi = this.dataByTimeAndDate(value, day);
+      console.log(gabi.status);
+      if (typeof gabi.status == "undefined" || gabi.status !== "RESERVADO") {
+        this.form.index = gabi.index;
+        this.form.horario_inicio = gabi.start_time;
+        this.form.horario_fim = gabi.end_time;
+        this.form.data = day;
+        this.$bvModal.show(this.modal_search_agendar);
+      }
+      //this.$bvModal.show(this.modal_search_agendar);
     },
     createTable() {
       for (var index = 0; index < this.min; index++) {
@@ -602,9 +617,7 @@ export default {
       }
     },
     getTimeForDay(value, day) {
-      console.log(value, day, "oiiiiiiiiiiii");
       const data1 = Rules.converterData(day.data);
-      console.log(value.date, day.data, "oiiiiiiiiiiii", data1);
       // Lógica para exibir o tempo correto com base na data e no dia
       // Substitua esta lógica pelo que você precisa.
       // Este é apenas um exemplo simples.
@@ -616,7 +629,6 @@ export default {
           if (obj) {
             this.profissional = obj;
           }
-          //this.isLoading = false;
         })
         .catch((error) => {
           console.log(error);
@@ -634,10 +646,8 @@ export default {
       this.isLoading = true;
       ServiceProfissional.findAllAgendaProfissional(id)
         .then((obj) => {
-          // console.log(obj);
           if (obj) {
             this.dateProfissional = this.extrairDatasUnicas(obj.data.Agenda);
-            // console.log(this.dateProfissional);
             this.dateProfissional.map((a) => {
               var data = this.formatarData(a);
               this.dayIndex.push({
@@ -655,17 +665,15 @@ export default {
                 end_time: a.horario_fim,
               });
             });
-            // console.log(this.dateRange);
             this.isLoading = false;
             this.isEnabled = true;
             this.isMsgProfissional = false;
-
             this.items = this.dateRange;
             this.items.forEach((item) => {
-              console.log(item);
               if (!this.dates.includes(item.date)) {
                 this.dates.push(item.date);
               }
+
               if (!this.times.includes(item.start_time)) {
                 this.times.push(item.start_time);
               }
@@ -797,6 +805,17 @@ export default {
         this.isLoadingAgenda = false;
         return;
       }
+    },
+    formatarHora(hora) {
+      console.log(hora);
+      // "17:40:00" // Saída: "17:40"
+      // Dividir a hora em partes (horas, minutos e segundos)
+      const partes = hora.split(":");
+
+      // Obter apenas as partes de horas e minutos
+      const horaFormatada = partes.slice(0, 2).join(":");
+
+      return horaFormatada;
     },
   },
 };

@@ -666,10 +666,11 @@ export default {
               if (!this.dates.includes(item.date)) {
                 this.dates.push(item.date);
               }
-
               if (!this.times.includes(item.start_time)) {
                 this.times.push(item.start_time, item.end_time);
               }
+
+              //ordena array
               this.dates = this.dates.sort(function (a, b) {
                 return a.localeCompare(b);
               });

@@ -661,7 +661,10 @@ export default {
             this.isMsgProfissional = false;
             this.items = this.dateRange;
             this.items.forEach((item) => {
+              console.log(item.date);
               if (!this.dates.includes(item.date)) {
+                let u = this.compararDatas_entre(item.date);
+                console.log(u);
                 this.dates.push(item.date);
               }
 
@@ -807,6 +810,22 @@ export default {
       const horaFormatada = partes.slice(0, 2).join(":");
 
       return horaFormatada;
+    },
+    compararDatas_entre(dataComparacao) {
+      // Obtém a data atual
+      const dataAtual = new Date();
+
+      // Converte a data de comparação para um objeto Date
+      const dataComparacaoObj = new Date(dataComparacao);
+
+      // Compara as datas
+      if (dataComparacaoObj >= dataAtual) {
+        return "A data atual é anterior à data de comparação.";
+      } else if (dataComparacaoObj < dataAtual) {
+        return "A data atual é posterior à data de comparação.";
+      } else {
+        return "A data atual é igual à data de comparação.";
+      }
     },
   },
 };

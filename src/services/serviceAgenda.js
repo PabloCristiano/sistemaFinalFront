@@ -7,15 +7,15 @@ class ServiceAgenda {
     let config = {
       headers: {
         "Content-Type": "multipart/form-data",
-        Accept: "application/json"
-      }
+        Accept: "application/json",
+      },
     };
     return await axios
-      .get(ApiService.url + "v1/categorias", config)
-      .then(response => {
+      .get(ApiService.url + "v1/criarAgenda", config)
+      .then((response) => {
         return response.data;
       })
-      .catch(errors => {
+      .catch((errors) => {
         console.log(errors);
       });
   }
@@ -25,15 +25,15 @@ class ServiceAgenda {
     let config = {
       headers: {
         "Content-Type": "multipart/form-data",
-        Accept: "application/json"
-      }
+        Accept: "application/json",
+      },
     };
     return await axios
       .post(ApiService.url + "v1/criarAgenda", data, config)
-      .then(obj => {
+      .then((obj) => {
         return obj;
       })
-      .catch(errors => {
+      .catch((errors) => {
         return errors;
       });
   }
@@ -43,15 +43,15 @@ class ServiceAgenda {
     let config = {
       headers: {
         "Content-Type": "multipart/form-data",
-        Accept: "application/json"
-      }
+        Accept: "application/json",
+      },
     };
     return await axios
       .post(ApiService.url + "v1/criarAgenda/" + `${id}`, config)
-      .then(obj => {
+      .then((obj) => {
         return obj;
       })
-      .catch(errors => {
+      .catch((errors) => {
         return errors;
       });
   }
@@ -60,16 +60,16 @@ class ServiceAgenda {
     ApiService.setHeader();
     let config = {
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      }
+        "Content-Type": "multipart/form-data",
+        Accept: "application/json",
+      },
     };
     return await axios
       .put(ApiService.url + "v1/criarAgenda/" + `${data.id}`, data, config)
-      .then(obj => {
+      .then((obj) => {
         return obj;
       })
-      .catch(errors => {
+      .catch((errors) => {
         return errors;
       });
   }
@@ -79,15 +79,15 @@ class ServiceAgenda {
     let config = {
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
-      }
+        Accept: "application/json",
+      },
     };
     return await axios
       .delete(ApiService.url + "v1/categorias/" + `${id}`, config)
-      .then(obj => {
+      .then((obj) => {
         return obj;
       })
-      .catch(errors => {
+      .catch((errors) => {
         return errors;
       });
   }
@@ -97,15 +97,15 @@ class ServiceAgenda {
     let config = {
       headers: {
         "Content-Type": "multipart/form-data",
-        Accept: "application/json"
-      }
+        Accept: "application/json",
+      },
     };
     return await axios
       .post(ApiService.url + "v1/agendaprofissional", data, config)
-      .then(obj => {
+      .then((obj) => {
         return obj;
       })
-      .catch(errors => {
+      .catch((errors) => {
         return errors;
       });
   }
@@ -115,15 +115,15 @@ class ServiceAgenda {
     let config = {
       headers: {
         "Content-Type": "multipart/form-data",
-        Accept: "application/json"
-      }
+        Accept: "application/json",
+      },
     };
     return await axios
       .post(ApiService.url + "v1/pesquisaAgenda", data, config)
-      .then(obj => {
+      .then((obj) => {
         return obj;
       })
-      .catch(errors => {
+      .catch((errors) => {
         return errors;
       });
   }
@@ -132,17 +132,37 @@ class ServiceAgenda {
     let config = {
       headers: {
         "Content-Type": "multipart/form-data",
-        Accept: "application/json"
-      }
+        Accept: "application/json",
+      },
     };
     return await axios
       .post(ApiService.url + "v1/agendamento/searchnexttime", data, config)
-      .then(obj => {
+      .then((obj) => {
         return obj;
       })
-      .catch(errors => {
+      .catch((errors) => {
         return errors;
       });
+  }
+  async findAllAgendaProfissional(id) {
+    try {
+      ApiService.setHeader();
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Accept: "application/json",
+        },
+      };
+      const response = await axios.post(
+        ApiService.url + "v1/allAgenda/" + `${id}`,
+        config
+      );
+      if (response) {
+        return response;
+      }
+    } catch (error) {
+      return error;
+    }
   }
 }
 const instance = new ServiceAgenda();

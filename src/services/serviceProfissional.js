@@ -108,26 +108,26 @@ class ServiceProfissional {
     }
   }
 
-  async findAllAgendaProfissional(id) {
-    try {
-      ApiService.setHeader();
-      let config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Accept: "application/json",
-        },
-      };
-      const response = await axios.post(
-        ApiService.url + "v1/allAgenda/" + `${id}`,
-        config
-      );
-      if (response) {
-        return response;
-      }
-    } catch (error) {
-      return error;
-    }
-  }
+  // async findAllAgendaProfissional(id) {
+  //   try {
+  //     ApiService.setHeader();
+  //     let config = {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //         Accept: "application/json",
+  //       },
+  //     };
+  //     const response = await axios.post(
+  //       ApiService.url + "v1/allAgenda/" + `${id}`,
+  //       config
+  //     );
+  //     if (response) {
+  //       return response;
+  //     }
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // }
 }
 
 const instance = new ServiceProfissional();

@@ -587,7 +587,6 @@ export default {
     },
     nextDate(index) {
       let dia = new Date(new Date().getTime() + index * 24 * 60 * 60 * 1000);
-      console.log(dia);
       return dia;
     },
     slot(value, day) {
@@ -626,7 +625,6 @@ export default {
         });
     },
     dataByTimeAndDate(time, date) {
-      // console.log(time, date);
       // Encontra o item correspondente com o horário e data fornecidos
       const horario = this.items.find(
         (item) => item.start_time === time && item.date === date
@@ -639,7 +637,7 @@ export default {
       this.times = [];
       this.dayIndex = [];
       this.isLoading = true;
-      ServiceProfissional.findAllAgendaProfissional(id)
+      ServiceAgenda.findAllAgendaProfissional(id)
         .then((obj) => {
           if (obj) {
             this.dateProfissional = this.extrairDatasUnicas(obj.data.Agenda);
@@ -747,7 +745,6 @@ export default {
       if (obj.column.field === "btn") {
         return;
       }
-      console.log(obj);
       this.form.id_servico = obj.row.id;
       this.form.servico = obj.row.servico;
       this.form.valor = obj.row.valor;
@@ -780,13 +777,12 @@ export default {
     },
     onSubmit() {
       this.isLoadingAgenda = true;
-      console.log(this.form);
       if (this.VerificaTempoHorario()) {
         ServiceAgenda.findAgendaProfissionalProximoHorario(this.form)
           .then((obj) => {
             if (obj.data.Success === true) {
               console.log("Deu Bom ");
-               console.log(this.form);
+              console.log(this.form);
               this.findAllAgendaProfissional(this.selected2.id);
               console.log(obj);
               this.isLoadingAgenda = false;

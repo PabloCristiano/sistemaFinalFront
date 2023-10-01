@@ -634,6 +634,10 @@ export default {
       return horario || "";
     },
     findAllAgendaProfissional(id) {
+      this.items = [];
+      this.dates = [];
+      this.times = [];
+      this.dayIndex = [];
       this.isLoading = true;
       ServiceProfissional.findAllAgendaProfissional(id)
         .then((obj) => {
@@ -782,6 +786,8 @@ export default {
           .then((obj) => {
             if (obj.data.Success === true) {
               console.log("Deu Bom ");
+               console.log(this.form);
+              this.findAllAgendaProfissional(this.selected2.id);
               console.log(obj);
               this.isLoadingAgenda = false;
             } else {

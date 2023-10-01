@@ -47,7 +47,7 @@ class ServiceAgenda {
       }
     };
     return await axios
-      .post(ApiService.url + "v1/categorias/" + `${id}`, config)
+      .post(ApiService.url + "v1/criarAgenda/" + `${id}`, config)
       .then(obj => {
         return obj;
       })
@@ -65,7 +65,7 @@ class ServiceAgenda {
       }
     };
     return await axios
-      .put(ApiService.url + "v1/categorias/" + `${data.id}`, data, config)
+      .put(ApiService.url + "v1/criarAgenda/" + `${data.id}`, data, config)
       .then(obj => {
         return obj;
       })

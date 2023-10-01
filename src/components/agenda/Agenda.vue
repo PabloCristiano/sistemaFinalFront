@@ -641,10 +641,12 @@ export default {
             this.dateProfissional = this.extrairDatasUnicas(obj.data.Agenda);
             this.dateProfissional.map((a) => {
               var data = this.formatarData(a);
+              //MONTA O ARRAY DO CABEÇALHO DATA
               this.dayIndex.push({
                 data,
               });
             });
+
             obj.data.Agenda.map((a) => {
               this.dateRange.push({
                 status: a.status,
@@ -661,11 +663,11 @@ export default {
             this.isMsgProfissional = false;
             this.items = this.dateRange;
             this.items.forEach((item) => {
-              console.log(item.date);
               if (!this.dates.includes(item.date)) {
-                let u = this.compararDatas_entre(item.date);
-                console.log(u);
-                this.dates.push(item.date);
+                let vereficaData = this.compararDatas_entre(item.date);
+                if (vereficaData) {
+                  this.dates.push(item.date);
+                }
               }
 
               if (!this.times.includes(item.start_time)) {
@@ -814,15 +816,14 @@ export default {
     compararDatas_entre(dataComparacao) {
       // Obtém a data atual
       const dataAtual = new Date();
-
-      // Converte a data de comparação para um objeto Date
-      const dataComparacaoObj = new Date(dataComparacao);
-
+      var data_Atual = Rules.converter_Data(dataAtual);
+      data_Atual = Rules.converterDataParaMilisegundos(data_Atual);
+      dataComparacao = Rules.converterDataParaMilisegundos(dataComparacao);
       // Compara as datas
-      if (dataComparacaoObj >= dataAtual) {
-        return "A data atual é anterior à data de comparação.";
-      } else if (dataComparacaoObj < dataAtual) {
-        return "A data atual é posterior à data de comparação.";
+      if (dataComparacao >= data_Atual) {
+        return true;
+      } else if (dataComparacao < data_Atual) {
+        return false;
       } else {
         return "A data atual é igual à data de comparação.";
       }

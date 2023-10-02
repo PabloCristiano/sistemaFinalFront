@@ -684,7 +684,17 @@ export default {
                 }
               }
 
+              //let v1 = Rules.converterDataParaMilisegundos("2023-10-01");
+              //let v2 = Rules.converterDataParaMilisegundos(item.date);
+              // console.log(v1, v2);
+
               if (!this.times.includes(item.start_time)) {
+                //let hora = this.compararHoras(item.start_time);
+                //console.log(!hora && !v2 >= !v1);
+                //if (!hora && !v2 >= !v1) {
+                //  console.log(hora);
+                //  this.times.push(item.start_time);
+                // }
                 this.times.push(item.start_time);
               }
 
@@ -851,6 +861,34 @@ export default {
       const segundos = agora.getSeconds().toString().padStart(2, "0"); // Obtém os segundos e formata com dois dígitos
 
       return `${horas}:${minutos}:${segundos}`;
+    },
+    compararHoras(dataComparacao) {
+      // Obtém a hora atual
+      const agora = new Date();
+      const horaAtual = agora.getHours();
+      const minutosAtual = agora.getMinutes();
+      const segundosAtual = agora.getSeconds();
+
+      // Divide a hora de comparação em horas, minutos e segundos
+      const partesDataComparacao = dataComparacao.split(":");
+      const horaComparacao = parseInt(partesDataComparacao[0], 10);
+      const minutosComparacao = parseInt(partesDataComparacao[1], 10);
+      const segundosComparacao = parseInt(partesDataComparacao[2], 10);
+
+      // Compara as horas, minutos e segundos
+      if (horaComparacao > horaAtual) {
+        return false;
+      } else if (horaComparacao === horaAtual) {
+        if (minutosComparacao > minutosAtual) {
+          return false;
+        } else if (minutosComparacao === minutosAtual) {
+          return segundosComparacao >= segundosAtual;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
     },
   },
 };

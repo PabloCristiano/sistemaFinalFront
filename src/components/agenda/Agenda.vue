@@ -781,11 +781,20 @@ export default {
         ServiceAgenda.findAgendaProfissionalProximoHorario(this.form)
           .then((obj) => {
             if (obj.data.Success === true) {
-              console.log("Deu Bom ");
               console.log(this.form);
-              this.findAllAgendaProfissional(this.selected2.id);
+              ServiceAgenda.alterarAgenda(this.form).then((obj) => {
+                console.log(obj);
+                if (obj.data.success === true) {
+                  console.log(this.items);
+
+                  notyf.success(obj.data.Msg);
+                  this.$bvModal.hide(this.modal_search_agendar);
+                  this.carregarList();
+                  this.isLoadingAgenda = false;
+                }
+              });
               console.log(obj);
-              this.isLoadingAgenda = false;
+              //
             } else {
               console.log("Deu ruim");
               this.isLoadingAgenda = false;
@@ -829,6 +838,9 @@ export default {
       } else {
         return "A data atual é igual à data de comparação.";
       }
+    },
+    carregarList() {
+      this.findAllAgendaProfissional(this.form.id_profissional);
     },
   },
 };

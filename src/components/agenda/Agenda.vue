@@ -172,6 +172,17 @@
               >
               </b-form-input>
             </div>
+            <div class="col-md-4">
+              <label>Data:</label>
+              <b-form-input
+                id="data"
+                type="date"
+                v-model="form.data"
+                placeholder="Nome Profissional"
+                disabled
+              >
+              </b-form-input>
+            </div>
           </div>
           <div class="row col-md-12 mt-2">
             <div class="col-md-2">
@@ -632,6 +643,7 @@ export default {
       return horario || "";
     },
     findAllAgendaProfissional(id) {
+      this.dateRange = [];
       this.items = [];
       this.dates = [];
       this.times = [];
@@ -684,6 +696,7 @@ export default {
                 return a.localeCompare(b);
               });
             });
+            console.log(this.obterHoraAtual());
             return;
           }
         })
@@ -781,22 +794,15 @@ export default {
         ServiceAgenda.findAgendaProfissionalProximoHorario(this.form)
           .then((obj) => {
             if (obj.data.Success === true) {
-              console.log(this.form);
               ServiceAgenda.alterarAgenda(this.form).then((obj) => {
-                console.log(obj);
                 if (obj.data.success === true) {
-                  console.log(this.items);
-
                   notyf.success(obj.data.Msg);
                   this.$bvModal.hide(this.modal_search_agendar);
-                  this.carregarList();
+                  this.findAllAgendaProfissional(this.form.id_profissional);
                   this.isLoadingAgenda = false;
                 }
               });
-              console.log(obj);
-              //
             } else {
-              console.log("Deu ruim");
               this.isLoadingAgenda = false;
               notyf.error(
                 "Não foi possivel realizar o agendamento, Verificar Disponibilidade de horários."
@@ -814,7 +820,6 @@ export default {
       }
     },
     formatarHora(hora) {
-      console.log(hora);
       // "17:40:00" // Saída: "17:40"
       // Dividir a hora em partes (horas, minutos e segundos)
       const partes = hora.split(":");
@@ -839,8 +844,13 @@ export default {
         return "A data atual é igual à data de comparação.";
       }
     },
-    carregarList() {
-      this.findAllAgendaProfissional(this.form.id_profissional);
+    obterHoraAtual() {
+      const agora = new Date();
+      const horas = agora.getHours().toString().padStart(2, "0"); // Obtém as horas e formata com dois dígitos
+      const minutos = agora.getMinutes().toString().padStart(2, "0"); // Obtém os minutos e formata com dois dígitos
+      const segundos = agora.getSeconds().toString().padStart(2, "0"); // Obtém os segundos e formata com dois dígitos
+
+      return `${horas}:${minutos}:${segundos}`;
     },
   },
 };

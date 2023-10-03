@@ -653,6 +653,10 @@ export default {
         .then((obj) => {
           if (obj) {
             this.dateProfissional = this.extrairDatasUnicas(obj.data.Agenda);
+            this.dateProfissional.sort(function (a, b) {
+              return a.localeCompare(b);
+            });
+
             this.dateProfissional.map((a) => {
               var data = this.formatarData(a);
               //MONTA O ARRAY DO CABEÇALHO DATA
@@ -677,27 +681,19 @@ export default {
             this.isMsgProfissional = false;
             this.items = this.dateRange;
             this.items.forEach((item) => {
-              if (!this.dates.includes(item.date)) {
-                let vereficaData = this.compararDatas_entre(item.date);
-                if (vereficaData) {
-                  this.dates.push(item.date);
-                }
+              let valida = this.comparaAgendaProfissionalComDataHoraAtual(
+                item.date,
+                item.start_time
+              );
+              if (!valida) {
+                item.status = "RESERVADO";
               }
-
-              //let v1 = Rules.converterDataParaMilisegundos("2023-10-01");
-              //let v2 = Rules.converterDataParaMilisegundos(item.date);
-              // console.log(v1, v2);
-
+              if (!this.dates.includes(item.date)) {
+                this.dates.push(item.date);
+              }
               if (!this.times.includes(item.start_time)) {
-                //let hora = this.compararHoras(item.start_time);
-                //console.log(!hora && !v2 >= !v1);
-                //if (!hora && !v2 >= !v1) {
-                //  console.log(hora);
-                //  this.times.push(item.start_time);
-                // }
                 this.times.push(item.start_time);
               }
-
               //ordena array
               this.dates = this.dates.sort(function (a, b) {
                 return a.localeCompare(b);
@@ -706,8 +702,6 @@ export default {
                 return a.localeCompare(b);
               });
             });
-            console.log(this.obterHoraAtual());
-            return;
           }
         })
         .catch((error) => {
@@ -889,6 +883,41 @@ export default {
       } else {
         return true;
       }
+    },
+    comparaAgendaProfissionalComDataHoraAtual(date, time) {
+      let data_ = Rules.converterDataParaMilisegundos(date);
+      let hora_ = Rules.horarioParaMilissegundos(time);
+
+      const dataHoraAtual = new Date();
+      let data_atual = Rules.converter_Data(dataHoraAtual);
+      console.log("Data Arr:", date, "Data atual:", data_atual);
+      data_atual = Rules.converterDataParaMilisegundos(data_atual);
+      const hora = dataHoraAtual.getHours();
+      const minutos = dataHoraAtual.getMinutes();
+      const segundos = dataHoraAtual.getSeconds();
+      const horaFormatada = `${hora}:${minutos}:${segundos}`;
+      let hora_atual = Rules.horarioParaMilissegundos(horaFormatada);
+      // console.log(hora_atual);
+      if (data_ > data_atual) {
+        return true;
+      }
+
+      if (data_ >= data_atual) {
+        if (hora_ < hora_atual) {
+          return false;
+        }
+        return true;
+      }
+    },
+    extrairDataHora(stringData) {
+      console.log(stringData);
+      const dataHora = new Date(stringData);
+      // Extrai a data no formato '0000-00-00'
+      const dataFormatada = dataHora.toISOString().split("T")[0];
+      // Extrai a hora no formato '00:00:00'
+      const horaFormatada = dataHora.toTimeString().split(" ")[0];
+
+      return { data: dataFormatada, hora: horaFormatada };
     },
   },
 };

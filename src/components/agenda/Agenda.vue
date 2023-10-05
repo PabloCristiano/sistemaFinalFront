@@ -999,7 +999,6 @@ export default {
   },
 };
 </script>
-
 <style lang="css">
 .table-wrapper {
   overflow-y: scroll;

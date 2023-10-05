@@ -75,7 +75,7 @@
                 >
                   <thead class="fixed-header">
                     <tr class="table-dark">
-                      <!-- <th class="text-center" scope="col">HORÁRIO</th> -->
+                      <th class="text-center" scope="col">HORÁRIO</th>
                       <th
                         class="text-center"
                         scope="col"
@@ -88,9 +88,13 @@
                   </thead>
                   <tbody>
                     <tr v-for="(time, key) in times" :key="key">
-                      <!-- <td class="text-center" scope="col">
+                      <td
+                        class="text-center table-active-horario"
+                        style="font-weight: 500; border-radius: 29px"
+                        scope="col"
+                      >
                         <b>{{ formatarHora(time) }}</b>
-                      </td> -->
+                      </td>
                       <td
                         class="table-default text-center"
                         style="font-weight: 500; border-radius: 29px"
@@ -1081,6 +1085,10 @@ td {
 }
 .table-active-fechado {
   --bs-table-accent-bg: rgba(184, 187, 185, 0.486);
+  color: var(--bs-table-active-color);
+}
+.table-active-horario {
+  --bs-table-accent-bg: rgba(0, 0, 0, 0.164);
   color: var(--bs-table-active-color);
 }
 </style>

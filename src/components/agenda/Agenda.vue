@@ -114,8 +114,8 @@
                       >
                         {{
                           dataByTimeAndDate(time, date).start_time
-                            ? dataByTimeAndDate(time, date).show
-                              ? dataByTimeAndDate(time, date).show
+                            ? dataByTimeAndDate(time, date).nome_cliente
+                              ? dataByTimeAndDate(time, date).nome_cliente
                               : dataByTimeAndDate(time, date).start_time
                             : "FECHADO"
                         }}
@@ -177,6 +177,9 @@
                 disabled
               >
               </b-form-input>
+              <small class="small-msg">
+                {{ validationMsg($v.form.profissional) }}
+              </small>
             </div>
             <div class="col-md-4">
               <label>Data:</label>
@@ -196,11 +199,16 @@
               <b-form-input
                 id="id_cliente_"
                 type="number"
+                :class="{
+                  'fail-error': $v.form.id_cliente.$error,
+                }"
                 placeholder="Código"
                 v-model="form.id_cliente"
               >
               </b-form-input>
-              <small class="small-msg"> </small>
+              <small class="small-msg">
+                {{ validationMsg($v.form.id_cliente) }}
+              </small>
             </div>
             <div class="col-md-10">
               <label>Cliente:<b style="color: rgb(245, 153, 153)"> *</b></label>
@@ -209,6 +217,9 @@
                   <b-form-input
                     id="cliente_"
                     type="text"
+                    :class="{
+                      'fail-error': $v.form.cliente.$error,
+                    }"
                     v-model="form.cliente"
                     placeholder="Nome do Cliente"
                     disabled
@@ -234,7 +245,9 @@
                     ></b-button>
                   </b-input-group-append>
                 </b-input-group>
-                <small class="small-msg"> </small>
+                <small class="small-msg">
+                  {{ validationMsg($v.form.cliente) }}
+                </small>
               </b-overlay>
             </div>
           </div>
@@ -245,10 +258,15 @@
                 id="id_estado"
                 type="number"
                 placeholder="Código"
+                :class="{
+                  'fail-error': $v.form.id_servico.$error,
+                }"
                 v-model="form.id_servico"
               >
               </b-form-input>
-              <small class="small-msg"> </small>
+              <small class="small-msg">{{
+                validationMsg($v.form.id_servico)
+              }}</small>
             </div>
             <div class="col-md-10">
               <label>Serviço:<b style="color: rgb(245, 153, 153)"> *</b></label>
@@ -257,6 +275,9 @@
                   <b-form-input
                     id="servico"
                     type="text"
+                    :class="{
+                      'fail-error': $v.form.servico.$error,
+                    }"
                     v-model="form.servico"
                     placeholder="Nome do Serviço"
                     disabled
@@ -282,7 +303,9 @@
                     ></b-button>
                   </b-input-group-append>
                 </b-input-group>
-                <small class="small-msg"> </small>
+                <small class="small-msg">{{
+                  validationMsg($v.form.servico)
+                }}</small>
               </b-overlay>
             </div>
           </div>
@@ -441,6 +464,8 @@ import HomeServico from "../servico/HomeServico.vue";
 import Rules from "../../rules/rules";
 import { ServiceAgenda } from "@/services/serviceAgenda";
 import { Notyf } from "notyf";
+import * as validators from "vuelidate/lib/validators";
+import { validationMessage } from "vuelidate-messages";
 const notyf = new Notyf({
   position: {
     x: "center",
@@ -464,6 +489,20 @@ const notyf = new Notyf({
     },
   ],
 });
+const formMessages = {
+  required: () => "Campo Obrigatório",
+  txtMinLen: ({ $params }) =>
+    `Campo minimo ${$params.txtMinLen.min} characters.`,
+  txtMaxLen: ({ $params }) =>
+    `Campo maximo ${$params.txtMaxLen.max} characters.`,
+  integer: () => "Campo deve ser um Numero inteiro",
+  txtCnpj: () => `CNPJ Inválido`,
+  txtCpf: () => `CPF Inválido`,
+  email: () => "Deve ser um E-mail Válido.",
+  txtUrl: () => `Site deve ser uma Url Ex: http://www.exemplo.com `,
+  txtConfSenha: () => "Deve ser a mesma Senha",
+  txtMaior: () => "Cliente deve ser Maior de Idade",
+};
 export default {
   components: { HomeCliente, HomeServico },
   props: {
@@ -560,7 +599,32 @@ export default {
   mounted() {
     // this.createTable();
   },
+  validations() {
+    return {
+      form: {
+        profissional: {
+          required: validators.required,
+        },
+        id_profissional: {
+          required: validators.required,
+        },
+        id_cliente: {
+          required: validators.required,
+        },
+        cliente: {
+          required: validators.required,
+        },
+        id_servico: {
+          required: validators.required,
+        },
+        servico: {
+          required: validators.required,
+        },
+      },
+    };
+  },
   methods: {
+    validationMsg: validationMessage(formMessages),
     calcularResultado() {
       if (this.selected2) {
         this.isEnabled = true;
@@ -682,7 +746,6 @@ export default {
                 end_time: a.horario_fim,
                 id_servico: a.id_servico,
                 nome_cliente: a.nome_cliente,
-                show: a.nome_cliente,
               });
             });
             this.isLoading = false;
@@ -746,6 +809,7 @@ export default {
     fecharModalAgendar() {
       this.$bvModal.hide(this.modal_search_agendar);
       this.resetForm();
+      this.$v.form.$reset();
     },
     showSearchCliente() {
       this.$bvModal.show(this.modal_search_cliente);
@@ -803,6 +867,11 @@ export default {
     },
     onSubmit() {
       this.isLoadingAgenda = true;
+      // this.$v.form.$invalid;
+      // this.$v.form.$touch();
+      if (this.$v.form.$invalid) {
+        this.$v.form.$touch();
+      }
       if (this.VerificaTempoHorario()) {
         ServiceAgenda.findAgendaProfissionalProximoHorario(this.form)
           .then((obj) => {

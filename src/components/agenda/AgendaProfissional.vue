@@ -264,6 +264,12 @@ export default {
           tdClass: "text-center",
         },
         {
+          label: "Status",
+          field: "nome_cliente",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
           label: "Ações",
           sortable: false,
           field: "btn",
@@ -335,7 +341,6 @@ export default {
             if (value.data.Success === true) {
               this.isLoadingAgenda = false;
               value.data.Agenda.map((agenda) => {
-                console.log(agenda);
                 agenda.data = formatarDataParaPtBR(agenda.data);
                 agenda.horario_inicio = formatarHorarioAgenda(
                   agenda.horario_inicio

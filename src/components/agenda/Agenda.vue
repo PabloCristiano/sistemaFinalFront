@@ -110,7 +110,10 @@
                       >
                         {{
                           dataByTimeAndDate(time, date).start_time
-                            ? dataByTimeAndDate(time, date).start_time
+                            ? dataByTimeAndDate(time, date).status ===
+                              "RESERVADO"
+                              ? dataByTimeAndDate(time, date).nome_cliente
+                              : dataByTimeAndDate(time, date).start_time
                             : "FECHADO"
                         }}
                       </td>
@@ -651,6 +654,7 @@ export default {
       this.isLoading = true;
       ServiceAgenda.findAllAgendaProfissional(id)
         .then((obj) => {
+          console.log(obj);
           if (obj) {
             this.dateProfissional = this.extrairDatasUnicas(obj.data.Agenda);
             this.dateProfissional.sort(function (a, b) {
@@ -674,6 +678,8 @@ export default {
                 label: a.horario_inicio,
                 start_time: a.horario_inicio,
                 end_time: a.horario_fim,
+                id_servico: a.id_servico,
+                nome_cliente: a.nome_cliente,
               });
             });
             this.isLoading = false;
@@ -798,6 +804,7 @@ export default {
         ServiceAgenda.findAgendaProfissionalProximoHorario(this.form)
           .then((obj) => {
             if (obj.data.Success === true) {
+              console.log(this.form);
               ServiceAgenda.alterarAgenda(this.form).then((obj) => {
                 if (obj.data.success === true) {
                   notyf.success(obj.data.Msg);
@@ -890,7 +897,6 @@ export default {
 
       const dataHoraAtual = new Date();
       let data_atual = Rules.converter_Data(dataHoraAtual);
-      console.log("Data Arr:", date, "Data atual:", data_atual);
       data_atual = Rules.converterDataParaMilisegundos(data_atual);
       const hora = dataHoraAtual.getHours();
       const minutos = dataHoraAtual.getMinutes();

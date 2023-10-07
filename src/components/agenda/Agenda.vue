@@ -654,7 +654,6 @@ export default {
       this.isLoading = true;
       ServiceAgenda.findAllAgendaProfissional(id)
         .then((obj) => {
-          console.log(obj);
           if (obj) {
             this.dateProfissional = this.extrairDatasUnicas(obj.data.Agenda);
             this.dateProfissional.sort(function (a, b) {
@@ -680,6 +679,7 @@ export default {
                 end_time: a.horario_fim,
                 id_servico: a.id_servico,
                 nome_cliente: a.nome_cliente,
+                show: true,
               });
             });
             this.isLoading = false;
@@ -693,6 +693,7 @@ export default {
               );
               if (!valida) {
                 item.status = "RESERVADO";
+                item.show = false;
               }
               if (!this.dates.includes(item.date)) {
                 this.dates.push(item.date);
@@ -804,7 +805,6 @@ export default {
         ServiceAgenda.findAgendaProfissionalProximoHorario(this.form)
           .then((obj) => {
             if (obj.data.Success === true) {
-              console.log(this.form);
               ServiceAgenda.alterarAgenda(this.form).then((obj) => {
                 if (obj.data.success === true) {
                   notyf.success(obj.data.Msg);

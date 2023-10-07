@@ -131,15 +131,16 @@
                   >
                     EDITAR <i class="bx bx-edit-alt"></i>
                   </a>
-                  <!-- <a
+                  <a
                     size="sm"
                     class="btn btn-sm me-1 mb-1"
                     data-backdrop="static"
                     title="EXCLUIR"
                     style="background-color: #f0f8ff"
+                    @click="executar_Horario(props.row)"
                   >
-                    <i class="bx bx-trash-alt"></i>
-                  </a> -->
+                    <i class="bx bx-time"></i> {{ btn_Inicio }}
+                  </a>
                 </span>
               </template>
             </vue-good-table>
@@ -288,6 +289,7 @@ export default {
       agenda: [],
       isLoadingAgenda: false,
       isLoadingProfissional: false,
+      btn_Inicio: "EXECUTAR",
     };
   },
   watch: {
@@ -400,6 +402,15 @@ export default {
 
       if (nextIndex >= 0 && nextIndex < inputs.length) {
         inputs[nextIndex].focus();
+      }
+    },
+    executar_Horario(i) {
+      console.log(i);
+      if (this.btn_Inicio === "EXECUTAR") {
+        this.btn_Inicio = "EXECUTANDO";
+      }
+      if (this.btn_Inicio === "EXECUTANDO") {
+        this.btn_Inicio = "EXECUTADO";
       }
     },
   },

@@ -132,10 +132,12 @@
                     EDITAR <i class="bx bx-edit-alt"></i>
                   </a>
                   <a
+                    v-if="true"
                     size="sm"
                     class="btn btn-sm me-1 mb-1"
                     data-backdrop="static"
                     title="EXCLUIR"
+                    :class="{ 'btn-danger': props.row.ativo }"
                     style="background-color: #f0f8ff"
                     @click="executar_Horario(props.row)"
                   >
@@ -406,12 +408,13 @@ export default {
     },
     executar_Horario(i) {
       console.log(i);
-      if (this.btn_Inicio === "EXECUTAR") {
-        this.btn_Inicio = "EXECUTANDO";
-      }
-      if (this.btn_Inicio === "EXECUTANDO") {
-        this.btn_Inicio = "EXECUTADO";
-      }
+      Object.keys(i).forEach((propriedade) => {
+        const valor = i[propriedade];
+        if (i[propriedade] === "RESERVADO") {
+          i[propriedade] = i[propriedade] + "01";
+        }
+        console.log(`${propriedade}: ${valor}`);
+      });
     },
   },
 };

@@ -110,9 +110,8 @@
                       >
                         {{
                           dataByTimeAndDate(time, date).start_time
-                            ? dataByTimeAndDate(time, date).status ===
-                              "RESERVADO"
-                              ? dataByTimeAndDate(time, date).nome_cliente
+                            ? dataByTimeAndDate(time, date).show
+                              ? dataByTimeAndDate(time, date).show
                               : dataByTimeAndDate(time, date).start_time
                             : "FECHADO"
                         }}
@@ -679,7 +678,7 @@ export default {
                 end_time: a.horario_fim,
                 id_servico: a.id_servico,
                 nome_cliente: a.nome_cliente,
-                show: true,
+                show: a.nome_cliente,
               });
             });
             this.isLoading = false;
@@ -693,7 +692,6 @@ export default {
               );
               if (!valida) {
                 item.status = "RESERVADO";
-                item.show = false;
               }
               if (!this.dates.includes(item.date)) {
                 this.dates.push(item.date);

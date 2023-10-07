@@ -132,12 +132,12 @@
                     EDITAR <i class="bx bx-edit-alt"></i>
                   </a>
                   <a
-                    v-if="true"
+                    v-if="props.row.status === 'RESERVADO' ? true : false"
                     size="sm"
                     class="btn btn-sm me-1 mb-1"
                     data-backdrop="static"
                     title="EXCLUIR"
-                    :class="{ 'btn-danger': props.row.ativo }"
+                    :class="{ 'btn btn-danger': props.row.ativo }"
                     style="background-color: #f0f8ff"
                     @click="executar_Horario(props.row)"
                   >

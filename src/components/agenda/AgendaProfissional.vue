@@ -267,8 +267,14 @@ export default {
           tdClass: "text-center",
         },
         {
-          label: "Status",
+          label: "Cliente",
           field: "nome_cliente",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
+          label: "Serviço",
+          field: "servico",
           thClass: "text-center",
           tdClass: "text-center",
         },

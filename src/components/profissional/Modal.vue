@@ -401,7 +401,7 @@
                         :search-options="{
                           enabled: true,
                           placeholder: 'Procure por um Serviço',
-                          skipDiacritics: true,
+                          skipDiacritics: true
                         }"
                         :pagination-options="{
                           enabled: true,
@@ -413,7 +413,7 @@
                           nextLabel: '',
                           rowsPerPageLabel: 'Qtd pág',
                           ofLabel: 'de',
-                          pageLabel: 'Pág', // for 'pages' mode
+                          pageLabel: 'Pág' // for 'pages' mode
                         }"
                       >
                         <template slot="table-row" slot-scope="props">
@@ -594,12 +594,12 @@ const formMessages = {
   email: () => "Deve ser um E-mail Válido.",
   txtUrl: () => `Site deve ser uma Url Ex: http://www.exemplo.com `,
   txtConfSenha: () => "Deve ser a mesma Senha",
-  txtMaior: () => "Profissional deve ser Maior de Idade",
+  txtMaior: () => "Profissional deve ser Maior de Idade"
 };
 const notyf = new Notyf({
   position: {
     x: "center",
-    y: "top",
+    y: "top"
   },
   types: [
     {
@@ -608,22 +608,22 @@ const notyf = new Notyf({
       icon: {
         className: "material-icons",
         tagName: "i",
-        text: "warning",
-      },
+        text: "warning"
+      }
     },
     {
       type: "error",
       background: "indianred",
       duration: 5000,
-      dismissible: true,
-    },
-  ],
+      dismissible: true
+    }
+  ]
 });
 export default {
   props: {
     formulario: { type: Object },
     funcOnReset: { type: Function },
-    functionGetListProfissional: { type: Function },
+    functionGetListProfissional: { type: Function }
   },
   components: { VueGoodTable, HomeCidade, HomeServico },
   data() {
@@ -637,7 +637,7 @@ export default {
       isLoadingCidade: false,
       options_tipo: [
         { text: "Usuário", value: "USUÁRIO" },
-        { text: "Administrador", value: "ADMINISTRADOR" },
+        { text: "Administrador", value: "ADMINISTRADOR" }
       ],
       servico: this.formulario.servico,
       columns: [
@@ -645,7 +645,7 @@ export default {
           label: "Serviço",
           field: "servico",
           thClass: "text-center",
-          tdClass: "text-center",
+          tdClass: "text-center"
         },
         {
           label: "Ações",
@@ -653,87 +653,87 @@ export default {
           field: "btn",
           html: true,
           thClass: "text-center",
-          tdClass: "text-center",
-        },
+          tdClass: "text-center"
+        }
       ],
-      a: [],
+      a: []
     };
   },
   filters: {
-    formataDataTempo,
+    formataDataTempo
   },
   validations() {
     return {
       form: {
         profissional: {
           required: validators.required,
-          txtMinLen: validators.minLength(3),
+          txtMinLen: validators.minLength(3)
         },
         apelido: {
           required: validators.required,
-          txtMinLen: validators.minLength(3),
+          txtMinLen: validators.minLength(3)
         },
         cpf: {
           required: validators.required,
           txtMinLen: validators.minLength(14),
           txtMaxLen: validators.maxLength(14),
-          txtCpf: Rules.ValidarCpf,
+          txtCpf: Rules.ValidarCpf
         },
         cep: {
           required: validators.required,
           txtMinLen: validators.minLength(9),
-          txtMaxLen: validators.maxLength(9),
+          txtMaxLen: validators.maxLength(9)
         },
         logradouro: {
           required: validators.required,
           txtMinLen: validators.minLength(3),
-          txtMaxLen: validators.maxLength(50),
+          txtMaxLen: validators.maxLength(50)
         },
         numero: {
           required: validators.required,
-          integer: validators.integer,
+          integer: validators.integer
         },
         bairro: {
           required: validators.required,
           txtMinLen: validators.minLength(3),
-          txtMaxLen: validators.maxLength(30),
+          txtMaxLen: validators.maxLength(30)
         },
         id_cidade: {
           required: validators.required,
-          integer: validators.integer,
+          integer: validators.integer
         },
         cidade: {
-          required: validators.required,
+          required: validators.required
         },
         telefone: {
           required: validators.required,
           txtMinLen: validators.minLength(15),
-          txtMaxLen: validators.maxLength(15),
+          txtMaxLen: validators.maxLength(15)
         },
         email: {
           required: validators.required,
-          email: validators.email,
+          email: validators.email
         },
         senha: {
           required: validators.required,
           txtMinLen: validators.minLength(4),
-          txtMaxLen: validators.maxLength(255),
+          txtMaxLen: validators.maxLength(255)
         },
         confSenha: {
           required: validators.required,
-          txtConfSenha: this.validarSenhasIguais,
+          txtConfSenha: this.validarSenhasIguais
         },
         dataNasc: {
           required: validators.required,
-          txtMaior: Rules.validarMaioridade,
+          txtMaior: Rules.validarMaioridade
         },
         servico: {
-          required: validators.required,
+          required: validators.required
         },
         tipoProf: {
-          required: validators.required,
-        },
-      },
+          required: validators.required
+        }
+      }
     };
   },
   methods: {
@@ -921,12 +921,11 @@ export default {
       const selectedOption = this.options.find(
         (option) => option.value === this.selectedPeople
       );
-      console.log("oi");
       if (selectedOption) {
         console.log("Label:", selectedOption.value);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 <style>

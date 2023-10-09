@@ -146,5 +146,251 @@ const Rules = {
 
     return milliseconds;
   },
+  validarHorario_Inicio(value) {
+    const dataHoraAtual = new Date();
+    const ano_ = dataHoraAtual.getFullYear();
+    const mes_ = String(dataHoraAtual.getMonth() + 1).padStart(2, "0");
+    const dia_ = String(dataHoraAtual.getDate()).padStart(2, "0");
+    var hora_ = String(dataHoraAtual.getHours()).padStart(2, "0");
+    var minutos_ = String(dataHoraAtual.getMinutes()).padStart(2, "0");
+    var _hora_ = parseInt(hora_);
+    var _minutos_ = parseInt(minutos_);
+    var milissegundos_ = (_hora_ * 60 + _minutos_) * 60 * 1000;
+    const dataAtual_ = `${ano_}-${mes_}-${dia_}`;
+    const dataAtual_milisegundos = Rules.convertToMilliseconds(dataAtual_);
+
+    const partes = value.split("T");
+    const horario_v = partes[1];
+    const data_value = new Date(value);
+    const ano_v = data_value.getFullYear();
+    const mes_v = String(data_value.getMonth() + 1).padStart(2, "0");
+    const dia_v = String(data_value.getDate()).padStart(2, "0");
+    const dataAtual_v = `${ano_v}-${mes_v}-${dia_v}`;
+    const data_v_milisegundos = Rules.convertToMilliseconds(dataAtual_v);
+    if (horario_v) {
+      const horario_partes = horario_v.split(":");
+      const hora_v = parseInt(horario_partes[0], 10);
+      const minutos_v = parseInt(horario_partes[1], 10);
+      var milissegundos_v = (hora_v * 60 + minutos_v) * 60 * 1000;
+    }
+
+    if (
+      data_v_milisegundos + milissegundos_v <
+      dataAtual_milisegundos + milissegundos_
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  },
+  validarHorario_Fim(horario_fim, horario_inicio) {
+    const partes = horario_fim.split("T");
+    const data_horario_fim = partes[1];
+    const data_value = new Date(horario_fim);
+    const ano_v = data_value.getFullYear();
+    const mes_v = String(data_value.getMonth() + 1).padStart(2, "0");
+    const dia_v = String(data_value.getDate()).padStart(2, "0");
+    const dataHorario_fim = `${ano_v}-${mes_v}-${dia_v}`;
+    const data_horario_fim_milisegundos =
+      Rules.convertToMilliseconds(dataHorario_fim);
+    if (data_horario_fim) {
+      const horario_partes = data_horario_fim.split(":");
+      const hora_v = parseInt(horario_partes[0], 10);
+      const minutos_v = parseInt(horario_partes[1], 10);
+      var milissegundos_horario_fim = (hora_v * 60 + minutos_v) * 60 * 1000;
+    }
+
+    const partes_inicio = horario_inicio.split("T");
+    const horario_inicioo = partes_inicio[1];
+    const data_horario_inicio = new Date(horario_inicio);
+    const ano_horario_incio = data_horario_inicio.getFullYear();
+    const mes_horario_incio = String(
+      data_horario_inicio.getMonth() + 1
+    ).padStart(2, "0");
+    const dia_horario_incio = String(data_horario_inicio.getDate()).padStart(
+      2,
+      "0"
+    );
+    const dataHorario_Iinicio = `${ano_horario_incio}-${mes_horario_incio}-${dia_horario_incio}`;
+    const data_horario_Inicio_milisegundos =
+      Rules.convertToMilliseconds(dataHorario_Iinicio);
+    if (horario_inicioo) {
+      const horario_partes_inicio = horario_inicioo.split(":");
+      const hora_inicio = parseInt(horario_partes_inicio[0], 10);
+      const minutos_inicio = parseInt(horario_partes_inicio[1], 10);
+      var milissegundos_horario_inicio =
+        (hora_inicio * 60 + minutos_inicio) * 60 * 1000;
+    }
+
+    if (
+      data_horario_fim_milisegundos + milissegundos_horario_fim <
+      data_horario_Inicio_milisegundos + milissegundos_horario_inicio
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  },
+  milissegundosParaData(milissegundos) {
+    // Crie um objeto de data usando os milissegundos
+    const data = new Date(milissegundos);
+
+    // Use métodos do objeto Date para obter a data, mês, ano, etc.
+    const dia = data.getDate();
+    const mes = data.getMonth() + 1; // Mês começa em zero, então adicione 1
+    const ano = data.getFullYear();
+    const hora = data.getHours();
+    const minuto = data.getMinutes();
+    const segundo = data.getSeconds();
+
+    // Formate a data como uma string no formato desejado (por exemplo, "dd/mm/aaaa hh:mm:ss")
+    const dataFormatada = `${dia}/${mes}/${ano} ${hora}:${minuto}:${segundo}`;
+
+    return dataFormatada;
+  },
+  milissegundosParaDataFormatada(milissegundos) {
+    // Crie um objeto de data usando os milissegundos
+    const data = new Date(milissegundos);
+
+    // Use métodos do objeto Date para obter o ano, mês e dia
+    const ano = data.getFullYear();
+    const mes = String(data.getMonth() + 1).padStart(2, "0"); // O mês começa em zero
+    const dia = String(data.getDate()).padStart(2, "0");
+
+    // Formate a data como uma string no formato 'yyyy-mm-dd'
+    const dataFormatada = `${ano}-${mes}-${dia}`;
+
+    return dataFormatada;
+  },
+  milissegundosParaDataFormatada_(milissegundos) {
+    // Crie um objeto de data usando os milissegundos
+    const data = new Date(milissegundos);
+
+    // Use o método toLocaleString() com opções para formatar a data
+    const opcoes = {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      timeZoneName: "short",
+    };
+
+    const dataFormatada = data.toLocaleString("en-US", opcoes);
+
+    return dataFormatada;
+  },
+  converterDataParaDiaSemana(dataString) {
+    const diasDaSemana = [
+      "Domingo",
+      "Segunda-feira",
+      "Terça-feira",
+      "Quarta-feira",
+      "Quinta-feira",
+      "Sexta-feira",
+      "Sábado",
+    ];
+
+    // Crie um objeto de data a partir da string
+    const data = new Date(dataString);
+
+    // Obtenha o índice do dia da semana (0 a 6)
+    const indiceDiaSemana = data.getDay();
+
+    // Use o índice para obter o nome do dia da semana em pt-BR
+    const diaSemana = diasDaSemana[indiceDiaSemana];
+
+    return diaSemana;
+  },
+  horarioParaMilissegundos(horario) {
+    //recebe  um formato 13:00:00 e converte em milisegundos
+    const partes = horario.split(":");
+    const horas = parseInt(partes[0], 10);
+    const minutos = parseInt(partes[1], 10);
+    const segundos = parseInt(partes[2], 10);
+
+    const milissegundosPorHora = 60 * 60 * 1000;
+    const milissegundosPorMinuto = 60 * 1000;
+    const milissegundosPorSegundo = 1000;
+
+    const totalMilissegundos =
+      horas * milissegundosPorHora +
+      minutos * milissegundosPorMinuto +
+      segundos * milissegundosPorSegundo;
+
+    return totalMilissegundos;
+  },
+  milissegundosParaHorario(milissegundos) {
+    //recebe  um formato  em milisegundos e convert em formata em hora 14:00:00
+    // Calcula horas, minutos e segundos a partir dos milissegundos
+    const segundosTotais = Math.floor(milissegundos / 1000);
+    const horas = Math.floor(segundosTotais / 3600);
+    const minutos = Math.floor((segundosTotais % 3600) / 60);
+    const segundos = segundosTotais % 60;
+
+    // Formata os valores em uma string no formato hh:mm:ss
+    const horarioFormatado = `${String(horas).padStart(2, "0")}:${String(
+      minutos
+    ).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`;
+
+    return horarioFormatado;
+  },
+  milissegundosParaMinutos(milissegundos) {
+    //Pega Milisegundos e converte em minutos
+    const minutos = Math.floor(milissegundos / 60000); // 1 minuto = 60.000 milissegundos
+    return minutos;
+  },
+  minutosParaMilissegundos(minutos) {
+    const milissegundos = minutos * 60000; // 1 minuto = 60.000 milissegundos
+    return milissegundos;
+  },
+  converterData(dataString) {
+    // converte a ( Quarta-feira, 27/09/2023 )  em data (2023-09-27)
+
+    // Mapeia os nomes dos dias da semana para números
+    // const diasSemana = {
+    //   Domingo: 0,
+    //   "Segunda-feira": 1,
+    //   "Terça-feira": 2,
+    //   "Quarta-feira": 3,
+    //   "Quinta-feira": 4,
+    //   "Sexta-feira": 5,
+    //   Sábado: 6
+    // };
+
+    // Divide a string em partes
+    const partes = dataString.split(", ");
+
+    // Extrai o dia da semana e a data
+    // const diaSemana = partes[0];
+    const data = partes[1];
+
+    // Divide a data em dia, mês e ano
+    const [dia, mes, ano] = data.split("/");
+
+    // // Formata o dia da semana como número de 0 a 6
+    // const numeroDiaSemana = diasSemana[diaSemana];
+
+    // Formata a data no formato desejado
+    const dataFormatada = `${ano}-${mes}-${dia}`;
+
+    return dataFormatada;
+  },
+  converter_Data(dataOriginal) {
+    //formato Wed Sep 27 2023 21:00:00 GMT-0300 (Hora padrão de Brasília)
+    const data = new Date(dataOriginal);
+    const ano = data.getFullYear();
+    const mes = (data.getMonth() + 1).toString().padStart(2, "0");
+    const dia = data.getDate().toString().padStart(2, "0");
+    return `${ano}-${mes}-${dia}`;
+  },
+  converterDataParaMilisegundos(dataFormatada) {
+    //dataFormatada = "2023-09-28";
+    const data = new Date(dataFormatada);
+    const milisegundos = data.getTime();
+    return milisegundos;
+  },
 };
 export default Rules;

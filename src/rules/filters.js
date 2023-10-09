@@ -45,6 +45,18 @@ export function formatarDataParaPtBR(data) {
   return `${dia}/${mes}/${ano}`;
 }
 
+export function formatarHorarioAgenda(hora) {
+  const partesData = hora.split(":");
+  if (partesData.length !== 3) {
+    throw new Error("Formato de Horario inválido. Use o formato 00:00:00.");
+  }
+
+  const horario = partesData[0];
+  const min = partesData[1];
+
+  return `${horario}:${min}`;
+}
+
 export function inverterDataPtBR(data) {
   const partesData = data.split("/");
   if (partesData.length !== 3) {

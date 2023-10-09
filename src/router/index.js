@@ -53,6 +53,10 @@ const HomeAgendamento = () =>
   import(
     /* webpackChunkName: "Home Agendamento" */ "@/components/agenda/HomeAgendamento"
   );
+const AgendaProfissional = () =>
+  import(
+    /* webpackChunkName: "Home Agendamento" */ "@/components/agenda/AgendaProfissional"
+  );
 
 Vue.use(VueRouter);
 
@@ -105,6 +109,17 @@ const routes = [
         meta: {
           public: false,
           label: "Agendamento",
+          requiresPermission: "admin",
+        },
+      },
+      {
+        path: "/agendaprofissional",
+        component: AgendaProfissional,
+        titulo: "Agenda Profissional",
+        name: "AgendaProfissional",
+        meta: {
+          public: false,
+          label: "AgendaProfissional",
           requiresPermission: "admin",
         },
       },

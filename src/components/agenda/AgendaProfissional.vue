@@ -131,17 +131,26 @@
                   >
                     EDITAR <i class="bx bx-edit-alt"></i>
                   </a>
+
                   <a
                     v-if="props.row.status === 'RESERVADO' ? true : false"
                     size="sm"
-                    class="btn btn-sm me-1 mb-1"
                     data-backdrop="static"
-                    title="EXCLUIR"
-                    :class="{ 'btn btn-danger': props.row.ativo }"
-                    style="background-color: #f0f8ff"
+                    :title="props.row.execucao"
+                    :class="{ 
+                      'btn btn-sm btn-danger me-1 mb-1':
+                           props.row.execucao === 'EXECUTAR',
+                          'btn btn-sm btn-warning me-1 mb-1':
+                            props.row.execucao ===
+                            'EXECUTANDO',
+                          'btn btn-sm btn-success me-1 mb-1':
+                            props.row.execucao === 'EXECUTADO',
+                    }"
                     @click="executar_Horario(props.row)"
                   >
-                    <i class="bx bx-time"></i> {{ btn_Inicio }}
+                    <b-overlay :show="props.row.btn_Inicio" rounded="sm">
+                      <i class="bx bx-time"></i>
+                    </b-overlay>
                   </a>
                 </span>
               </template>
@@ -297,7 +306,7 @@ export default {
       agenda: [],
       isLoadingAgenda: false,
       isLoadingProfissional: false,
-      btn_Inicio: "EXECUTAR",
+      btn_Inicio: false,
     };
   },
   watch: {
@@ -355,6 +364,7 @@ export default {
                 agenda.horario_inicio = formatarHorarioAgenda(
                   agenda.horario_inicio
                 );
+                agenda.btn_Inicio = false;
               });
               this.agenda = value.data.Agenda;
             }
@@ -413,14 +423,53 @@ export default {
       }
     },
     executar_Horario(i) {
-      console.log(i);
-      Object.keys(i).forEach((propriedade) => {
-        const valor = i[propriedade];
-        if (i[propriedade] === "RESERVADO") {
-          i[propriedade] = i[propriedade] + "01";
-        }
-        console.log(`${propriedade}: ${valor}`);
-      });
+      i.btn_Inicio = true;
+      if (i) {
+        ServiceAgenda.AtulizarExecucaoAgenda(i)
+          .then((value) => {
+            if (value.data.Success === true) {
+              ServiceAgenda.findAgendaProfissional(this.form)
+                .then((value) => {
+                  if (value.data.Success === true) {
+                    this.isLoadingAgenda = false;
+                    value.data.Agenda.map((agenda) => {
+                      agenda.data = formatarDataParaPtBR(agenda.data);
+                      agenda.horario_inicio = formatarHorarioAgenda(
+                        agenda.horario_inicio
+                      );
+                      agenda.btn_Inicio = false;
+                    });
+                    this.agenda = value.data.Agenda;
+                  }
+                  if (value.data.Success === false) {
+                    this.isLoadingAgenda = false;
+                    notyf.error(value.data.mensagem);
+                    this.agenda = [];
+                  }
+                })
+                .catch((error) => {
+                  this.isLoadingAgenda = false;
+                  console.error("Erro na requisição:", error);
+                });
+              i.btn_Inicio = false;
+            }
+            if (value.data.Success === false) {
+              i.btn_Inicio = false;
+              notyf.error("Serviço Já Executado");
+            }
+          })
+          .catch((error) => {
+            this.isLoadingAgenda = false;
+            console.error("Erro na requisição:", error);
+          });
+      }
+      // Object.keys(i).forEach((propriedade) => {
+      //   const valor = i[propriedade];
+      //   if (i[propriedade] === "RESERVADO") {
+      //     i[propriedade] = i[propriedade] + "01";
+      //   }
+      //   console.log(`${propriedade}: ${valor}`);
+      // });
     },
   },
 };
@@ -434,5 +483,17 @@ export default {
   color: rgba(228, 96, 96, 0.733);
   font-family: sans-serif;
   font-weight: 700;
+}
+.table-active-reservado {
+  --bs-table-accent-bg: rgba(228, 96, 96, 0.733);
+  color: var(--bs-table-active-color);
+}
+.table-active-livre {
+  --bs-table-accent-bg: rgb(40 187 120 / 62%);
+  color: var(--bs-table-active-color);
+}
+.table-active-fechado {
+  --bs-table-accent-bg: rgba(184, 187, 185, 0.486);
+  color: var(--bs-table-active-color);
 }
 </style>

@@ -16,7 +16,7 @@
                     placeholder="Modelo"
                     v-model="form.modelo"
                     :class="{
-                      'fail-error': $v.form.modelo.$error
+                      'fail-error': $v.form.modelo.$error,
                     }"
                     ref="modelo"
                     @keydown.enter.prevent="moveFocus(1)"
@@ -37,7 +37,7 @@
                     placeholder="Série"
                     v-model="form.serie"
                     :class="{
-                      'fail-error': $v.form.serie.$error
+                      'fail-error': $v.form.serie.$error,
                     }"
                     ref="serie"
                     @keydown.enter.prevent="moveFocus(2)"
@@ -58,12 +58,11 @@
                     placeholder="Número"
                     v-model="form.numero_nota"
                     :class="{
-                      'fail-error': $v.form.numero_nota.$error
+                      'fail-error': $v.form.numero_nota.$error,
                     }"
                     ref="numero_nota"
                     @keydown.enter.prevent="moveFocus(3)"
                     :disabled="form.desabilita_step1"
-                    @blur="ValidaNumeroNota(form.numero_nota)"
                   ></b-form-input>
                   <small class="small-msg">
                     {{ validationMsg($v.form.numero_nota) }}
@@ -83,7 +82,7 @@
                     v-model="form.id_fornecedor"
                     :title="form.id_fornecedor"
                     :class="{
-                      'fail-error': $v.form.id_fornecedor.$error
+                      'fail-error': $v.form.id_fornecedor.$error,
                     }"
                     :disabled="form.desabilita_step1"
                     ref="id_fornecedor"
@@ -112,7 +111,7 @@
                         v-model="form.fornecedor"
                         :title="form.fornecedor"
                         :class="{
-                          'fail-error': $v.form.fornecedor.$error
+                          'fail-error': $v.form.fornecedor.$error,
                         }"
                         disabled
                       ></b-form-input>
@@ -143,7 +142,7 @@
                     v-model="form.data_emissao"
                     :max="maxDate"
                     :class="{
-                      'fail-error': $v.form.data_emissao.$error
+                      'fail-error': $v.form.data_emissao.$error,
                     }"
                     :disabled="form.desabilita_step1"
                     @blur="ValidaDataEmissao"
@@ -159,7 +158,7 @@
                     type="date"
                     v-model="form.data_chegada"
                     :class="{
-                      'fail-error': $v.form.data_chegada.$error
+                      'fail-error': $v.form.data_chegada.$error,
                     }"
                     :min="minDate"
                     :disabled="form.desabilita_step1"
@@ -179,7 +178,7 @@
             <div
               v-if="true"
               class="slow-motion-div mt-4"
-              :class="{ card_produto_disabled: !todosParametrosPreenchidos }"
+              :class="{ card_produto_disabled: !teste }"
             >
               <b-card :header-html="textCard_Produto" class="text-start">
                 <div v-if="mostrarBlocoProduto" class="row mt-02">
@@ -189,7 +188,7 @@
                       id="id_produto"
                       v-model="validaProdutos.id_produto"
                       :class="{
-                        'fail-error': $v.validaProdutos.id_produto.$error
+                        'fail-error': $v.validaProdutos.id_produto.$error,
                       }"
                       type="number"
                       placeholder="Código"
@@ -219,7 +218,7 @@
                           type="text"
                           placeholder="Produto"
                           :class="{
-                            'fail-error': $v.validaProdutos.produto.$error
+                            'fail-error': $v.validaProdutos.produto.$error,
                           }"
                           disabled
                         >
@@ -250,7 +249,7 @@
                       type="text"
                       placeholder="Unidade"
                       :class="{
-                        'fail-error': $v.validaProdutos.unidade.$error
+                        'fail-error': $v.validaProdutos.unidade.$error,
                       }"
                       disabled
                     >
@@ -271,7 +270,7 @@
                       type="number"
                       placeholder="Quantidade"
                       :class="{
-                        'fail-error': $v.validaProdutos.quantidade.$error
+                        'fail-error': $v.validaProdutos.quantidade.$error,
                       }"
                       ref="quantidade"
                       @keydown.enter.prevent="moveFocus(6)"
@@ -302,7 +301,7 @@
                         v-model="validaProdutos.valor_unitario"
                         placeholder="0,00"
                         :class="{
-                          'fail-error': $v.validaProdutos.valor_unitario.$error
+                          'fail-error': $v.validaProdutos.valor_unitario.$error,
                         }"
                         ref="valor_unitario"
                         @keydown.enter.prevent="moveFocus(7)"
@@ -330,7 +329,7 @@
                       <b-form-input
                         id="desconto"
                         :class="{
-                          'fail-error': $v.validaProdutos.desconto.$error
+                          'fail-error': $v.validaProdutos.desconto.$error,
                         }"
                         v-model="validaProdutos.desconto"
                         type="number"
@@ -432,7 +431,7 @@
                               type="number"
                               class="form-control text-center"
                               :class="{
-                                'fail-error': form.produtos[key].msgErrorQtd
+                                'fail-error': form.produtos[key].msgErrorQtd,
                               }"
                               v-model="item.qtd_produto"
                               :disabled="!item.editing"
@@ -450,7 +449,7 @@
                               type="text"
                               class="form-control text-center"
                               :class="{
-                                'fail-error': form.produtos[key].msgErrorvl
+                                'fail-error': form.produtos[key].msgErrorvl,
                               }"
                               v-model="item.valor_unitario"
                               :disabled="!item.editing"
@@ -467,7 +466,7 @@
                               type="text"
                               class="form-control text-center"
                               :class="{
-                                'fail-error': form.produtos[key].msgErrorPer
+                                'fail-error': form.produtos[key].msgErrorPer,
                               }"
                               v-model="item.desconto"
                               :disabled="!item.editing"
@@ -564,7 +563,7 @@
                         v-model="form.frete"
                         type="number"
                         :class="{
-                          'fail-error': $v.form.frete.$error
+                          'fail-error': $v.form.frete.$error,
                         }"
                         placeholder="0,00"
                         ref="frete"
@@ -584,7 +583,7 @@
                         type="number"
                         placeholder="0,00"
                         :class="{
-                          'fail-error': $v.form.seguro.$error
+                          'fail-error': $v.form.seguro.$error,
                         }"
                         ref="seguro"
                         @keydown.enter.prevent="moveFocus(11)"
@@ -601,7 +600,7 @@
                         id="outras_despesas"
                         v-model="form.outras_despesas"
                         :class="{
-                          'fail-error': $v.form.outras_despesas.$error
+                          'fail-error': $v.form.outras_despesas.$error,
                         }"
                         type="number"
                         placeholder="0,00"
@@ -666,7 +665,7 @@
                         id="id_condicaopg"
                         type="number"
                         :class="{
-                          'fail-error': $v.form.id_condicaopg.$error
+                          'fail-error': $v.form.id_condicaopg.$error,
                         }"
                         v-model="form.id_condicaopg"
                         placeholder="Código"
@@ -697,7 +696,7 @@
                             id="fornecedor"
                             type="text"
                             :class="{
-                              'fail-error': $v.form.id_condicaopg.$error
+                              'fail-error': $v.form.id_condicaopg.$error,
                             }"
                             placeholder="Condição de Pagamento"
                             v-model="form.condicaopg"
@@ -996,7 +995,7 @@ import {
   inverterDataPtBR,
   currencyFormat,
   formatarDataParaPtBR,
-  extrairNumero
+  extrairNumero,
 } from "../../rules/filters";
 import Rules from "../../rules/rules";
 import { Decimal } from "decimal.js";
@@ -1021,13 +1020,13 @@ const formMessages = {
   maxValuePercent: () => "Excedeu 100% da(s) parcelas",
   textDataEmissao: () => "Data Posterior a Data Atual",
   textDataChegada: () => "Data anterior a Data de Emissão",
-  inputZero: () => "Campo não pode ser ZERO '0' "
+  inputZero: () => "Campo não pode ser ZERO '0' ",
 };
 import { Notyf } from "notyf";
 const notyf = new Notyf({
   position: {
     x: "center",
-    y: "top"
+    y: "top",
   },
   types: [
     {
@@ -1036,20 +1035,20 @@ const notyf = new Notyf({
       icon: {
         className: "material-icons",
         tagName: "i",
-        text: "warning"
-      }
+        text: "warning",
+      },
     },
     {
       type: "error",
       background: "indianred",
       duration: 5000,
-      dismissible: true
-    }
-  ]
+      dismissible: true,
+    },
+  ],
 });
 export default {
   props: {
-    formulario: { type: Object }
+    formulario: { type: Object },
   },
   components: { HomeFornecedor, HomeProduto, HomeCondicaoPagamento },
   data() {
@@ -1094,7 +1093,7 @@ export default {
         condicaopagamento: [],
         desabilita_step1: false,
         desabilita_step2: false,
-        desabilita_step3: false
+        desabilita_step3: false,
       },
       maxDate: "", // Define a data máxima como a data atual
       minDate: "", // Define a data mínima como a data atual
@@ -1114,8 +1113,9 @@ export default {
         unidade: "",
         quantidade: "",
         valor_unitario: "",
-        desconto: ""
-      }
+        desconto: "",
+      },
+      teste: false,
     };
   },
   beforeCreate() {},
@@ -1134,7 +1134,7 @@ export default {
   },
   computed: {
     todosParametrosPreenchidos() {
-      return (
+      if (
         !this.$v.form.modelo.$invalid &&
         !this.$v.form.serie.$invalid &&
         !this.$v.form.numero_nota.$invalid &&
@@ -1142,11 +1142,29 @@ export default {
         !this.$v.form.fornecedor.$invalid &&
         !this.$v.form.data_emissao.$invalid &&
         !this.$v.form.data_chegada.$invalid
-      );
+      ) {
+        var validad = this.verificaNumCompra(
+          this.form.modelo,
+          this.form.serie,
+          this.form.numero_nota,
+          this.form.id_fornecedor
+        );
+      }
+      // return (
+      //   !this.$v.form.modelo.$invalid &&
+      //   !this.$v.form.serie.$invalid &&
+      //   !this.$v.form.numero_nota.$invalid &&
+      //   !this.$v.form.id_fornecedor.$invalid &&
+      //   !this.$v.form.fornecedor.$invalid &&
+      //   !this.$v.form.data_emissao.$invalid &&
+      //   !this.$v.form.data_chegada.$invalid
+      // );
+      console.log(validad);
+      return validad;
     },
     produtosPreenchidos() {
       return !this.$v.form.produtos.$invalid;
-    }
+    },
   },
   watch: {
     "form.frete"(newValue) {
@@ -1267,98 +1285,98 @@ export default {
           this.setCondicaoPagamento(this.obj_condicao, num);
         }
       }
-    }
+    },
   },
   validations: {
     validaProdutos: {
       id_produto: {
         required: validators.required,
-        integer: validators.integer
+        integer: validators.integer,
       },
       produto: {
-        required: validators.required
+        required: validators.required,
       },
       unidade: {
-        required: validators.required
+        required: validators.required,
       },
       quantidade: {
         required: validators.required,
         integer: validators.integer,
-        inputZero: Rules.isPositiveNumber
+        inputZero: Rules.isPositiveNumber,
       },
       valor_unitario: {
         required: validators.required,
         inputZero: Rules.isPositiveNumber,
         txtNumeroisPositivo: Rules.isNumber,
-        decimal: validators.decimal
+        decimal: validators.decimal,
       },
       desconto: {
         required: validators.required,
         decimal: validators.decimal,
         maxValue: validators.maxValue(100),
         minValuePorcentagem: validators.minValue(0),
-        txtNumeroisPositivo: Rules.isNumber
-      }
+        txtNumeroisPositivo: Rules.isNumber,
+      },
     },
     form: {
       modelo: {
         required: validators.required,
         integer: validators.integer,
         txtNumeroisPositivo: Rules.isNumber,
-        inputZero: Rules.isPositiveNumber
+        inputZero: Rules.isPositiveNumber,
       },
       serie: {
         required: validators.required,
         integer: validators.integer,
         txtNumeroisPositivo: Rules.isNumber,
-        inputZero: Rules.isPositiveNumber
+        inputZero: Rules.isPositiveNumber,
       },
       numero_nota: {
         required: validators.required,
         integer: validators.integer,
         txtNumeroisPositivo: Rules.isNumber,
-        inputZero: Rules.isPositiveNumber
+        inputZero: Rules.isPositiveNumber,
       },
       id_fornecedor: {
         required: validators.required,
         integer: validators.integer,
-        txtNumeroisPositivo: Rules.isNumber
+        txtNumeroisPositivo: Rules.isNumber,
       },
       fornecedor: {
-        required: validators.required
+        required: validators.required,
       },
       data_emissao: {
         required: validators.required,
-        textDataEmissao: Rules.validardataEmissao
+        textDataEmissao: Rules.validardataEmissao,
       },
       data_chegada: {
         required: validators.required,
         textDataChegada: function ValidaData(value) {
           return Rules.validarDataEmissao(value, this.form.data_emissao);
-        }
+        },
       },
       id_condicaopg: {
-        required: validators.required
+        required: validators.required,
       },
       condicaopg: {
-        required: validators.required
+        required: validators.required,
       },
       produtos: {
-        required_Produto: validators.required
+        required_Produto: validators.required,
       },
       condicaopagamento: {
-        required_Condicao: validators.required
+        required_Condicao: validators.required,
       },
       frete: {
-        txtNumeroisPositivo: Rules.isNumber
+        txtNumeroisPositivo: Rules.isNumber,
       },
       seguro: {
-        txtNumeroisPositivo: Rules.isNumber
+        txtNumeroisPositivo: Rules.isNumber,
       },
       outras_despesas: {
-        txtNumeroisPositivo: Rules.isNumber
-      }
-    }
+        txtNumeroisPositivo: Rules.isNumber,
+      },
+    },
   },
   methods: {
     validationMsg: validationMessage(formMessages),
@@ -1552,7 +1570,7 @@ export default {
             editing: false,
             msgErrorQtd: false,
             msgErrorPer: false,
-            msgErrorvl: false
+            msgErrorvl: false,
           });
 
           this.form.total_produtos = this.calcTotalProduto(this.form.produtos);
@@ -1717,7 +1735,7 @@ export default {
             id_formapagamento: obj.parcelas[i].formaPagamento[0].id,
             formaPagamento: obj.parcelas[i].formaPagamento[0].forma_pg,
             data_vecimento: formatarDataParaPtBR(datavencimento),
-            valor_parcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100
+            valor_parcela: (valor_parcela * obj.parcelas[i].porcentagem) / 100,
           });
         }
         this.form.condicaopagamento.map(function (c) {
@@ -2002,7 +2020,7 @@ export default {
         this.$refs.frete,
         this.$refs.seguro,
         this.$refs.outras_despesas,
-        this.$refs.id_condicaopg
+        this.$refs.id_condicaopg,
         // ... mais referências de b-form-input ...
       ];
 
@@ -2124,11 +2142,29 @@ export default {
     ValidaDataChegada() {
       this.$v.form.data_chegada.$touch();
     },
-    ValidaFornecedor(){
+    ValidaFornecedor() {
       this.$v.form.id_fornecedor.$touch();
       this.$v.form.fornecedor.$touch();
-    }
-  }
+    },
+    verificaNumCompra(modelo_, serie_, numero_nota_, id_fornecedor_) {
+      var modelo = modelo_;
+      var serie = serie_;
+      var numero_nota = numero_nota_;
+      var id_fornecedor = id_fornecedor_;
+      var data = {
+        modelo: modelo,
+        serie: serie,
+        numero_nota: numero_nota,
+        id_fornecedor: id_fornecedor,
+      };
+      console.log(data);
+      ServiceCompra.verificaNumCompra(data).then((response) => {
+        console.log(response.data);
+        this.teste = response.data;
+        return response.data;
+      });
+    },
+  },
 };
 </script>
 <style>

@@ -178,6 +178,8 @@ export default {
       //   this.funcGetById(id, titulo, btn, disabled);
     },
     ShowModalFormCompra() {
+      this.form_compra.desabilita_step2 = true;
+      this.form_compra.desabilita_step3 = true;
       this.form_compra.titulo = "Cadastrar Nova Compra";
       this.form_compra.headerForm =
         "<span class='Text-Card'>Nova Compra</span>";

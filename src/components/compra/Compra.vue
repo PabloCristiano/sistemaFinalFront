@@ -61,6 +61,7 @@
                       'fail-error': $v.form.numero_nota.$error,
                     }"
                     ref="numero_nota"
+                    @blur="ValidaNumeroNota"
                     @keydown.enter.prevent="moveFocus(3)"
                     :disabled="form.desabilita_step1"
                   ></b-form-input>
@@ -170,6 +171,15 @@
                 </div>
               </div>
             </div>
+            <transition v-if="msg_1" name="slow-motion" appear>
+              <div
+                v-if="msg_1"
+                class="mt-3 col-8 offset-2 mt-1 alert alert-success text-center"
+                role="alert"
+              >
+                Pedido de Compra já cadastrado !
+              </div>
+            </transition>
           </div>
           <!-- card Produto -->
           <!-- :class="{ card_produto_disabled: !todosParametrosPreenchidos }" -->
@@ -178,7 +188,7 @@
             <div
               v-if="true"
               class="slow-motion-div mt-4"
-              :class="{ card_produto_disabled: !teste }"
+              :class="{ card_produto_disabled: false }"
             >
               <b-card :header-html="textCard_Produto" class="text-start">
                 <div v-if="mostrarBlocoProduto" class="row mt-02">
@@ -636,22 +646,33 @@
                 </template>
               </b-card>
               <div v-if="$v.form.produtos.$error" class="col text-center">
-                <div
-                  class="d-flex justify-content-center align-items-center col-12 mt-2"
+                <transition
+                  v-if="$v.form.produtos.$error"
+                  name="slow-motion"
+                  appear
                 >
-                  <div class="col-12 alert alert-danger" role="alert">
-                    {{ validationMsg($v.form.produtos) }}
+                  <div
+                    class="d-flex justify-content-center align-items-center col-8 offset-2 mt-2"
+                  >
+                    <div class="col-12 alert alert-danger" role="alert">
+                      {{ validationMsg($v.form.produtos) }}
+                    </div>
                   </div>
-                </div>
+                </transition>
               </div>
             </div>
           </transition>
           <!-- card Condição Pagamento -->
+          <!-- <div
+              v-if="true"
+              class="slow-motion-div mt-4"
+              :class="{ card_produto_disabled: !produtosPreenchidos }"
+            > -->
           <transition name="slow-motion" appear>
             <div
               v-if="true"
               class="slow-motion-div mt-4"
-              :class="{ card_produto_disabled: !produtosPreenchidos }"
+              :class="{ card_produto_disabled: false }"
             >
               <b-card
                 :header-html="textCard_CondicaoPagamento"
@@ -815,13 +836,19 @@
                 v-if="$v.form.condicaopagamento.$error"
                 class="col text-center"
               >
-                <div
-                  class="d-flex justify-content-center align-items-center col-12 mt-2"
+                <transition
+                  v-if="$v.form.condicaopagamento.$error"
+                  name="slow-motion"
+                  appear
                 >
-                  <div class="col-8 alert alert-danger" role="alert">
-                    {{ validationMsg($v.form.condicaopagamento) }}
+                  <div
+                    class="d-flex justify-content-center align-items-center col-12 mt-2"
+                  >
+                    <div class="col-8 alert alert-danger" role="alert">
+                      {{ validationMsg($v.form.condicaopagamento) }}
+                    </div>
                   </div>
-                </div>
+                </transition>
               </div>
             </div>
           </transition>
@@ -842,7 +869,7 @@
           >
             Cancelar
           </b-button>
-          <div v-if="!form.desabilita_step3">
+          <div>
             <b-button
               class="btn btn-sm me-1"
               :class="{ disabled: buttonLock }"
@@ -1115,7 +1142,7 @@ export default {
         valor_unitario: "",
         desconto: "",
       },
-      teste: false,
+      msg_1: false,
     };
   },
   beforeCreate() {},
@@ -1134,23 +1161,7 @@ export default {
   },
   computed: {
     todosParametrosPreenchidos() {
-      if (
-        !this.$v.form.modelo.$invalid &&
-        !this.$v.form.serie.$invalid &&
-        !this.$v.form.numero_nota.$invalid &&
-        !this.$v.form.id_fornecedor.$invalid &&
-        !this.$v.form.fornecedor.$invalid &&
-        !this.$v.form.data_emissao.$invalid &&
-        !this.$v.form.data_chegada.$invalid
-      ) {
-        var validad = this.verificaNumCompra(
-          this.form.modelo,
-          this.form.serie,
-          this.form.numero_nota,
-          this.form.id_fornecedor
-        );
-      }
-      // return (
+      // if (
       //   !this.$v.form.modelo.$invalid &&
       //   !this.$v.form.serie.$invalid &&
       //   !this.$v.form.numero_nota.$invalid &&
@@ -1158,9 +1169,24 @@ export default {
       //   !this.$v.form.fornecedor.$invalid &&
       //   !this.$v.form.data_emissao.$invalid &&
       //   !this.$v.form.data_chegada.$invalid
-      // );
-      console.log(validad);
-      return validad;
+      // ) {
+      //   this.verificaNumCompra(
+      //     this.form.modelo,
+      //     this.form.serie,
+      //     this.form.numero_nota,
+      //     this.form.id_fornecedor
+      //   );
+      // }
+
+      return (
+        !this.$v.form.modelo.$invalid &&
+        !this.$v.form.serie.$invalid &&
+        !this.$v.form.numero_nota.$invalid &&
+        !this.$v.form.id_fornecedor.$invalid &&
+        !this.$v.form.fornecedor.$invalid &&
+        !this.$v.form.data_emissao.$invalid &&
+        !this.$v.form.data_chegada.$invalid
+      );
     },
     produtosPreenchidos() {
       return !this.$v.form.produtos.$invalid;
@@ -1284,6 +1310,126 @@ export default {
           num = currency(num);
           this.setCondicaoPagamento(this.obj_condicao, num);
         }
+      }
+    },
+    "form.modelo"() {
+      this.msg_1 = false;
+      this.form.desabilita_step2 = true;
+      if (
+        !this.$v.form.modelo.$invalid &&
+        !this.$v.form.serie.$invalid &&
+        !this.$v.form.numero_nota.$invalid &&
+        !this.$v.form.id_fornecedor.$invalid &&
+        !this.$v.form.fornecedor.$invalid &&
+        !this.$v.form.data_emissao.$invalid &&
+        !this.$v.form.data_chegada.$invalid
+      ) {
+        this.verificaNumCompra(
+          this.form.modelo,
+          this.form.serie,
+          this.form.numero_nota,
+          this.form.id_fornecedor
+        );
+      }
+    },
+    "form.serie"() {
+      this.msg_1 = false;
+      this.form.desabilita_step2 = true;
+      if (
+        !this.$v.form.modelo.$invalid &&
+        !this.$v.form.serie.$invalid &&
+        !this.$v.form.numero_nota.$invalid &&
+        !this.$v.form.id_fornecedor.$invalid &&
+        !this.$v.form.fornecedor.$invalid &&
+        !this.$v.form.data_emissao.$invalid &&
+        !this.$v.form.data_chegada.$invalid
+      ) {
+        this.verificaNumCompra(
+          this.form.modelo,
+          this.form.serie,
+          this.form.numero_nota,
+          this.form.id_fornecedor
+        );
+      }
+    },
+    "form.numero_nota"() {
+      this.msg_1 = false;
+      this.form.desabilita_step2 = true;
+      if (
+        !this.$v.form.modelo.$invalid &&
+        !this.$v.form.serie.$invalid &&
+        !this.$v.form.numero_nota.$invalid &&
+        !this.$v.form.id_fornecedor.$invalid &&
+        !this.$v.form.fornecedor.$invalid &&
+        !this.$v.form.data_emissao.$invalid &&
+        !this.$v.form.data_chegada.$invalid
+      ) {
+        this.verificaNumCompra(
+          this.form.modelo,
+          this.form.serie,
+          this.form.numero_nota,
+          this.form.id_fornecedor
+        );
+      }
+    },
+    "form.id_fornecedor"() {
+      this.msg_1 = false;
+      this.form.desabilita_step2 = true;
+      if (
+        !this.$v.form.modelo.$invalid &&
+        !this.$v.form.serie.$invalid &&
+        !this.$v.form.numero_nota.$invalid &&
+        !this.$v.form.id_fornecedor.$invalid &&
+        !this.$v.form.fornecedor.$invalid &&
+        !this.$v.form.data_emissao.$invalid &&
+        !this.$v.form.data_chegada.$invalid
+      ) {
+        this.verificaNumCompra(
+          this.form.modelo,
+          this.form.serie,
+          this.form.numero_nota,
+          this.form.id_fornecedor
+        );
+      }
+    },
+    "form.data_emissao"() {
+      this.msg_1 = false;
+      this.form.desabilita_step2 = true;
+      if (
+        !this.$v.form.modelo.$invalid &&
+        !this.$v.form.serie.$invalid &&
+        !this.$v.form.numero_nota.$invalid &&
+        !this.$v.form.id_fornecedor.$invalid &&
+        !this.$v.form.fornecedor.$invalid &&
+        !this.$v.form.data_emissao.$invalid &&
+        !this.$v.form.data_chegada.$invalid
+      ) {
+        this.verificaNumCompra(
+          this.form.modelo,
+          this.form.serie,
+          this.form.numero_nota,
+          this.form.id_fornecedor
+        );
+      }
+    },
+    "form.data_chegada"() {
+      this.msg_1 = false;
+      this.form.desabilita_step2 = true;
+      if (
+        !this.$v.form.modelo.$invalid &&
+        !this.$v.form.serie.$invalid &&
+        !this.$v.form.numero_nota.$invalid &&
+        !this.$v.form.id_fornecedor.$invalid &&
+        !this.$v.form.fornecedor.$invalid &&
+        !this.$v.form.data_emissao.$invalid &&
+        !this.$v.form.data_chegada.$invalid
+      ) {
+        this.verificaNumCompra(
+          this.form.modelo,
+          this.form.serie,
+          this.form.numero_nota,
+          this.form.id_fornecedor
+        );
       }
     },
   },
@@ -1466,8 +1612,7 @@ export default {
     },
     setCompra(obj) {
       if (obj) {
-        console.log(obj),
-          (this.form.desabilita_step1 = obj.desabilita_step1),
+        (this.form.desabilita_step1 = obj.desabilita_step1),
           (this.form.desabilita_step2 = obj.desabilita_step2),
           (this.form.desabilita_step3 = obj.desabilita_step3),
           (this.form.modelo = obj.modelo),
@@ -1595,6 +1740,9 @@ export default {
           this.form.produtos.length > 0
             ? (this.form.desabilita_step1 = true)
             : (this.form.desabilita_step1 = false);
+          this.form.produtos.length > 0
+            ? (this.form.desabilita_step3 = false)
+            : (this.form.desabilita_step3 = true);
         }
       }
     },
@@ -1782,6 +1930,9 @@ export default {
       this.form.produtos.length > 0
         ? (this.form.desabilita_step1 = true)
         : (this.form.desabilita_step1 = false);
+      this.form.produtos.length > 0
+        ? (this.form.desabilita_step3 = false)
+        : (this.form.desabilita_step3 = true);
     },
     toggleEditingProdutos(index) {
       this.form.produtos[index].editing = !this.form.produtos[index].editing;
@@ -2104,22 +2255,8 @@ export default {
         this.condicaoPagamentoDebounce(0);
       }
     },
-    ValidaNumeroNota(numero_nota) {
-      console.log(numero_nota);
-      ServiceCompra.validaNumNota(numero_nota).then((response) => {
-        console.log(response);
-        if (response.status === 200) {
-          return true;
-        }
-
-        notyf.error(
-          "Número Nota:   " +
-            this.form.numero_nota +
-            "    " +
-            response.response.data.errors.numero_nota[0]
-        );
-        (this.form.numero_nota = ""), this.$v.form.numero_nota.$touch();
-      });
+    ValidaNumeroNota() {
+      this.$v.form.numero_nota.$touch();
     },
     ValidaSerie() {
       this.$v.form.serie.$touch();
@@ -2157,10 +2294,9 @@ export default {
         numero_nota: numero_nota,
         id_fornecedor: id_fornecedor,
       };
-      console.log(data);
       ServiceCompra.verificaNumCompra(data).then((response) => {
-        console.log(response.data);
-        this.teste = response.data;
+        this.msg_1 = !response.data;
+        this.form.desabilita_step2 = this.msg_1;
         return response.data;
       });
     },

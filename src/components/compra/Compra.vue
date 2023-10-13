@@ -869,13 +869,14 @@
           >
             Cancelar
           </b-button>
-          <div>
+          <div v-if="true">
             <b-button
               class="btn btn-sm me-1"
               :class="{ disabled: buttonLock }"
               type="button"
               variant="dark"
               @click.prevent="onSubmit()"
+              :disabled="form.desabilita_step3"
             >
               Salvar<i class="bx bx-check"></i>
             </b-button>
@@ -1161,23 +1162,6 @@ export default {
   },
   computed: {
     todosParametrosPreenchidos() {
-      // if (
-      //   !this.$v.form.modelo.$invalid &&
-      //   !this.$v.form.serie.$invalid &&
-      //   !this.$v.form.numero_nota.$invalid &&
-      //   !this.$v.form.id_fornecedor.$invalid &&
-      //   !this.$v.form.fornecedor.$invalid &&
-      //   !this.$v.form.data_emissao.$invalid &&
-      //   !this.$v.form.data_chegada.$invalid
-      // ) {
-      //   this.verificaNumCompra(
-      //     this.form.modelo,
-      //     this.form.serie,
-      //     this.form.numero_nota,
-      //     this.form.id_fornecedor
-      //   );
-      // }
-
       return (
         !this.$v.form.modelo.$invalid &&
         !this.$v.form.serie.$invalid &&
@@ -2299,6 +2283,10 @@ export default {
         this.form.desabilita_step2 = this.msg_1;
         return response.data;
       });
+      console.log(this.form.condicaopagamento.length > 0);
+      if (this.form.condicaopagamento) {
+        console.log(this.form);
+      }
     },
   },
 };

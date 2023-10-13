@@ -147,6 +147,8 @@ export default {
                 obj.desabilita_step1 = false;
                 obj.desabilita_step2 = false;
                 obj.desabilita_step3 = false;
+                obj.msg_1 =false;
+                obj.flag = false;
                 return obj;
               });
             }
@@ -167,6 +169,7 @@ export default {
       row.desabilita_step1 = true;
       row.desabilita_step2 = true;
       row.desabilita_step3 = true;
+      row.flag = false;
       this.$router.push({
         name: "adicionarCompra",
         params: { formulario: row },

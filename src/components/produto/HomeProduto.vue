@@ -170,7 +170,6 @@ export default {
       ServiceProduto.getAll()
         .then((obj) => {
           if (obj) {
-            console.log(obj)
             obj.map((produto)=>{
              produto.precoVenda = currency_t(produto.precoVenda)
             });

@@ -1154,7 +1154,6 @@ export default {
     if (!this.formulario) {
       this.$router.push({ name: "compra" });
     } else {
-      console.log(this.formulario);
       this.setCompra(this.formulario);
       this.form.frete = this.form.frete.toFixed(5);
       this.form.seguro = this.form.seguro.toFixed(5);
@@ -1522,7 +1521,6 @@ export default {
       } else {
         //clone
         let payLoad = this.convertPayLoad(this.form);
-        console.log(payLoad);
         ServiceCompra.storeCompra(payLoad)
           .then((response) => {
             if (response.status === 200) {

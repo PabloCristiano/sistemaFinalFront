@@ -122,36 +122,38 @@
             >
               <template slot="table-row" slot-scope="props">
                 <span v-if="props.column.field === 'btn'">
-                  <a
-                    size="sm"
-                    class="btn btn-sm me-1 mb-1"
-                    data-backdrop="static"
-                    title="EDITAR"
-                    style="background-color: #f0f8ff"
-                  >
-                    EDITAR <i class="bx bx-edit-alt"></i>
-                  </a>
+                  <span v-if="props.row.status === 'RESERVADO' ? true : false">
+                    <a
+                      size="sm"
+                      class="btn btn-sm me-1 mb-1"
+                      data-backdrop="static"
+                      title="EDITAR"
+                      style="background-color: #f0f8ff"
+                      @click="cancelar_Horario(props.row)"
+                    >
+                      CANCELAR <i class="bx bx-edit-alt"></i>
+                    </a>
 
-                  <a
-                    v-if="props.row.status === 'RESERVADO' ? true : false"
-                    size="sm"
-                    data-backdrop="static"
-                    :title="props.row.execucao"
-                    :class="{ 
-                      'btn btn-sm btn-danger me-1 mb-1':
-                           props.row.execucao === 'EXECUTAR',
-                          'btn btn-sm btn-warning me-1 mb-1':
-                            props.row.execucao ===
-                            'EXECUTANDO',
-                          'btn btn-sm btn-success me-1 mb-1':
-                            props.row.execucao === 'EXECUTADO',
-                    }"
-                    @click="executar_Horario(props.row)"
-                  >
-                    <b-overlay :show="props.row.btn_Inicio" rounded="sm">
-                      <i class="bx bx-time"></i>
-                    </b-overlay>
-                  </a>
+                    <a
+                      v-if="props.row.status === 'RESERVADO' ? true : false"
+                      size="sm"
+                      data-backdrop="static"
+                      :title="props.row.execucao"
+                      :class="{
+                        'btn btn-sm btn-danger me-1 mb-1':
+                          props.row.execucao === 'EXECUTAR',
+                        'btn btn-sm btn-warning me-1 mb-1':
+                          props.row.execucao === 'EXECUTANDO',
+                        'btn btn-sm btn-success me-1 mb-1':
+                          props.row.execucao === 'EXECUTADO',
+                      }"
+                      @click="executar_Horario(props.row)"
+                    >
+                      <b-overlay :show="props.row.btn_Inicio" rounded="sm">
+                        <i class="bx bx-time"></i>
+                      </b-overlay>
+                    </a>
+                  </span>
                 </span>
               </template>
             </vue-good-table>
@@ -470,6 +472,9 @@ export default {
       //   }
       //   console.log(`${propriedade}: ${valor}`);
       // });
+    },
+    cancelar_Horario(obj) {
+      console.log(obj);
     },
   },
 };

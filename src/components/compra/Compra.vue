@@ -1154,6 +1154,7 @@ export default {
     if (!this.formulario) {
       this.$router.push({ name: "compra" });
     } else {
+      console.log(this.formulario);
       this.setCompra(this.formulario);
       this.form.frete = this.form.frete.toFixed(5);
       this.form.seguro = this.form.seguro.toFixed(5);
@@ -2281,12 +2282,11 @@ export default {
       ServiceCompra.verificaNumCompra(data).then((response) => {
         this.msg_1 = !response.data;
         this.form.desabilita_step2 = this.msg_1;
+        if (this.form.condicaopagamento.length > 0) {
+          this.msg_1 = response.data;
+        }
         return response.data;
       });
-      console.log(this.form.condicaopagamento.length > 0);
-      if (this.form.condicaopagamento) {
-        console.log(this.form);
-      }
     },
   },
 };

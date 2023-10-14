@@ -169,7 +169,7 @@ export default {
       row.desabilita_step1 = true;
       row.desabilita_step2 = true;
       row.desabilita_step3 = true;
-      row.flag = false;
+      row.flag = true;
       this.$router.push({
         name: "adicionarCompra",
         params: { formulario: row },

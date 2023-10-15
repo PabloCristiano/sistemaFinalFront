@@ -125,10 +125,10 @@
                   <span v-if="props.row.status === 'RESERVADO' ? true : false">
                     <a
                       size="sm"
-                      class="btn btn-sm me-1 mb-1"
+                      class="btn btn-dark btn-sm me-1 mb-1"
                       data-backdrop="static"
                       title="EDITAR"
-                      style="background-color: #f0f8ff"
+                      
                       @click="cancelar_Horario(props.row)"
                     >
                       CANCELAR <i class="bx bx-edit-alt"></i>

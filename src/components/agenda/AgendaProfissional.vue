@@ -475,6 +475,44 @@ export default {
     },
     cancelar_Horario(obj) {
       console.log(obj);
+      this.isLoadingAgenda = true;
+      ServiceAgenda.cancelarHorario(obj)
+        .then((value) => {
+          if (value.data.Success === true) {
+            ServiceAgenda.findAgendaProfissional(this.form)
+              .then((value) => {
+                if (value.data.Success === true) {
+                  this.isLoadingAgenda = false;
+                  value.data.Agenda.map((agenda) => {
+                    agenda.data = formatarDataParaPtBR(agenda.data);
+                    agenda.horario_inicio = formatarHorarioAgenda(
+                      agenda.horario_inicio
+                    );
+                    agenda.btn_Inicio = false;
+                  });
+                  this.agenda = value.data.Agenda;
+                }
+                if (value.data.Success === false) {
+                  this.isLoadingAgenda = false;
+                  notyf.error(value.data.mensagem);
+                  this.agenda = [];
+                }
+              })
+              .catch((error) => {
+                this.isLoadingAgenda = false;
+                console.error("Erro na requisição:", error);
+              });
+               notyf.success("Horário Cancelado com Sucesso.");
+          }
+          if (value.data.Success === false) {
+            this.isLoadingAgenda = false;
+            notyf.error("Não Foi Possivel Cancelar Horário");
+          }
+        })
+        .catch((error) => {
+          this.isLoadingAgenda = false;
+          console.error("Erro na requisição:", error);
+        });
     },
   },
 };

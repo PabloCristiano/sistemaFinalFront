@@ -150,7 +150,7 @@
                       @click="executar_Horario(props.row)"
                     >
                       <b-overlay :show="props.row.btn_Inicio" rounded="sm">
-                        <i class="bx bx-time"></i>
+                       {{props.row.execucao}} <i class="bx bx-time"></i>
                       </b-overlay>
                     </a>
                   </span>

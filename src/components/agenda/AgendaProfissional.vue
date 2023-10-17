@@ -122,36 +122,38 @@
             >
               <template slot="table-row" slot-scope="props">
                 <span v-if="props.column.field === 'btn'">
-                  <a
-                    size="sm"
-                    class="btn btn-sm me-1 mb-1"
-                    data-backdrop="static"
-                    title="EDITAR"
-                    style="background-color: #f0f8ff"
-                  >
-                    EDITAR <i class="bx bx-edit-alt"></i>
-                  </a>
+                  <span v-if="props.row.status === 'RESERVADO' ? true : false">
+                    <a
+                      size="sm"
+                      class="btn btn-dark btn-sm me-1 mb-1"
+                      data-backdrop="static"
+                      title="EDITAR"
+                      
+                      @click="cancelar_Horario(props.row)"
+                    >
+                      CANCELAR <i class="bx bx-edit-alt"></i>
+                    </a>
 
-                  <a
-                    v-if="props.row.status === 'RESERVADO' ? true : false"
-                    size="sm"
-                    data-backdrop="static"
-                    :title="props.row.execucao"
-                    :class="{ 
-                      'btn btn-sm btn-danger me-1 mb-1':
-                           props.row.execucao === 'EXECUTAR',
-                          'btn btn-sm btn-warning me-1 mb-1':
-                            props.row.execucao ===
-                            'EXECUTANDO',
-                          'btn btn-sm btn-success me-1 mb-1':
-                            props.row.execucao === 'EXECUTADO',
-                    }"
-                    @click="executar_Horario(props.row)"
-                  >
-                    <b-overlay :show="props.row.btn_Inicio" rounded="sm">
-                      <i class="bx bx-time"></i>
-                    </b-overlay>
-                  </a>
+                    <a
+                      v-if="props.row.status === 'RESERVADO' ? true : false"
+                      size="sm"
+                      data-backdrop="static"
+                      :title="props.row.execucao"
+                      :class="{
+                        'btn btn-sm btn-danger me-1 mb-1':
+                          props.row.execucao === 'EXECUTAR',
+                        'btn btn-sm btn-warning me-1 mb-1':
+                          props.row.execucao === 'EXECUTANDO',
+                        'btn btn-sm btn-success me-1 mb-1':
+                          props.row.execucao === 'EXECUTADO',
+                      }"
+                      @click="executar_Horario(props.row)"
+                    >
+                      <b-overlay :show="props.row.btn_Inicio" rounded="sm">
+                       {{props.row.execucao}} <i class="bx bx-time"></i>
+                      </b-overlay>
+                    </a>
+                  </span>
                 </span>
               </template>
             </vue-good-table>
@@ -470,6 +472,47 @@ export default {
       //   }
       //   console.log(`${propriedade}: ${valor}`);
       // });
+    },
+    cancelar_Horario(obj) {
+      console.log(obj);
+      this.isLoadingAgenda = true;
+      ServiceAgenda.cancelarHorario(obj)
+        .then((value) => {
+          if (value.data.Success === true) {
+            ServiceAgenda.findAgendaProfissional(this.form)
+              .then((value) => {
+                if (value.data.Success === true) {
+                  this.isLoadingAgenda = false;
+                  value.data.Agenda.map((agenda) => {
+                    agenda.data = formatarDataParaPtBR(agenda.data);
+                    agenda.horario_inicio = formatarHorarioAgenda(
+                      agenda.horario_inicio
+                    );
+                    agenda.btn_Inicio = false;
+                  });
+                  this.agenda = value.data.Agenda;
+                }
+                if (value.data.Success === false) {
+                  this.isLoadingAgenda = false;
+                  notyf.error(value.data.mensagem);
+                  this.agenda = [];
+                }
+              })
+              .catch((error) => {
+                this.isLoadingAgenda = false;
+                console.error("Erro na requisição:", error);
+              });
+               notyf.success("Horário Cancelado com Sucesso.");
+          }
+          if (value.data.Success === false) {
+            this.isLoadingAgenda = false;
+            notyf.error("Não Foi Possivel Cancelar Horário");
+          }
+        })
+        .catch((error) => {
+          this.isLoadingAgenda = false;
+          console.error("Erro na requisição:", error);
+        });
     },
   },
 };

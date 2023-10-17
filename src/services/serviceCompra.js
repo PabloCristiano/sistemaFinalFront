@@ -125,6 +125,27 @@ class ServiceCompra {
       return error;
     }
   }
+  async verificaNumCompra(data) {
+    try {
+      ApiService.setHeader();
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Accept: "application/json",
+        },
+      };
+      const response = await axios.post(
+        ApiService.url + "v1/compra/compra/verificaNumCompra",
+        data,
+        config
+      );
+      if (response) {
+        return response;
+      }
+    } catch (error) {
+      return error;
+    }
+  }
 }
 const instance = new ServiceCompra();
 export { instance as ServiceCompra };

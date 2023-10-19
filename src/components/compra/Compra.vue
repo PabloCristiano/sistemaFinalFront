@@ -2163,7 +2163,9 @@ export default {
       }
     },
     convertPayLoad(obj) {
-      const clonedObj = JSON.parse(JSON.stringify(obj));
+      var clonedObj = [];
+      clonedObj = JSON.parse(JSON.stringify(obj));
+      console.log(clonedObj);
       let produtos = clonedObj.produtos;
       produtos.map((produto) => {
         produto.produto = produto.produto.produto;

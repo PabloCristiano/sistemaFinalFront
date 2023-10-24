@@ -1,12 +1,228 @@
 <template>
-  <div>
-    <h3>Seja Bem Vindo !!</h3>
+  <div class="col-md-12 p-3" style="margin-bottom: -90px">
+    <b-overlay :show="isLoading" rounded="sm">
+      <div class="card mb-5">
+        <div class="card-header">Contas A Pagar</div>
+        <div class="card-body">
+          <div class="row col-md-12 col-sm-12 mb-2 justify-content-start">
+            <div class="col-md-2 col-sm-">
+              <label>Data :</label>
+              <b-form-input
+                id="date"
+                type="date"
+                v-model="form.horario_inicio"
+                ref="horario_inicio"
+                :class="{
+                  'fail-error': false,
+                }"
+              ></b-form-input>
+              <small class="small-msg">
+                <!-- {{ validationMsg($v.form.horario_inicio) }} -->
+              </small>
+            </div>
+            <div class="col-md-2">
+              <label>Código:</label>
+              <b-form-input
+                id="id_profissional"
+                type="number"
+                :class="{
+                  'fail-error': false,
+                }"
+                placeholder="Código"
+                ref="id_profissional"
+                v-model="form.id_profissional"
+              >
+              </b-form-input>
+              <small class="small-msg">
+                <!-- {{ validationMsg($v.form.id_profissional) }} -->
+              </small>
+            </div>
+            <div class="col-md-4">
+              <label
+                >Profissional:<b style="color: rgb(245, 153, 153)"> *</b></label
+              >
+              <b-overlay :show="false" rounded="sm">
+                <b-input-group>
+                  <b-form-input
+                    id="profissional"
+                    type="text"
+                    :class="{
+                      'fail-error': false,
+                    }"
+                    placeholder="Profissional"
+                    v-model="form.profissional"
+                    disabled
+                  >
+                  </b-form-input>
+                  <b-input-group-append>
+                    <b-button
+                      text="Button"
+                      variant="dark"
+                      title="Pesquisar Profissional"
+                      ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-search"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+                        /></svg
+                    ></b-button>
+                  </b-input-group-append>
+                </b-input-group>
+                <small class="small-msg">
+                  <!-- {{ validationMsg($v.form.profissional) }} -->
+                </small>
+              </b-overlay>
+            </div>
+            <div class="col-md-2 mt-4 text-center">
+              <button id="pesquisar" class="btn btn-dark" ref="pesquisar">
+                Pesquisar
+              </button>
+            </div>
+            <div class="col-md-2 mt-4">
+              <button class="btn btn-dark" title="LIMPAR CAMPOS">
+                <i class="bx bx-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="row col-md-12 col-sm-12 mb-4 justify-content-end"></div>
+          <div class="">
+            <vue-good-table
+              :columns="columns"
+              :rows="contasPagar"
+              @on-cell-click="selectCellContaPagar"
+              :search-options="{
+                enabled: true,
+                placeholder: 'Procure por Contas a Pagar',
+                skipDiacritics: true,
+              }"
+              :pagination-options="{
+                enabled: true,
+                mode: 'records',
+                perPage: 5,
+                position: 'end',
+                perPageDropdown: [5, 10],
+                prevLabel: 'Anterior',
+                nextLabel: 'Proximo',
+                rowsPerPageLabel: 'Qtd por página',
+                ofLabel: 'de',
+                pageLabel: 'Pagina', // for 'pages' mode
+              }"
+            >
+              <template slot="table-row" slot-scope="props">
+                <span v-if="props.column.field === 'btn'">
+                  <a
+                    @click="showModalAlterarFornecedor(props.row.id)"
+                    size="sm"
+                    class="btn btn-sm me-1 mb-1"
+                    data-backdrop="static"
+                    title="EDITAR"
+                    style="background-color: #f0f8ff"
+                  >
+                    <i class="bx bx-edit-alt"></i>
+                  </a>
+                  <a
+                    @click="showModalExcluirFornecedor(props.row.id)"
+                    size="sm"
+                    class="btn btn-sm me-1 mb-1"
+                    data-backdrop="static"
+                    title="EXCLUIR"
+                    style="background-color: #f0f8ff"
+                  >
+                    <i class="bx bx-trash-alt"></i>
+                  </a>
+                </span>
+              </template>
+            </vue-good-table>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="col-md-12 text-end">
+            <br />
+          </div>
+        </div>
+      </div>
+    </b-overlay>
+    <br /><br />
   </div>
 </template>
 <script>
 export default {
   data() {
-    return {};
+    return {
+      form: {
+        horario_inicio: "",
+        id_profissional: "",
+        profissional: "",
+      },
+      contasPagar: [],
+      columns: [
+        {
+          label: "Nº Nota",
+          field: "id",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
+          label: "Fornecedor",
+          field: "razaoSocial",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
+          label: "Nº Parcela",
+          field: "nomefantasia",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
+          label: "Valor Parcela",
+          field: "contato",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
+          label: "Data Emissão",
+          field: "telefone",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
+          label: "Data Vencimento",
+          field: "cidade.cidade",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
+          label: "Status",
+          field: "cidade.cidade",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
+          label: "Ações",
+          sortable: false,
+          field: "btn",
+          html: true,
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+      ],
+      isLoading: false,
+    };
+  },
+  created() {},
+  methods: {
+    selectCellContaPagar(params) {
+      //   if (this.functionFornecedor) {
+      //     this.functionFornecedor(params);
+      //   }
+      console.log(params);
+    },
   },
 };
 </script>

@@ -57,6 +57,10 @@ const AgendaProfissional = () =>
   import(
     /* webpackChunkName: "Home Agendamento" */ "@/components/agenda/AgendaProfissional"
   );
+const ContasPagar = () =>
+  import(
+    /* webpackChunkName: "Home Agendamento" */ "@/components/contasPagar/HomeContaPagar"
+  );
 
 Vue.use(VueRouter);
 
@@ -264,6 +268,18 @@ const routes = [
         meta: {
           public: false,
           label: "Cadastro Nova Compra",
+          requiresPermission: "admin",
+        },
+      },
+      {
+        path: "/financeiro/contaspagar",
+        component: ContasPagar,
+        props: true,
+        titulo: "Contas a Pagar",
+        name: "contasPagar",
+        meta: {
+          public: false,
+          label: "Contas a Pagar",
           requiresPermission: "admin",
         },
       },

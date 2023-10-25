@@ -46,7 +46,7 @@
                   id="id_cliente_"
                   type="number"
                   :class="{
-                    'fail-error': fasle,
+                    'fail-error': false,
                   }"
                   placeholder="Nº Nota"
                   v-model="form.num_nota"
@@ -130,9 +130,9 @@
                   Pesquisar
                 </button>
               </div>
-              <div class="col-md-2 col-sm-2 text-center mt-2">
+              <div class="col-md-2 col-sm-2 mt-2 text-center text-sm-start">
                 <button class="btn btn-dark" title="LIMPAR CAMPOS">
-                  <i class="bx bx-trash"></i>
+                  <i class="bx bx-revision"></i>
                 </button>
               </div>
             </div>

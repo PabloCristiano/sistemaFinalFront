@@ -235,6 +235,12 @@ export default {
           tdClass: "text-center",
         },
         {
+          label: "Forma Pagamento",
+          field: "nomefantasia",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
           label: "Valor Parcela",
           field: "contato",
           thClass: "text-center",

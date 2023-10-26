@@ -151,9 +151,9 @@
               :pagination-options="{
                 enabled: true,
                 mode: 'records',
-                perPage: 5,
+                perPage: 15,
                 position: 'end',
-                perPageDropdown: [5, 10],
+                perPageDropdown: [30,50],
                 prevLabel: 'Anterior',
                 nextLabel: 'Proximo',
                 rowsPerPageLabel: 'Qtd por página',
@@ -199,6 +199,7 @@
   </div>
 </template>
 <script>
+import { ServiceContasPagar } from "@/services/serviceContasPagar";
 export default {
   data() {
     return {
@@ -218,49 +219,49 @@ export default {
       columns: [
         {
           label: "Nº Nota",
-          field: "id",
+          field: "compra_numero_nota",
           thClass: "text-center",
           tdClass: "text-center",
         },
         {
           label: "Fornecedor",
-          field: "razaoSocial",
+          field: "fornecedor.razaoSocial",
           thClass: "text-center",
           tdClass: "text-center",
         },
         {
           label: "Nº Parcela",
-          field: "nomefantasia",
+          field: "numero_parcela",
           thClass: "text-center",
           tdClass: "text-center",
         },
         {
           label: "Forma Pagamento",
-          field: "nomefantasia",
+          field: "formaPagamento.forma_pg",
           thClass: "text-center",
           tdClass: "text-center",
         },
         {
           label: "Valor Parcela",
-          field: "contato",
-          thClass: "text-center",
-          tdClass: "text-center",
-        },
-        {
-          label: "Data Emissão",
-          field: "telefone",
+          field: "valor_parcela",
           thClass: "text-center",
           tdClass: "text-center",
         },
         {
           label: "Data Vencimento",
-          field: "cidade.cidade",
+          field: "data_vencimento",
+          thClass: "text-center",
+          tdClass: "text-center",
+        },
+        {
+          label: "Data Emissão",
+          field: "data_emissao",
           thClass: "text-center",
           tdClass: "text-center",
         },
         {
           label: "Status",
-          field: "cidade.cidade",
+          field: "status",
           thClass: "text-center",
           tdClass: "text-center",
         },
@@ -276,13 +277,31 @@ export default {
       isLoading: false,
     };
   },
-  created() {},
+  created() {
+    this.getListContasPagar();
+  },
   methods: {
     selectCellContaPagar(params) {
       //   if (this.functionFornecedor) {
       //     this.functionFornecedor(params);
       //   }
       console.log(params);
+    },
+    getListContasPagar() {
+      this.isLoading = true;
+      ServiceContasPagar.getAll()
+        .then((obj) => {
+          if (obj) {
+            if (obj) {
+              console.log(obj);
+            }
+            this.contasPagar = obj;
+          }
+          this.isLoading = false;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };

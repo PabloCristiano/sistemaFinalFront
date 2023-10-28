@@ -142,7 +142,6 @@
             <vue-good-table
               :columns="columns"
               :rows="contasPagar"
-              @on-cell-click="selectCellContaPagar"
               :search-options="{
                 enabled: true,
                 placeholder: 'Procure por Contas a Pagar',
@@ -153,7 +152,7 @@
                 mode: 'records',
                 perPage: 15,
                 position: 'end',
-                perPageDropdown: [30,50],
+                perPageDropdown: [30, 50],
                 prevLabel: 'Anterior',
                 nextLabel: 'Proximo',
                 rowsPerPageLabel: 'Qtd por página',
@@ -164,21 +163,20 @@
               <template slot="table-row" slot-scope="props">
                 <span v-if="props.column.field === 'btn'">
                   <a
-                    @click="showModalAlterarFornecedor(props.row.id)"
+                    @click="showConta(props.row)"
                     size="sm"
                     class="btn btn-sm me-1 mb-1"
                     data-backdrop="static"
-                    title="EDITAR"
+                    title="Exibir Conta a Pagar"
                     style="background-color: #f0f8ff"
                   >
                     <i class="bx bx-edit-alt"></i>
                   </a>
                   <a
-                    @click="showModalExcluirFornecedor(props.row.id)"
                     size="sm"
                     class="btn btn-sm me-1 mb-1"
                     data-backdrop="static"
-                    title="EXCLUIR"
+                    title="Excluir Conta a Pagar"
                     style="background-color: #f0f8ff"
                   >
                     <i class="bx bx-trash-alt"></i>
@@ -200,7 +198,7 @@
 </template>
 <script>
 import { ServiceContasPagar } from "@/services/serviceContasPagar";
-import { formatarDataParaPtBR,currency_t } from "../../rules/filters";
+import { formatarDataParaPtBR, currency_t } from "../../rules/filters";
 export default {
   data() {
     return {
@@ -282,24 +280,19 @@ export default {
     this.getListContasPagar();
   },
   methods: {
-    selectCellContaPagar(params) {
-      //   if (this.functionFornecedor) {
-      //     this.functionFornecedor(params);
-      //   }
-      console.log(params);
-    },
     getListContasPagar() {
       this.isLoading = true;
       ServiceContasPagar.getAll()
         .then((obj) => {
           if (obj) {
             if (obj) {
-              console.log(obj);
-              obj.map((conta)=>{
+              obj.map((conta) => {
                 conta.valor_parcela = currency_t(conta.valor_parcela);
-                conta.data_vencimento = formatarDataParaPtBR(conta.data_vencimento);
+                conta.data_vencimento = formatarDataParaPtBR(
+                  conta.data_vencimento
+                );
                 conta.data_emissao = formatarDataParaPtBR(conta.data_emissao);
-              })
+              });
             }
             this.contasPagar = obj;
           }
@@ -308,6 +301,12 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    showConta(row) {
+      this.$router.push({
+        name: "viewContasPagar",
+        params: { obj: row },
+      });
     },
   },
 };

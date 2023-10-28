@@ -61,6 +61,10 @@ const ContasPagar = () =>
   import(
     /* webpackChunkName: "Home Agendamento" */ "@/components/contasPagar/HomeContaPagar"
   );
+const ViewContasPagar = () =>
+  import(
+    /* webpackChunkName: "Home Agendamento" */ "@/components/contasPagar/ViewContasPagar"
+  );
 
 Vue.use(VueRouter);
 
@@ -277,6 +281,18 @@ const routes = [
         props: true,
         titulo: "Contas a Pagar",
         name: "contasPagar",
+        meta: {
+          public: false,
+          label: "Contas a Pagar",
+          requiresPermission: "admin",
+        },
+      },
+      {
+        path: "/financeiro/contaspagar/viewContasPagar",
+        component: ViewContasPagar,
+        props: true,
+        titulo: "Contas a Pagar",
+        name: "viewContasPagar",
         meta: {
           public: false,
           label: "Contas a Pagar",

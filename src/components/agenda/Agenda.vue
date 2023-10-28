@@ -14,6 +14,11 @@
               v-model="selected2"
             ></v-select>
           </div>
+          <div class="col-md-6" v-if="isEnabled">
+            <button class="btn btn-dark mt-4" @click="atualizarAgenda">
+              Atualizar Agenda
+            </button>
+          </div>
           <!-- <div class="col-md-6" v-if="true">
             <label for="">Serviço:</label>
             <v-select
@@ -711,6 +716,9 @@ export default {
         (item) => item.start_time === time && item.date === date
       );
       return horario || "";
+    },
+    atualizarAgenda() {
+      this.findAllAgendaProfissional(this.selected2.id);
     },
     findAllAgendaProfissional(id) {
       this.dateRange = [];

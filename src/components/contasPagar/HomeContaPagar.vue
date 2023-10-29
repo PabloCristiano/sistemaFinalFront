@@ -198,7 +198,11 @@
 </template>
 <script>
 import { ServiceContasPagar } from "@/services/serviceContasPagar";
-import { formatarDataParaPtBR, currency_t } from "../../rules/filters";
+import {
+  formatarDataParaPtBR,
+  currency_t,
+  currency_percentual_decimal2,
+} from "../../rules/filters";
 export default {
   data() {
     return {
@@ -288,10 +292,19 @@ export default {
             if (obj) {
               obj.map((conta) => {
                 conta.valor_parcela = currency_t(conta.valor_parcela);
+                conta.valor_pago = currency_t(conta.valor_pago);
                 conta.data_vencimento = formatarDataParaPtBR(
                   conta.data_vencimento
                 );
                 conta.data_emissao = formatarDataParaPtBR(conta.data_emissao);
+                if (conta.data_pagamento != "") {
+                  conta.data_pagamento = formatarDataParaPtBR(
+                    conta.data_pagamento
+                  );
+                }
+
+                conta.juros = currency_percentual_decimal2(conta.juros);
+                conta.desconto = currency_percentual_decimal2(conta.desconto);
               });
             }
             this.contasPagar = obj;

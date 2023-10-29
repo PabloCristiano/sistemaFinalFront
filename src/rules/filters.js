@@ -26,6 +26,10 @@ export function currency_percentual(value, currencySymbol = "%") {
   if (isNaN(value)) return "";
   return value.toFixed(5).replace(".", ",") + currencySymbol;
 }
+export function currency_percentual_decimal2(value, currencySymbol = " %") {
+  if (isNaN(value)) return "";
+  return value.toFixed(2).replace(".", ",") + currencySymbol;
+}
 
 export function Min(value, currencySymbol = " minutos") {
   if (isNaN(value)) return "";

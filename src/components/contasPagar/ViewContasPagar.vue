@@ -183,6 +183,7 @@
                     type="button"
                     variant="dark"
                     :disabled="isStatus"
+                    @click="onsubmit"
                   >
                     Baixar<i class="bx bx-check"></i>
                   </b-button>
@@ -202,6 +203,31 @@
 </template>
 <script>
 import { inverterDataPtBR } from "../../rules/filters";
+import { ServiceContasPagar } from "../../services/serviceContasPagar";
+import { Notyf } from "notyf";
+const notyf = new Notyf({
+  position: {
+    x: "center",
+    y: "top",
+  },
+  types: [
+    {
+      type: "warning",
+      background: "orange",
+      icon: {
+        className: "material-icons",
+        tagName: "i",
+        text: "warning",
+      },
+    },
+    {
+      type: "error",
+      background: "indianred",
+      duration: 5000,
+      dismissible: true,
+    },
+  ],
+});
 export default {
   props: {
     obj: { type: Object },
@@ -280,6 +306,16 @@ export default {
       this.form.data_create = "";
       this.form.data_alt = "";
       this.isStatus = false;
+    },
+    onsubmit() {
+      ServiceContasPagar.storeContasPagar(this.form).then((response) => {
+        if (response.status === 200) {
+          notyf.success(response.data.success);
+          this.$router.push({ name: "contasPagar" });
+        } else {
+          notyf.error(response.data.error);
+        }
+      });
     },
   },
 };

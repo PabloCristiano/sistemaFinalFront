@@ -23,6 +23,23 @@ class ServiceContasPagar {
       // return error;
     }
   }
+  async storeContasPagar(data) {
+    ApiService.setHeader();
+    let config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Accept: "application/json",
+      },
+    };
+    return await axios
+      .post(ApiService.url + "v1/contaspagar", data, config)
+      .then((obj) => {
+        return obj;
+      })
+      .catch((errors) => {
+        return errors;
+      });
+  }
   async getById(id) {
     try {
       ApiService.setHeader();

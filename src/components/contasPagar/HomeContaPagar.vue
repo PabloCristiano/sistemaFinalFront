@@ -176,7 +176,7 @@
                     size="sm"
                     class="btn btn-sm me-1 mb-1"
                     data-backdrop="static"
-                    title="Excluir Conta a Pagar"
+                    title="Cancelar Conta a Pagar"
                     style="background-color: #f0f8ff"
                   >
                     <i class="bx bx-trash-alt"></i>

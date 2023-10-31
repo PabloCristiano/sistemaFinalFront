@@ -525,6 +525,7 @@ const formMessages = {
     `Campo maximo ${$params.txtMaxLen.max} characters.`,
   integer: () => "Campo deve ser um Numero inteiro",
   txtNumeroPositivo: () => "Campo deve ser Positivo/Maior que zero.",
+  txtNumeroPositivo_: () => "Campo deve ser Positivo/Ou zero.",
   txtNumeroisPositivo: () => "Campo deve ser Positivo.",
   maxValue: () => "Campo máx 100",
   maxValuePorcentagem: () => "Porcentagem máx 100%",
@@ -653,7 +654,7 @@ export default {
       prazo: {
         required: validators.required,
         integer: validators.integer,
-        txtNumeroPositivo: Rules.isPositiveNumber,
+        txtNumeroPositivo_: Rules.isPositiveNumber_,
       },
       porcentagem: {
         required: validators.required,

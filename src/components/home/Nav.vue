@@ -58,6 +58,7 @@
           <li><a class="link_name" href="#">Financeiro</a></li>
           <li><router-link :to="{path:'/formapagamento'}">Forma de Pagamento</router-link></li>
           <li><router-link :to="{path:'/condicaopagamento'}">Condição de Pagamento</router-link></li>
+          <li><router-link :to="{path:'/financeiro/contaspagar'}">Contas a Pagar</router-link></li>
         </ul>
       </li>
       <li v-if="data.isUser !== 'false' ? false : true">

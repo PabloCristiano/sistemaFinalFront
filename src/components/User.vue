@@ -5,9 +5,26 @@
         <i class="bx bxs-face-mask"></i>
         <span class="logo_name">Barber Shop</span>
       </div>
+      <!-- Nave bar -->
       <ul class="nav-links">
         <li>
           <ul class="sub-menu blank">
+            <li></li>
+          </ul>
+        </li>
+        <li>
+          <div class="iocn-link">
+            <a href="#">
+              <i class="bx bx-calendar"></i>
+              <span class="link_name">Home</span>
+            </a>
+            <i class="bx bxs-chevron-down arrow"></i>
+          </div>
+          <ul class="sub-menu">
+            <li>
+              <router-link :to="{ path: '/home_Usuario' }">Home</router-link>
+            </li>
+            <li></li>
             <li></li>
           </ul>
         </li>
@@ -21,7 +38,11 @@
           </div>
           <ul class="sub-menu">
             <li><a class="link_name" href="#">Agenda</a></li>
-            <li></li>
+            <li>
+              <router-link :to="{ path: '/agenda_usuario' }"
+                >Agendar</router-link
+              >
+            </li>
             <li></li>
             <li></li>
           </ul>
@@ -153,7 +174,7 @@
       </div>
       <hr class="mt-0" />
       <div>
-        <router-view></router-view>
+        <router-view> </router-view>
       </div>
     </section>
   </div>

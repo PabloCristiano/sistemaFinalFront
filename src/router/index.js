@@ -66,19 +66,49 @@ const ViewContasPagar = () =>
     /* webpackChunkName: "Home Agendamento" */ "@/components/contasPagar/ViewContasPagar"
   );
 const ViewUser = () =>
-  import(/* webpackChunkName: "Home Agendamento" */ "@/components/User");
+  import(/* webpackChunkName: "Home Usuario" */ "@/components/User");
+const Home_user = () =>
+  import(
+    /* webpackChunkName: "Home Agendamento" */ "@/components/home_user/home_user"
+  );
+const user_agendamento = () =>
+  import(
+    /* webpackChunkName: "Home Agendamento" */ "@/components/User/user_agendamento/agendamento"
+  );
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/user",
-    name: "User",
+    path: "/home_Usuario",
+    name: "/home_Usuario",
     component: ViewUser,
     meta: {
       public: true,
       label: "User",
     },
+    children: [
+      {
+        path: "/home_Usuario",
+        component: Home_user,
+        titulo: "Pagina Inicial",
+        name: "/home_Usuario",
+        meta: {
+          public: true,
+          label: "Home Usuario",
+        },
+      },
+      {
+        path: "/agenda_usuario",
+        component: user_agendamento,
+        titulo: "Agenda Clientes",
+        name: "/agenda_usuario",
+        meta: {
+          public: true,
+          label: "Home Usuario",
+        },
+      },
+    ],
   },
   {
     path: "/login",

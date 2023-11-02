@@ -38,7 +38,11 @@
             </p>
           </div>
         </div>
-        <p><router-link to="/user" class="btn btn-lg btn-secondary">Agendar</router-link><br /></p>
+        <p>
+          <router-link to="/home_Usuario" class="btn btn-lg btn-secondary"
+            >Agendar</router-link
+          ><br />
+        </p>
       </main>
     </div>
   </div>

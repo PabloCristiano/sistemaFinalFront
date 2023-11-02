@@ -82,6 +82,7 @@ const routes = [
     path: "/",
     name: "Site",
     component: Site,
+    props: true,
     meta: {
       public: true,
       label: "Site",

@@ -65,10 +65,21 @@ const ViewContasPagar = () =>
   import(
     /* webpackChunkName: "Home Agendamento" */ "@/components/contasPagar/ViewContasPagar"
   );
+const ViewUser = () =>
+  import(/* webpackChunkName: "Home Agendamento" */ "@/components/User");
 
 Vue.use(VueRouter);
 
 const routes = [
+  {
+    path: "/user",
+    name: "User",
+    component: ViewUser,
+    meta: {
+      public: true,
+      label: "User",
+    },
+  },
   {
     path: "/login",
     name: "Login",

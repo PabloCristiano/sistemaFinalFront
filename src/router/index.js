@@ -86,6 +86,7 @@ const routes = [
     meta: {
       public: false,
       label: "User",
+      requiresPermission: "user",
     },
     children: [
       {
@@ -96,6 +97,7 @@ const routes = [
         meta: {
           public: true,
           label: "Home Usuario",
+          requiresPermission: "user",
         },
       },
       {
@@ -106,6 +108,7 @@ const routes = [
         meta: {
           public: true,
           label: "Home Usuario",
+          requiresPermission: "user",
         },
       },
     ],
@@ -346,12 +349,13 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  // mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
   routes,
 });
 
 router.beforeEach((to, from, next) => {
+  console.log(to.meta.requiresPermission);
   NProgress.start();
   const isPublic = to.matched.some((record) => record.meta.public);
   const loggedIn = !!TokenService.getToken();

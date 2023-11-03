@@ -84,7 +84,7 @@ const routes = [
     name: "/home_Usuario",
     component: ViewUser,
     meta: {
-      public: true,
+      public: false,
       label: "User",
     },
     children: [

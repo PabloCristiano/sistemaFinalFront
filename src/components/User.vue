@@ -8,24 +8,16 @@
       <!-- Nave bar -->
       <ul class="nav-links">
         <li>
-          <ul class="sub-menu blank">
-            <li></li>
-          </ul>
-        </li>
-        <li>
           <div class="iocn-link">
-            <a href="#">
-              <i class="bx bx-calendar"></i>
+            <router-link :to="{ path: '/home_Usuario' }">
+              <i class="bx bx-spreadsheet"></i>
               <span class="link_name">Home</span>
-            </a>
-            <i class="bx bxs-chevron-down arrow"></i>
+            </router-link>
           </div>
           <ul class="sub-menu">
             <li>
-              <router-link :to="{ path: '/home_Usuario' }">Home</router-link>
+              <router-link :to="{ path: '/home_Usuario' }" class="link_name">Home</router-link>
             </li>
-            <li></li>
-            <li></li>
           </ul>
         </li>
         <li>

@@ -183,7 +183,7 @@
 
           <!-- Color System -->
           <div class="row">
-            <div class="col-lg-6 mb-4">
+            <!-- <div class="col-lg-6 mb-4">
               <div class="card bg-primary text-white shadow">
                 <div class="card-body">
                   Primary
@@ -246,7 +246,7 @@
                   <div class="text-white-50 small">#5a5c69</div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
 

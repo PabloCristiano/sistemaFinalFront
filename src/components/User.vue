@@ -16,7 +16,9 @@
           </div>
           <ul class="sub-menu">
             <li>
-              <router-link :to="{ path: '/home_Usuario' }" class="link_name">Home</router-link>
+              <router-link :to="{ path: '/home_Usuario' }" class="link_name"
+                >Home</router-link
+              >
             </li>
           </ul>
         </li>
@@ -39,7 +41,7 @@
             <li></li>
           </ul>
         </li>
-        <li>
+        <!-- <li>
           <div class="iocn-link">
             <a href="#">
               <i class="bx bx-spreadsheet"></i>
@@ -59,8 +61,8 @@
             <li></li>
             <li></li>
           </ul>
-        </li>
-        <li>
+        </li> -->
+        <!-- <li>
           <div class="iocn-link">
             <a href="#">
               <i class="bx bx-wallet"></i>
@@ -74,8 +76,8 @@
             <li></li>
             <li></li>
           </ul>
-        </li>
-        <li>
+        </li> -->
+        <!-- <li>
           <div class="iocn-link">
             <a href="#">
               <i class="bx bx-cart-alt"></i>
@@ -88,7 +90,7 @@
             <li></li>
             <li><a class="" href="#">Venda</a></li>
           </ul>
-        </li>
+        </li> -->
         <!-- <li>
         <a href="#">
           <i class="bx bx-pie-chart-alt-2"></i>
@@ -107,21 +109,21 @@
           <li><a class="link_name" href="#">Chart</a></li>
         </ul>
       </li> -->
-        <!-- <li>
-        <div class="iocn-link">
-          <a href="#">
-            <i class="bx bx-plug"></i>
-            <span class="link_name">Plugins</span>
-          </a>
-          <i class="bx bxs-chevron-down arrow"></i>
-        </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="#">Plugins</a></li>
-          <li><a href="#">UI Face</a></li>
-          <li><a href="#">Pigments</a></li>
-          <li><a href="#">Box Icons</a></li>
-        </ul>
-      </li> -->
+        <li>
+          <div class="iocn-link">
+            <a href="#">
+              <i class="bx bx-cog"></i>
+              <span class="link_name">Configuração</span>
+            </a>
+            <i class="bx bxs-chevron-down arrow"></i>
+          </div>
+          <ul class="sub-menu">
+            <li><a class="link_name" href="#">Configuração</a></li>
+            <li><a href="#">UI Face</a></li>
+            <li><a href="#">Pigments</a></li>
+            <li><a href="#">Box Icons</a></li>
+          </ul>
+        </li>
         <!-- <li>
         <a href="#">
           <i class="bx bx-compass"></i>
@@ -140,7 +142,7 @@
           <li><a class="link_name" href="#">History</a></li>
         </ul>
       </li> -->
-        <li>
+        <!-- <li>
           <a href="#">
             <i class="bx bx-cog"></i>
             <span class="link_name">Configuração</span>
@@ -148,14 +150,14 @@
           <ul class="sub-menu blank">
             <li><a class="link_name" href="#">Configuração</a></li>
           </ul>
-        </li>
+        </li> -->
         <li>
           <div class="profile-details">
             <div class="profile-content"></div>
             <div class="name-job">
               <div class="profile_name">Area do Usuario</div>
             </div>
-            <i class="bx bx-log-out"></i>
+            <i class="bx bx-log-out" @click.prevent="sair()"></i>
           </div>
         </li>
       </ul>
@@ -222,7 +224,11 @@ export default {
       notyf.success("Seja Bem Vindo(a) ! " + this.user.data.profissional);
     }
   },
-  methods: {},
+  methods: {
+    sair() {
+      this.$router.push({ name: "Site" });
+    },
+  },
 };
 </script>
 <style>

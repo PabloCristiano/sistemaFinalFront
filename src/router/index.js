@@ -95,7 +95,7 @@ const routes = [
         titulo: "Pagina Inicial",
         name: "/home_Usuario",
         meta: {
-          public: true,
+          public: false,
           label: "Home Usuario",
           requiresPermission: "user",
         },
@@ -106,7 +106,7 @@ const routes = [
         titulo: "Agenda Clientes",
         name: "/agenda_usuario",
         meta: {
-          public: true,
+          public: false,
           label: "Home Usuario",
           requiresPermission: "user",
         },
@@ -359,7 +359,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresPermission === "user") {
     console.log(to.meta.requiresPermission);
     const isPublic = to.matched.some((record) => record.meta.public);
-    const loggedIn = !!TokenService.getToken();
+    const loggedIn = true;
     ApiService.getInterceptor();
     if (!isPublic && !loggedIn) {
       NProgress.done();

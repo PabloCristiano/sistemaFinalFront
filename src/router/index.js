@@ -355,8 +355,32 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(to.meta.requiresPermission);
   NProgress.start();
+  if (to.meta.requiresPermission === "user") {
+    console.log(to.meta.requiresPermission);
+    const isPublic = to.matched.some((record) => record.meta.public);
+    const loggedIn = !!TokenService.getToken();
+    ApiService.getInterceptor();
+    if (!isPublic && !loggedIn) {
+      NProgress.done();
+      return next("/login");
+    }
+    NProgress.done();
+    next();
+  }
+
+  if (to.meta.requiresPermission === "admin") {
+    const isPublic = to.matched.some((record) => record.meta.public);
+    const loggedIn = !!TokenService.getToken();
+    ApiService.getInterceptor();
+    if (!isPublic && !loggedIn) {
+      NProgress.done();
+      return next("/login");
+    }
+    NProgress.done();
+    next();
+  }
+
   const isPublic = to.matched.some((record) => record.meta.public);
   const loggedIn = !!TokenService.getToken();
   ApiService.getInterceptor();
